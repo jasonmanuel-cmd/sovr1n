@@ -122,9 +122,9 @@
         .splash-logo { 
             width: 220px; margin-bottom: 30px; 
             animation: pulseLogo 3s infinite alternate; 
-            filter: invert(1) drop-shadow(0 0 20px rgba(25,118,255,0.25));
+            filter: drop-shadow(0 0 20px rgba(25,118,255,0.25));
             background: transparent;
-            object-fit: contain;
+            object-fit: contain; cursor: pointer;
         }
         .header-logo {
             height: 32px; 
@@ -219,7 +219,7 @@
         <div class="door-panel door-left"></div>
         <div class="door-panel door-right"></div>
         <div class="splash-content">
-            <img class="splash-logo" src="sovr1n-logo.svg" alt="Sovr1n Heavy Logistics">
+            <img class="splash-logo" src="sovr1n-logo.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Heavy Logistics">
             <h1 class="splash-catchphrase">Logistics, Redefined.</h1>
             <button class="splash-skip" onclick="closeSplashScreen()">Skip Intro</button>
         </div>
@@ -229,7 +229,7 @@
     <header class="fixed top-0 inset-x-0 z-50 glass-header">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center gap-2">
-                <img src="sovr1n-logo.svg" alt="Sovr1n Logo" class="header-logo">
+                <img src="sovr1n-logo.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Logo" class="header-logo">
             </a>
             <nav class="hidden lg:flex items-center gap-8 text-[15px] font-medium text-textMuted">
                 <a href="#services" class="hover:text-primaryBlue transition-colors">Services</a>
@@ -359,6 +359,42 @@
             </div>
         </div>
     </section>
+
+        <!-- Splash control script -->
+        <script>
+            // Close the splash by animating the doors and then removing the element
+            function closeSplashScreen() {
+                const splash = document.getElementById('splash-screen');
+                if (!splash) return;
+                // add class to animate doors open
+                splash.classList.add('doors-open');
+                // after animation, remove the element so it no longer blocks interaction
+                setTimeout(() => {
+                    try { splash.parentNode && splash.parentNode.removeChild(splash); } catch (e) { splash.style.display = 'none'; }
+                }, 1400);
+                // remember user's preference (optional)
+                try { localStorage.setItem('sovr1n_splash_seen','1'); } catch(e){}
+            }
+
+            // Auto-open the doors shortly after load unless user already dismissed
+            function autoOpenSplash() {
+                const splash = document.getElementById('splash-screen');
+                if (!splash) return;
+                // if previously dismissed, remove immediately
+                try { if (localStorage.getItem('sovr1n_splash_seen') === '1') { splash.parentNode && splash.parentNode.removeChild(splash); return; } } catch(e){}
+                // Ensure the logo can be clicked to dismiss
+                const logo = splash.querySelector('.splash-logo');
+                if (logo) logo.addEventListener('click', closeSplashScreen);
+                // open doors after a short intro delay
+                setTimeout(() => { splash.classList.add('doors-open'); setTimeout(() => { try { splash.parentNode && splash.parentNode.removeChild(splash); } catch(e){splash.style.display='none'} }, 1400); }, 1700);
+            }
+
+            // Start behavior on page load
+            window.addEventListener('load', () => {
+                // Small delay to allow paint, then auto-open
+                setTimeout(autoOpenSplash, 120);
+            });
+        </script>
 
     <!-- Trust Strip -->
     <section class="border-y border-borderLight bg-surface py-8 relative z-20">
