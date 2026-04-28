@@ -99,11 +99,38 @@
         /* Splash Screen */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #07111F; z-index: 9999; display: flex;
+            z-index: 9999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; overflow: hidden;
-            transition: opacity 1.5s ease-in-out;
+            pointer-events: all;
         }
-        #splash-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
+        .door-panel {
+            position: absolute; top: 0; width: 50vw; height: 100%;
+            background: #07111F; transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 1; border-right: 1px solid rgba(25,118,255,0.2);
+        }
+        .door-left { left: 0; border-right: 1px solid rgba(25,118,255,0.2); }
+        .door-right { right: 0; border-left: 1px solid rgba(25,118,255,0.2); }
+        
+        #splash-screen.doors-open .door-left { transform: translateX(-100%); }
+        #splash-screen.doors-open .door-right { transform: translateX(100%); }
+        #splash-screen.doors-open .splash-content { opacity: 0; transform: scale(0.9); pointer-events: none; }
+        
+        .splash-content {
+            position: relative; z-index: 2; text-align: center;
+            transition: all 0.8s ease; display: flex; flex-direction: column; align-items: center;
+        }
+        .splash-logo { width: 180px; margin-bottom: 30px; animation: pulseLogo 3s infinite alternate; }
+        .splash-catchphrase { font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 700; color: #F3F7FC; margin-bottom: 40px; letter-spacing: -0.02em; }
+        .splash-skip {
+            padding: 12px 32px; background: transparent; border: 1px solid rgba(173, 194, 220, 0.4);
+            color: #A9B7CC; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+        }
+        .splash-skip:hover { background: rgba(25, 118, 255, 0.1); border-color: #1976FF; color: #fff; }
+        
+        @keyframes pulseLogo {
+            0% { filter: drop-shadow(0 0 10px rgba(25, 118, 255, 0.2)); }
+            100% { filter: drop-shadow(0 0 30px rgba(25, 118, 255, 0.6)); }
+        }
         
         /* Layout & Utilities */
         .glass-header {
@@ -177,8 +204,13 @@
 
     <!-- Splash Screen -->
     <div id="splash-screen">
-        <img id="splash-img" src="35.jpg" alt="Sovr1n Icon" style="display: none;">
-        <canvas id="splash-canvas"></canvas>
+        <div class="door-panel door-left"></div>
+        <div class="door-panel door-right"></div>
+        <div class="splash-content">
+            <img class="splash-logo" src="splash-logo.png" alt="Sovr1n Heavy Logistics">
+            <h1 class="splash-catchphrase">Logistics, Redefined.</h1>
+            <button class="splash-skip" onclick="closeSplashScreen()">Skip Intro</button>
+        </div>
     </div>
 
     <!-- Header -->
@@ -752,102 +784,21 @@
         </div>
     </footer>
 
-    <!-- Splash Screen JS (Same as before, modified for dark theme) -->
+    <!-- Scripts -->
     <script>
+        function closeSplashScreen() {
+            const splash = document.getElementById('splash-screen');
+            splash.classList.add('doors-open');
+            setTimeout(() => {
+                splash.style.pointerEvents = 'none';
+            }, 1500);
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
-            const splashScreen = document.getElementById('splash-screen');
-            const canvas = document.getElementById('splash-canvas');
-            const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            const img = document.getElementById('splash-img');
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            let particles = [];
-            let imageLoaded = false;
-            let startDisintegration = false;
-
-            const setupImage = () => {
-                let imgWidth = 400; 
-                let imgHeight = (img.naturalHeight / img.naturalWidth) * imgWidth;
-                
-                let startX = (canvas.width - imgWidth) / 2;
-                let startY = (canvas.height - imgHeight) / 2;
-
-                ctx.drawImage(img, startX, startY, imgWidth, imgHeight);
-                const imageData = ctx.getImageData(startX, startY, imgWidth, imgHeight);
-                
-                for (let y = 0; y < imgHeight; y += 4) {
-                    for (let x = 0; x < imgWidth; x += 4) {
-                        const index = (y * imgWidth + x) * 4;
-                        const r = imageData.data[index];
-                        const g = imageData.data[index + 1];
-                        const b = imageData.data[index + 2];
-                        const a = imageData.data[index + 3];
-
-                        if (a > 128 && (r < 240 || g < 240 || b < 240)) { 
-                            particles.push({
-                                x: startX + x,
-                                y: startY + y,
-                                originX: startX + x,
-                                originY: startY + y,
-                                color: `rgb(${r},${g},${b})`,
-                                size: Math.random() * 3 + 2,
-                                vx: (Math.random() - 0.5) * 15,
-                                vy: (Math.random() - 0.5) * 15 - 5,
-                                alpha: 1,
-                                delay: Math.random() * 50
-                            });
-                        }
-                    }
-                }
-                imageLoaded = true;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                particles.forEach(p => {
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
-                });
-
-                setTimeout(() => { startDisintegration = true; }, 1800);
-            };
-
-            if (img.complete) { setupImage(); } else { img.onload = setupImage; }
-
-            let frame = 0;
-            function animateSplash() {
-                if (!imageLoaded) { requestAnimationFrame(animateSplash); return; }
-                
-                frame++;
-                ctx.fillStyle = 'rgba(7, 17, 31, 0.4)'; 
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                let allDead = true;
-
-                for (let i = 0; i < particles.length; i++) {
-                    let p = particles[i];
-                    if (startDisintegration && frame > p.delay) {
-                        p.x += p.vx; p.y += p.vy; p.alpha -= 0.015;
-                        p.vy += 0.4; p.vx *= 0.98;
-                    }
-
-                    if (p.alpha > 0) {
-                        allDead = false;
-                        ctx.globalAlpha = p.alpha;
-                        ctx.fillStyle = p.color;
-                        ctx.fillRect(p.x, p.y, p.size, p.size);
-                    }
-                }
-                ctx.globalAlpha = 1;
-
-                if (startDisintegration && allDead) {
-                    splashScreen.style.opacity = '0';
-                    setTimeout(() => { splashScreen.style.display = 'none'; }, 1500);
-                } else {
-                    requestAnimationFrame(animateSplash);
-                }
-            }
-            animateSplash();
+            // Auto open doors after 3 seconds
+            setTimeout(() => {
+                closeSplashScreen();
+            }, 3000);
             
             // Header scroll effect
             const header = document.querySelector('header');
