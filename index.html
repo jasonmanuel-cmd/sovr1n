@@ -1,28 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sovr1n offers same-day delivery for oversized items from Facebook Marketplace, OfferUp, and provides delivery solutions for farmer's markets and local restaurants.">
-    <meta name="keywords" content="oversized delivery, same-day delivery, Facebook Marketplace delivery, OfferUp delivery, restaurant delivery, farmer's market delivery">
-    <title>Sovr1n | Oversized Item & Local Business Delivery</title>
+    <meta name="description" content="Sovr1n is premium local delivery for oversized purchases and business logistics. White-glove local delivery for furniture, bulk goods, restaurant orders, and vendor logistics.">
+    <meta name="keywords" content="oversized delivery, local logistics, same-day delivery, Facebook Marketplace delivery, OfferUp delivery, B2B delivery, restaurant delivery">
+    <title>Sovr1n | Premium Local Delivery & Logistics</title>
     
-    <!-- Open Graph / SEO / GEO / AEO Optimization -->
-    <meta property="og:title" content="Sovr1n | Oversized Item & Local Business Delivery">
-    <meta property="og:description" content="Seamless delivery for oversized items, local farmer's markets, and restaurants. Get your purchases home safely and quickly.">
+    <!-- Open Graph / SEO Optimization -->
+    <meta property="og:title" content="Sovr1n | Premium Local Delivery & Logistics">
+    <meta property="og:description" content="From marketplace finds to wholesale pickups — Sovr1n gets it home safely.">
     <meta property="og:image" content="34.webp">
     <meta property="og:type" content="website">
 
-    <!-- Schema Markup for AEO/GEO -->
+    <!-- Schema Markup -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "DeliveryChargeSpecification",
+      "@type": "LocalBusiness",
       "name": "Sovr1n Delivery",
-      "description": "Same-day delivery service for oversized items from marketplaces and local businesses.",
+      "image": "34.webp",
+      "description": "White-glove local delivery for oversized purchases, bulk goods, and scheduled business runs.",
       "areaServed": {
-        "@type": "City",
-        "name": "Las Vegas"
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": "36.1699",
+          "longitude": "-115.1398"
+        },
+        "geoRadius": "50000"
       }
     }
     </script>
@@ -30,308 +36,717 @@
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": [{
-        "@type": "Question",
-        "name": "What does Sovr1n deliver?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "We deliver oversized items bought on Facebook Marketplace or OfferUp, and provide delivery solutions for small businesses like restaurants and farmer's markets."
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What kinds of items do you deliver?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We specialize in oversized, bulky, or fragile items that don't fit in a standard car. This includes furniture, large appliances, bulk restaurant supplies, and farmer's market event setups."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you handle Facebook Marketplace pickups?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. If you buy a couch, dining set, or dresser online, we coordinate the pickup with the seller and deliver it safely to your door."
+          }
         }
-      }, {
-        "@type": "Question",
-        "name": "Can you deliver furniture?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, we specialize in delivering oversized items including furniture and appliances."
-        }
-      }]
+      ]
     }
     </script>
 
+    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              brand: {
-                50: '#f4f6f8',
-                100: '#e3e8ee',
-                500: '#2c3e50',
-                900: '#000000'
-              },
-              accent: {
-                400: '#ffffff',
-                500: '#e0e0e0'
-              }
+              base: '#07111F',
+              surface: '#0D1728',
+              surface2: '#12203A',
+              textPrimary: '#F3F7FC',
+              textMuted: '#A9B7CC',
+              borderLight: 'rgba(173, 194, 220, 0.16)',
+              primaryBlue: '#1976FF',
+              primaryHover: '#0E63E6',
+              secondaryBlue: '#45B2FF',
+              highlightTint: '#D9ECFF',
+              accentAmber: '#F4A62A',
+              successGreen: '#2FBF71'
             },
             fontFamily: {
-              sans: ['Inter', 'system-ui', 'sans-serif'],
-              display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+              sans: ['Inter', 'sans-serif'],
+              display: ['Satoshi', 'sans-serif']
+            },
+            boxShadow: {
+              'glow': '0 0 20px rgba(25, 118, 255, 0.3)',
+              'glow-hover': '0 0 30px rgba(25, 118, 255, 0.6)',
+              'card': '0 10px 30px -10px rgba(0,0,0,0.5)'
             }
           }
         }
       }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #030303;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
+        body { background-color: #07111F; color: #F3F7FC; overflow-x: hidden; }
+        
         /* Splash Screen */
         #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #07111F; z-index: 9999; display: flex;
+            align-items: center; justify-content: center; overflow: hidden;
             transition: opacity 1.5s ease-in-out;
         }
+        #splash-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
         
-        #splash-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-        }
-
-        #main-content {
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Parallax Star Field */
-        #star-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .star-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 200%;
-            height: 200%;
-            background: transparent;
-        }
-
-        @keyframes moveStars {
-            from { transform: translateY(0); }
-            to { transform: translateY(-50%); }
-        }
-
-        /* Nav Blur */
-        .nav-blur {
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            background: rgba(5, 5, 5, 0.7);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .glow-btn {
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        /* Layout & Utilities */
+        .glass-header {
+            background: rgba(7, 17, 31, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(173, 194, 220, 0.16);
             transition: all 0.3s ease;
         }
-        .glow-btn:hover {
-            box-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
+        .text-gradient {
+            background: linear-gradient(to right, #F3F7FC, #A9B7CC);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .btn-primary {
+            background-color: #1976FF; color: #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary:hover {
+            background-color: #0E63E6;
+            box-shadow: 0 0 25px rgba(25, 118, 255, 0.5);
             transform: translateY(-2px);
-            background-color: #fff;
-            color: #000;
+        }
+        .card-surface {
+            background-color: #0D1728;
+            border: 1px solid rgba(173, 194, 220, 0.16);
+            transition: all 0.4s ease;
+        }
+        .card-surface:hover {
+            transform: translateY(-4px);
+            border-color: rgba(25, 118, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(25, 118, 255, 0.1);
         }
         
-        .card-bg {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(12px);
+        /* Subtle Grid Pattern */
+        .bg-grid {
+            background-image: 
+                linear-gradient(rgba(173, 194, 220, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(173, 194, 220, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
         }
+        
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up { animation: fadeUp 0.8s ease forwards; opacity: 0; }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
 
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 15px 40px -10px rgba(255, 255, 255, 0.1);
-            background: rgba(255,255,255,0.05);
-        }
-
-        /* Gradient Text */
-        .text-gradient {
-            background: linear-gradient(to right, #ffffff, #888888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary ~ * { animation: fadeUp 0.3s ease-in-out; }
+        details[open] .icon-rotate { transform: rotate(180deg); }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-primaryBlue selection:text-white">
 
     <!-- Splash Screen -->
     <div id="splash-screen">
-        <!-- Hidden original image to draw from -->
         <img id="splash-img" src="35.jpg" alt="Sovr1n Icon" style="display: none;" crossorigin="anonymous">
         <canvas id="splash-canvas"></canvas>
     </div>
 
-    <!-- Animated Star Field Background -->
-    <div id="star-container"></div>
-
-    <!-- Main Content -->
-    <div id="main-content" class="min-h-screen flex flex-col">
-        <!-- Navigation -->
-        <header class="fixed top-0 inset-x-0 z-50 nav-blur">
-            <div class="max-w-7xl mx-auto px-5 lg:px-8 h-24 flex items-center justify-between">
-                <a href="#top" class="flex items-center gap-3 transition-transform hover:scale-105">
-                    <img src="34.webp" alt="Sovr1n Logo" class="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                </a>
-                <nav class="hidden md:flex items-center gap-10 text-sm font-semibold tracking-wide text-gray-400">
-                    <a href="#services" class="hover:text-white transition-colors">Services</a>
-                    <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
-                    <a href="#businesses" class="hover:text-white transition-colors">For Businesses</a>
-                </nav>
-                <div class="flex items-center gap-4">
-                    <a href="#book" class="text-sm font-bold text-black bg-white px-7 py-3 rounded-full glow-btn">Book Delivery</a>
+    <!-- Header -->
+    <header class="fixed top-0 inset-x-0 z-50 glass-header">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2">
+                <img src="34.webp" alt="Sovr1n Logo" class="h-8 object-contain">
+            </a>
+            <nav class="hidden lg:flex items-center gap-8 text-[15px] font-medium text-textMuted">
+                <a href="#services" class="hover:text-primaryBlue transition-colors">Services</a>
+                <a href="#how-it-works" class="hover:text-primaryBlue transition-colors">How It Works</a>
+                <a href="#business" class="hover:text-primaryBlue transition-colors">Business Delivery</a>
+                <a href="#coverage" class="hover:text-primaryBlue transition-colors">Coverage</a>
+                <a href="#faq" class="hover:text-primaryBlue transition-colors">FAQ</a>
+            </nav>
+            <div class="flex items-center gap-5">
+                <a href="tel:+18001234567" class="hidden md:block text-sm font-semibold text-textPrimary hover:text-secondaryBlue transition-colors">Call or Text</a>
+                <div class="flex items-center gap-3">
+                    <a href="#quote" class="btn-primary text-[15px] font-semibold px-6 py-2.5 rounded-lg flex items-center gap-2">
+                        Get Quote
+                    </a>
                 </div>
             </div>
-        </header>
+        </div>
+        <!-- Trust micro-line -->
+        <div class="w-full bg-surface2 border-b border-borderLight text-center py-1.5 hidden md:block">
+            <p class="text-xs text-textMuted font-medium flex items-center justify-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-successGreen"></span> Same-day local delivery available in your area
+            </p>
+        </div>
+    </header>
 
-        <!-- Hero Section -->
-        <section id="top" class="relative pt-40 pb-24 lg:pt-56 lg:pb-40 flex-grow flex items-center min-h-[90vh]">
-            <div class="max-w-7xl mx-auto px-5 lg:px-8 relative z-10 w-full text-center">
-                <div class="inline-flex items-center gap-2 text-white text-xs font-bold uppercase tracking-[0.2em] px-4 py-2 rounded-full border border-white/20 bg-white/5 mb-8 backdrop-blur-sm">
-                    <span class="h-2 w-2 rounded-full bg-white animate-pulse"></span>
-                    The Logistics Network of the Future
+    <!-- Hero Section -->
+    <section class="relative pt-36 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-base">
+        <div class="absolute inset-0 bg-grid opacity-30"></div>
+        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-primaryBlue opacity-[0.07] blur-[120px] rounded-full pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+            
+            <!-- Left Copy -->
+            <div class="max-w-xl animate-fade-up">
+                <div class="inline-flex items-center gap-2 text-secondaryBlue text-sm font-bold uppercase tracking-wide mb-5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Local oversized delivery, done right
                 </div>
-                <h1 class="font-display font-black text-6xl sm:text-8xl lg:text-[7rem] tracking-tighter leading-[0.95] text-white mb-8">
-                    Oversized? <br/>
-                    <span class="text-gradient">No Problem.</span>
+                <h1 class="font-display font-black text-5xl lg:text-6xl leading-[1.05] text-textPrimary mb-6">
+                    From marketplace finds to wholesale pickups — <span class="text-primaryBlue">Sovr1n gets it home safely.</span>
                 </h1>
-                <p class="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
-                    Sovr1n brings your heavy purchases home safely. From <span class="text-white font-semibold">Facebook Marketplace</span> & <span class="text-white font-semibold">OfferUp</span> hauls, to fresh goods from local farmer's markets.
+                <p class="text-lg text-textMuted mb-10 leading-relaxed font-sans">
+                    White-glove local delivery for furniture, bulk goods, restaurant orders, and vendor logistics across your city.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-5 justify-center">
-                    <a href="#book" class="inline-flex items-center justify-center gap-3 bg-white text-black font-bold px-10 py-5 rounded-full glow-btn text-lg tracking-wide">
-                        Get a Quote Now
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                
+                <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                    <a href="#quote" class="btn-primary text-center text-base font-bold px-8 py-4 rounded-xl flex-1 sm:flex-none">
+                        Get My Quote
                     </a>
-                    <a href="#services" class="inline-flex items-center justify-center gap-3 bg-transparent border-2 border-white/30 hover:border-white hover:bg-white/5 text-white font-bold px-10 py-5 rounded-full transition-all duration-300 text-lg tracking-wide">
-                        Explore Services
+                    <a href="#how-it-works" class="bg-surface border border-borderLight hover:bg-surface2 text-textPrimary text-center text-base font-semibold px-8 py-4 rounded-xl transition-colors flex-1 sm:flex-none">
+                        See How It Works
                     </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services" class="py-32 relative z-10 bg-black/60 backdrop-blur-md border-y border-white/10">
-            <div class="max-w-7xl mx-auto px-5 lg:px-8">
-                <div class="text-center mb-20">
-                    <h2 class="font-display font-extrabold text-5xl sm:text-6xl tracking-tight text-white mb-6">Delivery <span class="text-gradient">Redefined</span></h2>
-                    <p class="text-xl text-gray-400 max-w-2xl mx-auto font-light">Bridging the gap between large purchases and your living room with premium, white-glove service.</p>
                 </div>
                 
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Card 1 -->
-                    <div class="card-bg rounded-3xl p-10 card-hover">
-                        <div class="h-16 w-16 rounded-2xl bg-white/10 text-white grid place-items-center mb-8 border border-white/20">
-                            <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-7h14l2 7M3 12v6h18v-6M3 12h18M7 18v2M17 18v2"/></svg>
+                <!-- Trust Points -->
+                <div class="grid grid-cols-2 gap-4 text-sm font-medium text-textMuted">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Same-day options
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Large-item friendly
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Business scheduling
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Careful handling
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Visual (Mock Booking/Operations Interface) -->
+            <div class="relative animate-fade-up delay-200">
+                <div class="bg-surface rounded-2xl border border-borderLight p-6 shadow-card relative z-10 backdrop-blur-sm">
+                    <div class="flex justify-between items-center mb-6 border-b border-borderLight pb-4">
+                        <h3 class="font-display font-bold text-lg text-textPrimary">Live Logistics Network</h3>
+                        <span class="px-2 py-1 bg-successGreen/10 text-successGreen text-xs font-bold rounded flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-successGreen animate-pulse"></span> Active
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <!-- Route Mock 1 -->
+                        <div class="bg-surface2 rounded-xl p-4 border border-borderLight flex items-start gap-4">
+                            <div class="mt-1 flex flex-col items-center">
+                                <div class="w-3 h-3 rounded-full bg-primaryBlue"></div>
+                                <div class="w-0.5 h-8 bg-borderLight my-1"></div>
+                                <div class="w-3 h-3 rounded-full bg-accentAmber"></div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-semibold text-primaryBlue mb-1">Marketplace Pickup</p>
+                                <p class="text-sm font-bold text-textPrimary">Vintage Sectional Couch</p>
+                                <p class="text-xs text-textMuted mt-1">Est. arrival: 14 mins</p>
+                            </div>
                         </div>
-                        <h3 class="font-display font-bold text-3xl text-white mb-4 tracking-tight">Marketplace Hauls</h3>
-                        <p class="text-gray-400 leading-relaxed text-lg">
-                            Found a great couch on Facebook Marketplace or OfferUp but don't have a truck? We'll pick it up and bring it directly to your home.
+                        
+                        <!-- Route Mock 2 -->
+                        <div class="bg-surface2 rounded-xl p-4 border border-borderLight flex items-start gap-4">
+                            <div class="mt-1 flex flex-col items-center">
+                                <div class="w-3 h-3 rounded-full bg-primaryBlue"></div>
+                                <div class="w-0.5 h-8 bg-borderLight my-1"></div>
+                                <div class="w-3 h-3 rounded-full bg-successGreen"></div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-semibold text-primaryBlue mb-1">Commercial Run</p>
+                                <p class="text-sm font-bold text-textPrimary">Farmers Market Stall Setup</p>
+                                <p class="text-xs text-textMuted mt-1">Status: Loading</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Decorative Elements -->
+                <div class="absolute -right-6 -bottom-6 bg-surface border border-borderLight p-4 rounded-xl shadow-lg z-20 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-primaryBlue/10 flex items-center justify-center text-primaryBlue">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-textMuted">Avg Response</p>
+                        <p class="font-display font-bold text-lg text-textPrimary">22 mins</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Strip -->
+    <section class="border-y border-borderLight bg-surface py-8 relative z-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-wrap justify-center lg:justify-between items-center gap-8 text-center sm:text-left">
+                <div>
+                    <p class="font-display font-bold text-2xl text-textPrimary">5,000+</p>
+                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">Local Deliveries</p>
+                </div>
+                <div class="hidden sm:block w-px h-10 bg-borderLight"></div>
+                <div>
+                    <p class="font-display font-bold text-2xl text-textPrimary flex items-center justify-center sm:justify-start gap-1">
+                        4.9 <svg class="w-5 h-5 text-accentAmber" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </p>
+                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">Customer Rating</p>
+                </div>
+                <div class="hidden md:block w-px h-10 bg-borderLight"></div>
+                <div>
+                    <p class="font-display font-bold text-lg text-textPrimary">Oversized Specialists</p>
+                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">White-glove handling</p>
+                </div>
+                <div class="hidden lg:block w-px h-10 bg-borderLight"></div>
+                <div>
+                    <p class="font-display font-bold text-lg text-textPrimary">Local Vendor Logistics</p>
+                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">Recurring reliable routes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services (Use-case Cards) -->
+    <section id="services" class="py-24 bg-base relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-16">
+                <h2 class="font-display font-bold text-4xl text-textPrimary mb-4">Specialized Local Transport</h2>
+                <p class="text-textMuted max-w-2xl text-lg">We don't just move boxes. We solve high-friction local logistics for consumers and businesses.</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-12 gap-6">
+                <!-- Dominant Card -->
+                <div class="lg:col-span-8 card-surface rounded-2xl p-8 lg:p-10 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primaryBlue opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-opacity"></div>
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-primaryBlue/10 text-primaryBlue rounded-xl flex items-center justify-center mb-6">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-7h14l2 7M3 12v6h18v-6M3 12h18M7 18v2M17 18v2"></path></svg>
+                            </div>
+                            <h3 class="font-display font-bold text-3xl text-textPrimary mb-3">Marketplace Delivery</h3>
+                            <p class="text-textMuted text-lg max-w-xl mb-6">
+                                Found a couch, dining table, or appliance online? We coordinate pickup with the seller and bring it to your door without the truck rental headache.
+                            </p>
+                        </div>
+                        <ul class="space-y-2 text-sm text-textMuted">
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Seller coordination handled</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Careful loading & blanketing</li>
+                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Direct-to-door delivery</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Secondary Column -->
+                <div class="lg:col-span-4 flex flex-col gap-6">
+                    <div class="card-surface rounded-2xl p-6 flex-1 group">
+                        <div class="w-10 h-10 bg-successGreen/10 text-successGreen rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+                        </div>
+                        <h3 class="font-display font-bold text-xl text-textPrimary mb-2">Farmers Market Logistics</h3>
+                        <p class="text-textMuted text-sm mb-4">
+                            Bulk produce, packaged goods, stalls, and end-of-day transport for vendors and buyers.
+                        </p>
+                        <p class="text-xs text-primaryBlue font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            Learn more <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </p>
                     </div>
                     
-                    <!-- Card 2 -->
-                    <div class="card-bg rounded-3xl p-10 card-hover">
-                        <div class="h-16 w-16 rounded-2xl bg-white/10 text-white grid place-items-center mb-8 border border-white/20">
-                            <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    <div class="card-surface rounded-2xl p-6 flex-1 group">
+                        <div class="w-10 h-10 bg-accentAmber/10 text-accentAmber rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
                         </div>
-                        <h3 class="font-display font-bold text-3xl text-white mb-4 tracking-tight">Farmer's Markets</h3>
-                        <p class="text-gray-400 leading-relaxed text-lg">
-                            Supporting local agriculture? We help vendors and buyers transport bulk fresh produce and goods across town safely and efficiently.
+                        <h3 class="font-display font-bold text-xl text-textPrimary mb-2">Restaurant & Catering</h3>
+                        <p class="text-textMuted text-sm mb-4">
+                            Large food runs with timing discipline and temperature-aware handling.
                         </p>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="card-bg rounded-3xl p-10 card-hover">
-                        <div class="h-16 w-16 rounded-2xl bg-white/10 text-white grid place-items-center mb-8 border border-white/20">
-                            <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
-                        </div>
-                        <h3 class="font-display font-bold text-3xl text-white mb-4 tracking-tight">Local Restaurants</h3>
-                        <p class="text-gray-400 leading-relaxed text-lg">
-                            For catering orders or large food deliveries, we provide reliable, temperature-aware transport so your food arrives fresh.
+                        <p class="text-xs text-primaryBlue font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            Learn more <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- CTA Section -->
-        <section class="py-32 relative z-10">
-            <div class="max-w-5xl mx-auto px-5 lg:px-8 text-center">
-                <div class="card-bg rounded-[3rem] p-16 border border-white/20 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent"></div>
-                    <div class="relative z-10">
-                        <h2 class="font-display font-extrabold text-5xl md:text-6xl text-white mb-8 tracking-tight">Ready to move?</h2>
-                        <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light">Whether it's a vintage dresser or a week's worth of farm-fresh produce, Sovr1n has you covered.</p>
-                        <a href="#book" class="inline-block bg-white text-black font-bold px-12 py-5 rounded-full glow-btn text-xl tracking-wide">
-                            Book Your Delivery
-                        </a>
+    <!-- How It Works (Timeline) -->
+    <section id="how-it-works" class="py-24 bg-surface border-y border-borderLight relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="font-display font-bold text-4xl text-textPrimary mb-4">Operational Precision</h2>
+                <p class="text-textMuted">Four steps from confirmation to your front door.</p>
+            </div>
+            
+            <div class="relative">
+                <!-- Desktop Line -->
+                <div class="hidden md:block absolute top-6 left-0 w-full h-px bg-borderLight"></div>
+                <div class="hidden md:block absolute top-6 left-0 w-1/3 h-px bg-primaryBlue shadow-[0_0_10px_rgba(25,118,255,0.8)]"></div>
+                
+                <div class="grid md:grid-cols-4 gap-8 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="relative pt-4 md:pt-0">
+                        <div class="w-12 h-12 rounded-full bg-base border-2 border-primaryBlue flex items-center justify-center text-primaryBlue font-bold mb-6 mx-auto md:mx-0 shadow-glow">
+                            1
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Request a quote</h4>
+                            <p class="text-sm text-textMuted">Share the item details, dimensions, pickup point, and delivery address.</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="relative pt-4 md:pt-0">
+                        <div class="w-12 h-12 rounded-full bg-surface2 border-2 border-borderLight flex items-center justify-center text-textMuted font-bold mb-6 mx-auto md:mx-0">
+                            2
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Confirm details</h4>
+                            <p class="text-sm text-textMuted">We confirm timing, access details (stairs, elevators), and handling requirements.</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="relative pt-4 md:pt-0">
+                        <div class="w-12 h-12 rounded-full bg-surface2 border-2 border-borderLight flex items-center justify-center text-textMuted font-bold mb-6 mx-auto md:mx-0">
+                            3
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Collection & Transport</h4>
+                            <p class="text-sm text-textMuted">Our team manages pickup and transport with route-aware coordination.</p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="relative pt-4 md:pt-0">
+                        <div class="w-12 h-12 rounded-full bg-surface2 border-2 border-borderLight flex items-center justify-center text-textMuted font-bold mb-6 mx-auto md:mx-0">
+                            4
+                        </div>
+                        <div class="text-center md:text-left">
+                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Order arrives</h4>
+                            <p class="text-sm text-textMuted">Delivery completed with door-to-door care and photo confirmation.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Footer -->
-        <footer class="border-t border-white/10 bg-black/80 backdrop-blur-lg py-16 relative z-10 mt-auto">
-            <div class="max-w-7xl mx-auto px-5 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
-                <div class="flex items-center gap-4">
-                    <img src="34.webp" alt="Sovr1n" class="h-8 opacity-90 hover:opacity-100 transition-opacity">
+    <!-- Why Sovr1n -->
+    <section class="py-24 bg-base">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="font-display font-bold text-4xl text-textPrimary mb-6">Why local logistics require a specialist.</h2>
+                    <p class="text-lg text-textMuted mb-8">We reframe delivery from random gig help into specialized, reliable local logistics.</p>
+                    <a href="#quote" class="text-primaryBlue font-semibold flex items-center gap-2 hover:text-secondaryBlue transition-colors">
+                        Get started with Sovr1n <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
                 </div>
-                <p class="text-gray-500 text-sm font-medium">© 2026 Sovr1n. Built for the modern local economy.</p>
-                <div class="flex gap-8 text-sm font-semibold text-gray-500">
-                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition-colors">Contact</a>
+                
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="card-surface p-6 rounded-xl">
+                        <h4 class="font-bold text-textPrimary mb-2 text-lg">Built for oversized items</h4>
+                        <p class="text-sm text-textMuted">Furniture, bulky orders, vendor loads, and awkward pickups are the job, not the exception.</p>
+                    </div>
+                    <div class="card-surface p-6 rounded-xl">
+                        <h4 class="font-bold text-textPrimary mb-2 text-lg">White-glove care</h4>
+                        <p class="text-sm text-textMuted">Careful loading, secure transport, and a more professional customer experience than informal hauling.</p>
+                    </div>
+                    <div class="card-surface p-6 rounded-xl">
+                        <h4 class="font-bold text-textPrimary mb-2 text-lg">Local business friendly</h4>
+                        <p class="text-sm text-textMuted">Reliable recurring support for restaurants, markets, and neighborhood businesses.</p>
+                    </div>
+                    <div class="card-surface p-6 rounded-xl">
+                        <h4 class="font-bold text-textPrimary mb-2 text-lg">Flexible scheduling</h4>
+                        <p class="text-sm text-textMuted">Faster coordination than national freight and less friction than renting a truck yourself.</p>
+                    </div>
                 </div>
             </div>
-        </footer>
-    </div>
+        </div>
+    </section>
 
+    <!-- For Businesses -->
+    <section id="business" class="py-24 bg-surface2 border-y border-borderLight relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#1976FF 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="max-w-3xl mb-16">
+                <div class="inline-flex items-center gap-2 bg-surface border border-borderLight px-3 py-1 rounded-full text-xs font-bold text-textMuted tracking-wider uppercase mb-4">
+                    B2B Operations
+                </div>
+                <h2 class="font-display font-bold text-4xl md:text-5xl text-textPrimary mb-6">Delivery support for businesses that outgrow basic couriers.</h2>
+                <p class="text-xl text-textMuted">Stop managing ad-hoc deliveries. Sovr1n provides recurring, scheduled logistics that scale with your local operations.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-base/50 backdrop-blur border border-borderLight p-6 rounded-xl">
+                    <h4 class="font-bold text-textPrimary mb-2">Restaurants & Caterers</h4>
+                    <p class="text-sm text-textMuted">Handling large-volume catering orders that require timing precision and specialized space.</p>
+                </div>
+                <div class="bg-base/50 backdrop-blur border border-borderLight p-6 rounded-xl">
+                    <h4 class="font-bold text-textPrimary mb-2">Market Vendors</h4>
+                    <p class="text-sm text-textMuted">Recurring transport of inventory, tents, and supplies to and from weekend markets.</p>
+                </div>
+                <div class="bg-base/50 backdrop-blur border border-borderLight p-6 rounded-xl">
+                    <h4 class="font-bold text-textPrimary mb-2">Local Retailers</h4>
+                    <p class="text-sm text-textMuted">Fulfillment for oversized items purchased in-store, ensuring professional customer handoffs.</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-4 text-sm font-medium text-textPrimary">
+                <span class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Recurring scheduling</span>
+                <span class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Flexible fulfillment</span>
+                <span class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Branded professionalism</span>
+            </div>
+            
+            <div class="mt-12">
+                <a href="#contact-business" class="bg-white text-base font-bold px-8 py-3 rounded-lg hover:bg-gray-200 transition-colors">
+                    Talk About Business Delivery
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coverage Area -->
+    <section id="coverage" class="py-24 bg-base">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="font-display font-bold text-4xl text-textPrimary mb-6">Service Area & Operations</h2>
+                <p class="text-textMuted mb-6">We operate extensive routes across the greater metropolitan area, providing rapid response and scheduled runs.</p>
+                
+                <ul class="space-y-4 mb-8 text-sm">
+                    <li class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded bg-surface2 border border-borderLight flex items-center justify-center text-primaryBlue shrink-0 mt-0.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        <div>
+                            <p class="font-bold text-textPrimary">Delivery Windows</p>
+                            <p class="text-textMuted">Same-day available if booked before 2 PM. Scheduled delivery 7 days a week.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded bg-surface2 border border-borderLight flex items-center justify-center text-primaryBlue shrink-0 mt-0.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        <div>
+                            <p class="font-bold text-textPrimary">Item Acceptance</p>
+                            <p class="text-textMuted">Furniture, appliances, boxed inventory, pallets. (Hazardous materials excluded).</p>
+                        </div>
+                    </li>
+                </ul>
+                <p class="text-sm text-textMuted italic">Need a custom route outside standard zones? <a href="#contact" class="text-primaryBlue hover:underline">Contact us</a>.</p>
+            </div>
+            
+            <div class="bg-surface2 rounded-2xl border border-borderLight p-2 relative">
+                <!-- Abstract Map Graphic -->
+                <div class="aspect-video bg-base rounded-xl overflow-hidden relative border border-borderLight">
+                    <div class="absolute inset-0 bg-grid opacity-50"></div>
+                    <!-- Nodes -->
+                    <div class="absolute top-[30%] left-[20%] w-4 h-4 bg-primaryBlue rounded-full shadow-[0_0_15px_#1976FF]"></div>
+                    <div class="absolute top-[60%] left-[40%] w-3 h-3 bg-secondaryBlue rounded-full"></div>
+                    <div class="absolute top-[40%] left-[70%] w-3 h-3 bg-accentAmber rounded-full"></div>
+                    <!-- Lines -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+                        <path d="M 20% 30% L 40% 60% L 70% 40%" fill="none" stroke="rgba(25, 118, 255, 0.4)" stroke-width="2" stroke-dasharray="5 5"></path>
+                    </svg>
+                    <!-- Overlay label -->
+                    <div class="absolute bottom-4 left-4 bg-surface/90 backdrop-blur border border-borderLight px-3 py-1.5 rounded-lg text-xs font-bold text-textPrimary">
+                        Active Local Zones
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 bg-surface border-t border-borderLight">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="font-display font-bold text-3xl text-textPrimary mb-12 text-center">Trusted locally.</h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="card-surface p-8 rounded-2xl">
+                    <div class="flex text-accentAmber mb-4">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </div>
+                    <p class="text-textPrimary italic text-sm mb-6">"Picked up our marketplace sectional same day and got it upstairs without damage. Way easier than renting a truck."</p>
+                    <div>
+                        <p class="font-bold text-textPrimary text-sm">Sarah J.</p>
+                        <p class="text-xs text-textMuted">Marketplace Buyer</p>
+                    </div>
+                </div>
+                
+                <div class="card-surface p-8 rounded-2xl">
+                    <div class="flex text-accentAmber mb-4">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </div>
+                    <p class="text-textPrimary italic text-sm mb-6">"Reliable enough to use for our recurring weekend vendor transport. We don't worry about logistics anymore."</p>
+                    <div>
+                        <p class="font-bold text-textPrimary text-sm">Marcus D.</p>
+                        <p class="text-xs text-textMuted">Local Vendor</p>
+                    </div>
+                </div>
+                
+                <div class="card-surface p-8 rounded-2xl">
+                    <div class="flex text-accentAmber mb-4">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </div>
+                    <p class="text-textPrimary italic text-sm mb-6">"Saved us during a large catering run. The timing was perfect and everything arrived intact."</p>
+                    <div>
+                        <p class="font-bold text-textPrimary text-sm">Elena R.</p>
+                        <p class="text-xs text-textMuted">Catering Manager</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-24 bg-base border-t border-borderLight">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="font-display font-bold text-3xl text-textPrimary mb-10 text-center">Frequently Asked Questions</h2>
+            
+            <div class="space-y-4">
+                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
+                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
+                        What kinds of items do you deliver?
+                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
+                        We specialize in oversized, bulky, or fragile items that don't fit in a standard car. This includes furniture, large appliances, bulk restaurant supplies, and event setups.
+                    </div>
+                </details>
+                
+                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
+                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
+                        Do you handle Facebook Marketplace pickups?
+                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
+                        Yes. If you buy a couch, dining set, or dresser online, we coordinate the pickup with the seller and deliver it safely to your door.
+                    </div>
+                </details>
+
+                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
+                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
+                        Can you help local businesses on a recurring basis?
+                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
+                        Absolutely. We offer scheduled routes for restaurants, caterers, farmers market vendors, and local retailers to handle their specific logistical needs.
+                    </div>
+                </details>
+
+                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
+                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
+                        How does pricing work?
+                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
+                        Pricing is based on distance, item size, and handling requirements (e.g., stairs). You'll receive a clear, upfront quote before booking.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section id="quote" class="py-24 bg-surface2 border-y border-borderLight">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="font-display font-bold text-4xl md:text-5xl text-textPrimary mb-6">Need help moving something big?</h2>
+            <p class="text-lg text-textMuted mb-10">Stop borrowing trucks. Book a professional local delivery in minutes.</p>
+            <a href="#" class="btn-primary inline-block text-lg font-bold px-12 py-5 rounded-xl shadow-glow">
+                Get a Quote
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-base pt-16 pb-8 border-t border-borderLight">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-10 mb-16">
+                <div class="md:col-span-1">
+                    <img src="34.webp" alt="Sovr1n Logo" class="h-8 object-contain mb-4">
+                    <p class="text-sm text-textMuted leading-relaxed">
+                        Premium local delivery for oversized purchases and business logistics.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-textPrimary mb-4">Services</h4>
+                    <ul class="space-y-2 text-sm text-textMuted">
+                        <li><a href="#" class="hover:text-primaryBlue">Marketplace Delivery</a></li>
+                        <li><a href="#" class="hover:text-primaryBlue">B2B Logistics</a></li>
+                        <li><a href="#" class="hover:text-primaryBlue">Farmers Markets</a></li>
+                        <li><a href="#" class="hover:text-primaryBlue">Restaurant Runs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-textPrimary mb-4">Operations</h4>
+                    <ul class="space-y-2 text-sm text-textMuted">
+                        <li><a href="#how-it-works" class="hover:text-primaryBlue">How it Works</a></li>
+                        <li><a href="#coverage" class="hover:text-primaryBlue">Service Area</a></li>
+                        <li><a href="#faq" class="hover:text-primaryBlue">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-textPrimary mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm text-textMuted">
+                        <li><a href="#" class="hover:text-primaryBlue">Get a Quote</a></li>
+                        <li><a href="#" class="hover:text-primaryBlue">Business Inquiry</a></li>
+                        <li><a href="tel:+18001234567" class="hover:text-primaryBlue">1-800-123-4567</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-borderLight flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-textMuted">
+                <p>&copy; 2026 Sovr1n Logistics. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-textPrimary">Privacy Policy</a>
+                    <a href="#" class="hover:text-textPrimary">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Splash Screen JS (Same as before, modified for dark theme) -->
     <script>
-        // --- 1. Splash Screen Pixelation/Glitch Particle Effect ---
         document.addEventListener("DOMContentLoaded", () => {
             const splashScreen = document.getElementById('splash-screen');
             const canvas = document.getElementById('splash-canvas');
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
             const img = document.getElementById('splash-img');
-            const mainContent = document.getElementById('main-content');
             
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -340,10 +755,8 @@
             let imageLoaded = false;
             let startDisintegration = false;
 
-            // Load image onto canvas
             const setupImage = () => {
-                // Determine size keeping aspect ratio
-                let imgWidth = 400; // slightly larger for visual impact
+                let imgWidth = 400; 
                 let imgHeight = (img.naturalHeight / img.naturalWidth) * imgWidth;
                 
                 let startX = (canvas.width - imgWidth) / 2;
@@ -352,8 +765,7 @@
                 ctx.drawImage(img, startX, startY, imgWidth, imgHeight);
                 const imageData = ctx.getImageData(startX, startY, imgWidth, imgHeight);
                 
-                // Create particles based on pixels
-                for (let y = 0; y < imgHeight; y += 4) { // step by 4 for performance/pixelation
+                for (let y = 0; y < imgHeight; y += 4) {
                     for (let x = 0; x < imgWidth; x += 4) {
                         const index = (y * imgWidth + x) * 4;
                         const r = imageData.data[index];
@@ -361,8 +773,6 @@
                         const b = imageData.data[index + 2];
                         const a = imageData.data[index + 3];
 
-                        // Only create particles for non-white/non-transparent pixels (since 35.jpg might have a white bg)
-                        // Assuming the logo is dark/black, we filter out white pixels (r,g,b > 240)
                         if (a > 128 && (r < 240 || g < 240 || b < 240)) { 
                             particles.push({
                                 x: startX + x,
@@ -370,11 +780,11 @@
                                 originX: startX + x,
                                 originY: startY + y,
                                 color: `rgb(${r},${g},${b})`,
-                                size: Math.random() * 3 + 2, // slightly varied block sizes
-                                vx: (Math.random() - 0.5) * 15, // horizontal spread
-                                vy: (Math.random() - 0.5) * 15 - 5, // slight upward bias initially
+                                size: Math.random() * 3 + 2,
+                                vx: (Math.random() - 0.5) * 15,
+                                vy: (Math.random() - 0.5) * 15 - 5,
                                 alpha: 1,
-                                delay: Math.random() * 50 // stagger the explosion slightly
+                                delay: Math.random() * 50
                             });
                         }
                     }
@@ -382,52 +792,31 @@
                 imageLoaded = true;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Draw initial state (static pixels)
                 particles.forEach(p => {
                     ctx.fillStyle = p.color;
                     ctx.fillRect(p.x, p.y, p.size, p.size);
                 });
 
-                // Start sequence
-                setTimeout(() => {
-                    startDisintegration = true;
-                }, 1800); // Wait 1.8s before glitching
+                setTimeout(() => { startDisintegration = true; }, 1800);
             };
 
-            if (img.complete) {
-                setupImage();
-            } else {
-                img.onload = setupImage;
-            }
+            if (img.complete) { setupImage(); } else { img.onload = setupImage; }
 
             let frame = 0;
             function animateSplash() {
-                if (!imageLoaded) {
-                    requestAnimationFrame(animateSplash);
-                    return;
-                }
+                if (!imageLoaded) { requestAnimationFrame(animateSplash); return; }
                 
                 frame++;
-                
-                // clear with a slight trail
-                ctx.fillStyle = 'rgba(0,0,0,0.3)'; 
+                ctx.fillStyle = 'rgba(7, 17, 31, 0.4)'; 
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 let allDead = true;
 
                 for (let i = 0; i < particles.length; i++) {
                     let p = particles[i];
-                    
                     if (startDisintegration && frame > p.delay) {
-                        // Apply movement
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        p.alpha -= 0.015; // fade out faster
-                        
-                        // Gravity
-                        p.vy += 0.4;
-                        // Air resistance
-                        p.vx *= 0.98;
+                        p.x += p.vx; p.y += p.vy; p.alpha -= 0.015;
+                        p.vy += 0.4; p.vx *= 0.98;
                     }
 
                     if (p.alpha > 0) {
@@ -441,81 +830,22 @@
 
                 if (startDisintegration && allDead) {
                     splashScreen.style.opacity = '0';
-                    mainContent.style.opacity = '1';
-                    setTimeout(() => {
-                        splashScreen.style.display = 'none';
-                    }, 1500);
+                    setTimeout(() => { splashScreen.style.display = 'none'; }, 1500);
                 } else {
                     requestAnimationFrame(animateSplash);
                 }
             }
             animateSplash();
-
-            // --- 2. Parallax Star Field ---
-            const starContainer = document.getElementById('star-container');
             
-            // Create 3 layers of stars
-            for(let i=1; i<=3; i++) {
-                let layer = document.createElement('div');
-                layer.className = 'star-layer';
-                
-                // Generate box-shadow string for stars
-                let shadows = [];
-                let numStars = i * 200; // 200, 400, 600 stars per layer
-                for(let j=0; j<numStars; j++) {
-                    let x = Math.floor(Math.random() * window.innerWidth * 2);
-                    let y = Math.floor(Math.random() * window.innerHeight * 2);
-                    
-                    // Add subtle colors to some stars for realism
-                    let colors = ['rgba(255,255,255,', 'rgba(200,220,255,', 'rgba(255,220,200,'];
-                    let color = colors[Math.floor(Math.random() * colors.length)];
-                    let opacity = (Math.random() * 0.8 + 0.2).toFixed(2);
-                    
-                    shadows.push(`${x}px ${y}px ${color}${opacity})`);
+            // Header scroll effect
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('shadow-card');
+                } else {
+                    header.classList.remove('shadow-card');
                 }
-                
-                let size = 4 - i; // layer 1 is 3px, layer 2 is 2px, layer 3 is 1px
-                layer.style.width = size + 'px';
-                layer.style.height = size + 'px';
-                layer.style.borderRadius = '50%';
-                layer.style.background = 'transparent';
-                layer.style.boxShadow = shadows.join(', ');
-                
-                // Animation duration: closer stars (layer 1) move faster
-                let duration = 60 + (i * 40); 
-                layer.style.animation = `moveStars ${duration}s linear infinite`;
-                
-                starContainer.appendChild(layer);
-            }
-            
-            // Mouse Parallax effect
-            let targetX = 0;
-            let targetY = 0;
-            let currentX = 0;
-            let currentY = 0;
-
-            document.addEventListener('mousemove', (e) => {
-                targetX = (e.clientX / window.innerWidth) - 0.5;
-                targetY = (e.clientY / window.innerHeight) - 0.5;
             });
-
-            // Smooth parallax animation loop
-            function updateParallax() {
-                // Lerp towards target
-                currentX += (targetX - currentX) * 0.05;
-                currentY += (targetY - currentY) * 0.05;
-
-                const layers = document.querySelectorAll('.star-layer');
-                layers.forEach((layer, index) => {
-                    let depth = 3 - index;
-                    let moveX = currentX * depth * 30;
-                    let moveY = currentY * depth * 30;
-                    layer.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                });
-                
-                requestAnimationFrame(updateParallax);
-            }
-            updateParallax();
             
             window.addEventListener('resize', () => {
                 if(splashScreen.style.display !== 'none') {
