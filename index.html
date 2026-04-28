@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sovr1n offers same-day delivery for oversized items from Facebook Marketplace, OfferUp, and provides delivery solutions for farmer's markets and local restaurants.">
+    <meta name="keywords" content="oversized delivery, same-day delivery, Facebook Marketplace delivery, OfferUp delivery, restaurant delivery, farmer's market delivery">
+    <title>Sovr1n | Oversized Item & Local Business Delivery</title>
+    
+    <!-- Open Graph / SEO / GEO / AEO Optimization -->
+    <meta property="og:title" content="Sovr1n | Oversized Item & Local Business Delivery">
+    <meta property="og:description" content="Seamless delivery for oversized items, local farmer's markets, and restaurants. Get your purchases home safely and quickly.">
+    <meta property="og:image" content="34.webp">
+    <meta property="og:type" content="website">
+
+    <!-- Schema Markup for AEO/GEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "DeliveryChargeSpecification",
+      "name": "Sovr1n Delivery",
+      "description": "Same-day delivery service for oversized items from marketplaces and local businesses.",
+      "areaServed": {
+        "@type": "City",
+        "name": "Las Vegas"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What does Sovr1n deliver?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We deliver oversized items bought on Facebook Marketplace or OfferUp, and provide delivery solutions for small businesses like restaurants and farmer's markets."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can you deliver furniture?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, we specialize in delivering oversized items including furniture and appliances."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#f4f6f8',
+                100: '#e3e8ee',
+                500: '#2c3e50',
+                900: '#000000'
+              },
+              accent: {
+                400: '#ffffff',
+                500: '#e0e0e0'
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #030303;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: opacity 1.5s ease-in-out;
+        }
+        
+        #splash-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        #main-content {
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Parallax Star Field */
+        #star-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 200%;
+            height: 200%;
+            background: transparent;
+        }
+
+        @keyframes moveStars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-50%); }
+        }
+
+        /* Nav Blur */
+        .nav-blur {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(5, 5, 5, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glow-btn {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            background-color: #fff;
+            color: #000;
+        }
+        
+        .card-bg {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 40px -10px rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <!-- Hidden original image to draw from -->
+        <img id="splash-img" src="35.jpg" alt="Sovr1n Icon" style="display: none;" crossorigin="anonymous">
+        <canvas id="splash-canvas"></canvas>
+    </div>
+
+    <!-- Animated Star Field Background -->
+    <div id="star-container"></div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="min-h-screen flex flex-col">
+        <!-- Navigation -->
+        <header class="fixed top-0 inset-x-0 z-50 nav-blur">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8 h-24 flex items-center justify-between">
+                <a href="#top" class="flex items-center gap-3 transition-transform hover:scale-105">
+                    <img src="34.webp" alt="Sovr1n Logo" class="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                </a>
+                <nav class="hidden md:flex items-center gap-10 text-sm font-semibold tracking-wide text-gray-400">
+                    <a href="#services" class="hover:text-white transition-colors">Services</a>
+                    <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
+                    <a href="#businesses" class="hover:text-white transition-colors">For Businesses</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <a href="#book" class="text-sm font-bold text-black bg-white px-7 py-3 rounded-full glow-btn">Book Delivery</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="top" class="relative pt-40 pb-24 lg:pt-56 lg:pb-40 flex-grow flex items-center min-h-[90vh]">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8 relative z-10 w-full text-center">
+                <div class="inline-flex items-center gap-2 text-white text-xs font-bold uppercase tracking-[0.2em] px-4 py-2 rounded-full border border-white/20 bg-white/5 mb-8 backdrop-blur-sm">
+                    <span class="h-2 w-2 rounded-full bg-white animate-pulse"></span>
+                    The Logistics Network of the Future
+                </div>
+                <h1 class="font-display font-black text-6xl sm:text-8xl lg:text-[7rem] tracking-tighter leading-[0.95] text-white mb-8">
+                    Oversized? <br/>
+                    <span class="text-gradient">No Problem.</span>
+                </h1>
+                <p class="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+                    Sovr1n brings your heavy purchases home safely. From <span class="text-white font-semibold">Facebook Marketplace</span> & <span class="text-white font-semibold">OfferUp</span> hauls, to fresh goods from local farmer's markets.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-5 justify-center">
+                    <a href="#book" class="inline-flex items-center justify-center gap-3 bg-white text-black font-bold px-10 py-5 rounded-full glow-btn text-lg tracking-wide">
+                        Get a Quote Now
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                    <a href="#services" class="inline-flex items-center justify-center gap-3 bg-transparent border-2 border-white/30 hover:border-white hover:bg-white/5 text-white font-bold px-10 py-5 rounded-full transition-all duration-300 text-lg tracking-wide">
+                        Explore Services
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-32 relative z-10 bg-black/60 backdrop-blur-md border-y border-white/10">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8">
+                <div class="text-center mb-20">
+                    <h2 class="font-display font-extrabold text-5xl sm:text-6xl tracking-tight text-white mb-6">Delivery <span class="text-gradient">Redefined</span></h2>
+                    <p class="text-xl text-gray-400 max-w-2xl mx-auto font-light">Bridging the gap between large purchases and your living room with premium, white-glove service.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="card-bg rounded-3xl p-10 card-hover">
+                        <div class="h-16 w-16 rounded-2xl bg-white/10 text-white grid place-items-center mb-8 border border-white/20">
+                            <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-7h14l2 7M3 12v6h18v-6M3 12h18M7 18v2M17 18v2"/></svg>
+                        </div>
+                        <h3 class="font-display font-bold text-3xl text-white mb-4 tracking-tight">Marketplace Hauls</h3>
+                        <p class="text-gray-400 leading-relaxed text-lg">
+                            Found a great couch on Facebook Marketplace or OfferUp but don't have a truck? We'll pick it up and bring it directly to your home.
+                        </p>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="card-bg rounded-3xl p-10 card-hover">
+                        <div class="h-16 w-16 rounded-2xl bg-white/10 text-white grid place-items-center mb-8 border border-white/20">
+                            <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        </div>
+                        <h3 class="font-display font-bold text-3xl text-white mb-4 tracking-tight">Farmer's Markets</h3>
+                        <p class="text-gray-400 leading-relaxed text-lg">
+                            Supporting local agriculture? We help vendors and buyers transport bulk fresh produce and goods across town safely and efficiently.
+                        </p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="card-bg rounded-3xl p-10 card-hover">
+                        <div class="h-16 w-16 rounded-2xl bg-white/10 text-white grid place-items-center mb-8 border border-white/20">
+                            <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
+                        </div>
+                        <h3 class="font-display font-bold text-3xl text-white mb-4 tracking-tight">Local Restaurants</h3>
+                        <p class="text-gray-400 leading-relaxed text-lg">
+                            For catering orders or large food deliveries, we provide reliable, temperature-aware transport so your food arrives fresh.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-32 relative z-10">
+            <div class="max-w-5xl mx-auto px-5 lg:px-8 text-center">
+                <div class="card-bg rounded-[3rem] p-16 border border-white/20 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent"></div>
+                    <div class="relative z-10">
+                        <h2 class="font-display font-extrabold text-5xl md:text-6xl text-white mb-8 tracking-tight">Ready to move?</h2>
+                        <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light">Whether it's a vintage dresser or a week's worth of farm-fresh produce, Sovr1n has you covered.</p>
+                        <a href="#book" class="inline-block bg-white text-black font-bold px-12 py-5 rounded-full glow-btn text-xl tracking-wide">
+                            Book Your Delivery
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/10 bg-black/80 backdrop-blur-lg py-16 relative z-10 mt-auto">
+            <div class="max-w-7xl mx-auto px-5 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-4">
+                    <img src="34.webp" alt="Sovr1n" class="h-8 opacity-90 hover:opacity-100 transition-opacity">
+                </div>
+                <p class="text-gray-500 text-sm font-medium">© 2026 Sovr1n. Built for the modern local economy.</p>
+                <div class="flex gap-8 text-sm font-semibold text-gray-500">
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- 1. Splash Screen Pixelation/Glitch Particle Effect ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const splashScreen = document.getElementById('splash-screen');
+            const canvas = document.getElementById('splash-canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const img = document.getElementById('splash-img');
+            const mainContent = document.getElementById('main-content');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            let imageLoaded = false;
+            let startDisintegration = false;
+
+            // Load image onto canvas
+            const setupImage = () => {
+                // Determine size keeping aspect ratio
+                let imgWidth = 400; // slightly larger for visual impact
+                let imgHeight = (img.naturalHeight / img.naturalWidth) * imgWidth;
+                
+                let startX = (canvas.width - imgWidth) / 2;
+                let startY = (canvas.height - imgHeight) / 2;
+
+                ctx.drawImage(img, startX, startY, imgWidth, imgHeight);
+                const imageData = ctx.getImageData(startX, startY, imgWidth, imgHeight);
+                
+                // Create particles based on pixels
+                for (let y = 0; y < imgHeight; y += 4) { // step by 4 for performance/pixelation
+                    for (let x = 0; x < imgWidth; x += 4) {
+                        const index = (y * imgWidth + x) * 4;
+                        const r = imageData.data[index];
+                        const g = imageData.data[index + 1];
+                        const b = imageData.data[index + 2];
+                        const a = imageData.data[index + 3];
+
+                        // Only create particles for non-white/non-transparent pixels (since 35.jpg might have a white bg)
+                        // Assuming the logo is dark/black, we filter out white pixels (r,g,b > 240)
+                        if (a > 128 && (r < 240 || g < 240 || b < 240)) { 
+                            particles.push({
+                                x: startX + x,
+                                y: startY + y,
+                                originX: startX + x,
+                                originY: startY + y,
+                                color: `rgb(${r},${g},${b})`,
+                                size: Math.random() * 3 + 2, // slightly varied block sizes
+                                vx: (Math.random() - 0.5) * 15, // horizontal spread
+                                vy: (Math.random() - 0.5) * 15 - 5, // slight upward bias initially
+                                alpha: 1,
+                                delay: Math.random() * 50 // stagger the explosion slightly
+                            });
+                        }
+                    }
+                }
+                imageLoaded = true;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw initial state (static pixels)
+                particles.forEach(p => {
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+
+                // Start sequence
+                setTimeout(() => {
+                    startDisintegration = true;
+                }, 1800); // Wait 1.8s before glitching
+            };
+
+            if (img.complete) {
+                setupImage();
+            } else {
+                img.onload = setupImage;
+            }
+
+            let frame = 0;
+            function animateSplash() {
+                if (!imageLoaded) {
+                    requestAnimationFrame(animateSplash);
+                    return;
+                }
+                
+                frame++;
+                
+                // clear with a slight trail
+                ctx.fillStyle = 'rgba(0,0,0,0.3)'; 
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                let allDead = true;
+
+                for (let i = 0; i < particles.length; i++) {
+                    let p = particles[i];
+                    
+                    if (startDisintegration && frame > p.delay) {
+                        // Apply movement
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.alpha -= 0.015; // fade out faster
+                        
+                        // Gravity
+                        p.vy += 0.4;
+                        // Air resistance
+                        p.vx *= 0.98;
+                    }
+
+                    if (p.alpha > 0) {
+                        allDead = false;
+                        ctx.globalAlpha = p.alpha;
+                        ctx.fillStyle = p.color;
+                        ctx.fillRect(p.x, p.y, p.size, p.size);
+                    }
+                }
+                ctx.globalAlpha = 1;
+
+                if (startDisintegration && allDead) {
+                    splashScreen.style.opacity = '0';
+                    mainContent.style.opacity = '1';
+                    setTimeout(() => {
+                        splashScreen.style.display = 'none';
+                    }, 1500);
+                } else {
+                    requestAnimationFrame(animateSplash);
+                }
+            }
+            animateSplash();
+
+            // --- 2. Parallax Star Field ---
+            const starContainer = document.getElementById('star-container');
+            
+            // Create 3 layers of stars
+            for(let i=1; i<=3; i++) {
+                let layer = document.createElement('div');
+                layer.className = 'star-layer';
+                
+                // Generate box-shadow string for stars
+                let shadows = [];
+                let numStars = i * 200; // 200, 400, 600 stars per layer
+                for(let j=0; j<numStars; j++) {
+                    let x = Math.floor(Math.random() * window.innerWidth * 2);
+                    let y = Math.floor(Math.random() * window.innerHeight * 2);
+                    
+                    // Add subtle colors to some stars for realism
+                    let colors = ['rgba(255,255,255,', 'rgba(200,220,255,', 'rgba(255,220,200,'];
+                    let color = colors[Math.floor(Math.random() * colors.length)];
+                    let opacity = (Math.random() * 0.8 + 0.2).toFixed(2);
+                    
+                    shadows.push(`${x}px ${y}px ${color}${opacity})`);
+                }
+                
+                let size = 4 - i; // layer 1 is 3px, layer 2 is 2px, layer 3 is 1px
+                layer.style.width = size + 'px';
+                layer.style.height = size + 'px';
+                layer.style.borderRadius = '50%';
+                layer.style.background = 'transparent';
+                layer.style.boxShadow = shadows.join(', ');
+                
+                // Animation duration: closer stars (layer 1) move faster
+                let duration = 60 + (i * 40); 
+                layer.style.animation = `moveStars ${duration}s linear infinite`;
+                
+                starContainer.appendChild(layer);
+            }
+            
+            // Mouse Parallax effect
+            let targetX = 0;
+            let targetY = 0;
+            let currentX = 0;
+            let currentY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                targetX = (e.clientX / window.innerWidth) - 0.5;
+                targetY = (e.clientY / window.innerHeight) - 0.5;
+            });
+
+            // Smooth parallax animation loop
+            function updateParallax() {
+                // Lerp towards target
+                currentX += (targetX - currentX) * 0.05;
+                currentY += (targetY - currentY) * 0.05;
+
+                const layers = document.querySelectorAll('.star-layer');
+                layers.forEach((layer, index) => {
+                    let depth = 3 - index;
+                    let moveX = currentX * depth * 30;
+                    let moveY = currentY * depth * 30;
+                    layer.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+                
+                requestAnimationFrame(updateParallax);
+            }
+            updateParallax();
+            
+            window.addEventListener('resize', () => {
+                if(splashScreen.style.display !== 'none') {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
