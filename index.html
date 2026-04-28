@@ -120,15 +120,15 @@
             transition: all 0.8s ease; display: flex; flex-direction: column; align-items: center;
         }
         .splash-logo { 
-            width: 220px; margin-bottom: 30px; 
+            width: 260px; max-width: 60vw; margin-bottom: 30px; 
             animation: pulseLogo 3s infinite alternate; 
-            filter: drop-shadow(0 0 20px rgba(25,118,255,0.25));
+            filter: drop-shadow(0 0 18px rgba(25,118,255,0.18));
             background: transparent;
             object-fit: contain; cursor: pointer;
         }
         .header-logo {
-            height: 32px; 
-            filter: invert(1) brightness(1.1);
+            height: 28px; 
+            filter: none;
             object-fit: contain;
         }
         .splash-catchphrase { font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 700; color: #F3F7FC; margin-bottom: 40px; letter-spacing: -0.02em; }
@@ -219,7 +219,7 @@
         <div class="door-panel door-left"></div>
         <div class="door-panel door-right"></div>
         <div class="splash-content">
-            <img class="splash-logo" src="sovr1n-logo.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Heavy Logistics">
+            <img class="splash-logo" src="34.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Heavy Logistics">
             <h1 class="splash-catchphrase">Logistics, Redefined.</h1>
             <button class="splash-skip" onclick="closeSplashScreen()">Skip Intro</button>
         </div>
@@ -229,7 +229,7 @@
     <header class="fixed top-0 inset-x-0 z-50 glass-header">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center gap-2">
-                <img src="sovr1n-logo.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Logo" class="header-logo">
+                <img src="34.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Logo" class="header-logo">
             </a>
             <nav class="hidden lg:flex items-center gap-8 text-[15px] font-medium text-textMuted">
                 <a href="#services" class="hover:text-primaryBlue transition-colors">Services</a>
