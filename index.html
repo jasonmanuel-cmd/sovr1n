@@ -119,17 +119,22 @@
             position: relative; z-index: 2; text-align: center;
             transition: all 0.8s ease; display: flex; flex-direction: column; align-items: center;
         }
-        .splash-logo { width: 180px; margin-bottom: 30px; animation: pulseLogo 3s infinite alternate; }
+        .splash-logo { 
+            width: 180px; margin-bottom: 30px; 
+            animation: pulseLogo 3s infinite alternate; 
+            filter: invert(1);
+        }
         .splash-catchphrase { font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 700; color: #F3F7FC; margin-bottom: 40px; letter-spacing: -0.02em; }
         .splash-skip {
             padding: 12px 32px; background: transparent; border: 1px solid rgba(173, 194, 220, 0.4);
             color: #A9B7CC; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            pointer-events: auto;
         }
         .splash-skip:hover { background: rgba(25, 118, 255, 0.1); border-color: #1976FF; color: #fff; }
         
         @keyframes pulseLogo {
-            0% { filter: drop-shadow(0 0 10px rgba(25, 118, 255, 0.2)); }
-            100% { filter: drop-shadow(0 0 30px rgba(25, 118, 255, 0.6)); }
+            0% { filter: invert(1) drop-shadow(0 0 10px rgba(25, 118, 255, 0.2)); }
+            100% { filter: invert(1) drop-shadow(0 0 30px rgba(25, 118, 255, 0.6)); }
         }
         
         /* Layout & Utilities */
@@ -807,13 +812,6 @@
                     header.classList.add('shadow-card');
                 } else {
                     header.classList.remove('shadow-card');
-                }
-            });
-            
-            window.addEventListener('resize', () => {
-                if(splashScreen.style.display !== 'none') {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
                 }
             });
         });
