@@ -1,1040 +1,1106 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sovr1n is premium local delivery for oversized purchases and business logistics. White-glove local delivery for furniture, bulk goods, restaurant orders, and vendor logistics.">
-    <meta name="keywords" content="oversized delivery, local logistics, same-day delivery, Facebook Marketplace delivery, OfferUp delivery, B2B delivery, restaurant delivery">
-    <title>Sovr1n | Premium Local Delivery & Logistics</title>
-    
-    <!-- Open Graph / SEO Optimization -->
-    <meta property="og:title" content="Sovr1n | Premium Local Delivery & Logistics">
-    <meta property="og:description" content="From marketplace finds to wholesale pickups — Sovr1n gets it home safely.">
-    <meta property="og:image" content="34.webp">
+    <meta name="description" content="Sourc'n — Local Markets & Commerce. Find services, drivers, load boards, and local deals in your city.">
+    <title>Sourc'n | Local Markets & Commerce</title>
+    <meta property="og:title" content="Sourc'n | Local Markets & Commerce">
+    <meta property="og:description" content="Bakersfield's local marketplace. Services, drivers, load boards, and deals — all nearby.">
     <meta property="og:type" content="website">
 
-    <!-- Schema Markup -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "Sovr1n Delivery",
-      "image": "34.webp",
-      "description": "White-glove local delivery for oversized purchases, bulk goods, and scheduled business runs.",
-      "areaServed": {
-        "@type": "GeoCircle",
-        "geoMidpoint": {
-          "@type": "GeoCoordinates",
-          "latitude": "36.1699",
-          "longitude": "-115.1398"
-        },
-        "geoRadius": "50000"
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What kinds of items do you deliver?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "We specialize in oversized, bulky, or fragile items that don't fit in a standard car. This includes furniture, large appliances, bulk restaurant supplies, and farmer's market event setups."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do you handle Facebook Marketplace pickups?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. If you buy a couch, dining set, or dresser online, we coordinate the pickup with the seller and deliver it safely to your door."
-          }
-        }
-      ]
-    }
-    </script>
+    <!-- Fonts: Clash Display (display) + Outfit (body) — NOT Inter -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700,500&f[]=outfit@400,500,600,700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    
     <script>
-      tailwind.config = {
+    tailwind.config = {
         theme: {
-          extend: {
-            colors: {
-              base: '#07111F',
-              surface: '#0D1728',
-              surface2: '#12203A',
-              textPrimary: '#F3F7FC',
-              textMuted: '#A9B7CC',
-              borderLight: 'rgba(173, 194, 220, 0.16)',
-              primaryBlue: '#1976FF',
-              primaryHover: '#0E63E6',
-              secondaryBlue: '#45B2FF',
-              highlightTint: '#D9ECFF',
-              accentAmber: '#F4A62A',
-              successGreen: '#2FBF71'
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              display: ['Satoshi', 'sans-serif']
-            },
-            boxShadow: {
-              'glow': '0 0 20px rgba(25, 118, 255, 0.3)',
-              'glow-hover': '0 0 30px rgba(25, 118, 255, 0.6)',
-              'card': '0 10px 30px -10px rgba(0,0,0,0.5)'
+            extend: {
+                colors: {
+                    base:      '#0A0A0A',
+                    surface:   '#111111',
+                    surface2:  '#1A1A1A',
+                    surface3:  '#222222',
+                    warm:      '#F5F0EB',
+                    muted:     '#8A8078',
+                    copper:    '#D4A574',
+                    copperDim: 'rgba(212,165,116,0.12)',
+                    sage:      '#7B9E87',
+                    sageDim:   'rgba(123,158,135,0.12)',
+                    rose:      '#C4786B',
+                    roseDim:   'rgba(196,120,107,0.12)',
+                    cream:     '#F5F0EB',
+                },
+                fontFamily: {
+                    display: ['Clash Display','sans-serif'],
+                    body:    ['Outfit','sans-serif'],
+                },
             }
-          }
         }
-      }
+    }
     </script>
-    <style>
-        body { background-color: #07111F; color: #F3F7FC; overflow-x: hidden; }
-        
-        /* Splash Screen */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 9999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; overflow: hidden;
-            pointer-events: all;
-        }
-        .door-panel {
-            position: absolute; top: 0; width: 50vw; height: 100%;
-            background: #07111F; transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
-            z-index: 1; border-right: 1px solid rgba(25,118,255,0.2);
-        }
-        .door-left { left: 0; border-right: 1px solid rgba(25,118,255,0.2); }
-        .door-right { right: 0; border-left: 1px solid rgba(25,118,255,0.2); }
-        
-        #splash-screen.doors-open .door-left { transform: translateX(-100%); }
-        #splash-screen.doors-open .door-right { transform: translateX(100%); }
-        #splash-screen.doors-open .splash-content { opacity: 0; transform: scale(0.9); pointer-events: none; }
-        
-        .splash-content {
-            position: relative; z-index: 2; text-align: center;
-            transition: all 0.8s ease; display: flex; flex-direction: column; align-items: center;
-        }
-        .splash-logo { 
-            width: 260px; max-width: 60vw; margin-bottom: 30px; 
-            animation: pulseLogo 3s infinite alternate; 
-            filter: drop-shadow(0 0 18px rgba(25,118,255,0.18));
-            background: transparent;
-            object-fit: contain; cursor: pointer;
-        }
-        .header-logo {
-            height: 28px; 
-            filter: none;
-            object-fit: contain;
-        }
-        .splash-catchphrase { font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 700; color: #F3F7FC; margin-bottom: 40px; letter-spacing: -0.02em; }
-        .splash-skip {
-            padding: 12px 32px; background: transparent; border: 1px solid rgba(173, 194, 220, 0.4);
-            color: #A9B7CC; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
-            pointer-events: auto;
-        }
-        .splash-skip:hover { background: rgba(25, 118, 255, 0.1); border-color: #1976FF; color: #fff; }
-        
-        @keyframes pulseLogo {
-            0% { filter: invert(1) drop-shadow(0 0 10px rgba(25, 118, 255, 0.2)); }
-            100% { filter: invert(1) drop-shadow(0 0 30px rgba(25, 118, 255, 0.6)); }
-        }
-        
-        /* Layout & Utilities */
-        .glass-header {
-            background: rgba(7, 17, 31, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(173, 194, 220, 0.16);
-            transition: all 0.3s ease;
-        }
-        .text-gradient {
-            background: linear-gradient(to right, #F3F7FC, #A9B7CC);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .btn-primary {
-            background-color: #1976FF; color: #ffffff;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-primary:hover {
-            background-color: #0E63E6;
-            box-shadow: 0 0 25px rgba(25, 118, 255, 0.5);
-            transform: translateY(-2px);
-        }
-        .card-surface {
-            background-color: #0D1728;
-            border: 1px solid rgba(173, 194, 220, 0.16);
-            transition: all 0.4s ease;
-        }
-        .card-surface:hover {
-            transform: translateY(-4px);
-            border-color: rgba(25, 118, 255, 0.3);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(25, 118, 255, 0.1);
-        }
-        
-        /* Modal Transitions */
-        .modal-overlay { opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { opacity: 0; transform: scale(0.95) translateY(10px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .modal-overlay.active .modal-content { opacity: 1; transform: scale(1) translateY(0); }
-        .step-panel { display: none; animation: fadeUp 0.4s ease forwards; }
-        .step-panel.active { display: block; }
-        .form-input { background-color: #0D1728; border: 1px solid rgba(173, 194, 220, 0.16); color: #F3F7FC; transition: all 0.3s; }
-        .form-input:focus { outline: none; border-color: #1976FF; box-shadow: 0 0 0 2px rgba(25, 118, 255, 0.2); }
-        .select-card { border: 1px solid rgba(173, 194, 220, 0.16); transition: all 0.3s; cursor: pointer; }
-        .select-card.selected { border-color: #1976FF; background-color: rgba(25, 118, 255, 0.1); }
 
-        /* Subtle Grid Pattern */
-        .bg-grid {
-            background-image: 
-                linear-gradient(rgba(173, 194, 220, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(173, 194, 220, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: center center;
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0A0A0A;
+            color: #F5F0EB;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        /* Animations */
+
+        /* ---- NOISE GRAIN OVERLAY ---- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* ---- GRADIENT MESH BACKGROUND ---- */
+        .mesh-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 600px 400px at 15% 20%, rgba(212,165,116,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 500px at 85% 70%, rgba(123,158,135,0.04) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 300px at 50% 90%, rgba(196,120,107,0.03) 0%, transparent 70%);
+        }
+
+        /* ---- TYPOGRAPHY ---- */
+        .font-display { font-family: 'Clash Display', sans-serif; }
+        .font-body { font-family: 'Outfit', sans-serif; }
+
+        /* ---- GLASS PANEL ---- */
+        .glass {
+            background: rgba(17,17,17,0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(245,240,235,0.06);
+        }
+
+        /* ---- CITY PILL ---- */
+        .city-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(245,240,235,0.04);
+            border: 1px solid rgba(245,240,235,0.08);
+            border-radius: 100px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            font-size: 13px;
+            font-weight: 600;
+            color: #F5F0EB;
+            letter-spacing: 0.01em;
+        }
+        .city-pill:hover {
+            background: rgba(212,165,116,0.08);
+            border-color: rgba(212,165,116,0.2);
+            transform: translateY(-1px);
+        }
+
+        /* ---- MODAL ---- */
+        .modal-bg {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 100;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        .modal-bg.open { opacity: 1; pointer-events: auto; }
+        .modal-panel {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #111111;
+            border-radius: 28px 28px 0 0;
+            z-index: 101;
+            transform: translateY(100%);
+            transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+            max-height: 85vh;
+            overflow-y: auto;
+            border-top: 1px solid rgba(245,240,235,0.06);
+        }
+        .modal-bg.open .modal-panel { transform: translateY(0); }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(245,240,235,0.06);
+            border: 1px solid rgba(245,240,235,0.08);
+            color: #F5F0EB; font-size: 20px; cursor: pointer;
+            display: grid; place-items: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: rgba(245,240,235,0.1); }
+
+        /* ---- SEARCH ---- */
+        .search-bar {
+            background: rgba(245,240,235,0.03);
+            border: 1px solid rgba(245,240,235,0.08);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #F5F0EB;
+            font-size: 15px;
+            font-family: 'Outfit', sans-serif;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .search-bar:focus {
+            border-color: rgba(212,165,116,0.3);
+            background: rgba(245,240,235,0.05);
+            box-shadow: 0 0 0 3px rgba(212,165,116,0.06);
+        }
+        .search-bar::placeholder { color: #5A5550; }
+
+        /* ---- ACTION BOXES ---- */
+        .action-box {
+            position: relative;
+            border-radius: 24px;
+            padding: 32px 28px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            border: 1px solid transparent;
+            min-height: 180px;
+            overflow: hidden;
+        }
+        .action-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .action-box:hover { transform: translateY(-6px); }
+        .action-box:hover::before { opacity: 1; }
+        .action-box:active { transform: translateY(-2px) scale(0.98); }
+
+        .action-box .box-icon {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: grid; place-items: center;
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+        .action-box:hover .box-icon { transform: scale(1.1) rotate(-3deg); }
+        .action-box .box-title {
+            font-family: 'Clash Display', sans-serif;
+            font-weight: 600;
+            font-size: 22px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        .action-box .box-sub {
+            font-size: 13px;
+            opacity: 0.6;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* Panel A — Sage (buyers/green) */
+        .box-panelA {
+            background: linear-gradient(135deg, rgba(123,158,135,0.08) 0%, rgba(123,158,135,0.02) 100%);
+            border-color: rgba(123,158,135,0.12);
+        }
+        .box-panelA::before { background: radial-gradient(circle at 30% 30%, rgba(123,158,135,0.1), transparent 70%); }
+        .box-panelA:hover { border-color: rgba(123,158,135,0.3); box-shadow: 0 20px 60px rgba(123,158,135,0.1); }
+        .box-panelA .box-icon { background: rgba(123,158,135,0.12); color: #7B9E87; }
+        .box-panelA .box-title { color: #7B9E87; }
+
+        /* Panel B — Copper (sellers/amber) */
+        .box-panelB {
+            background: linear-gradient(135deg, rgba(212,165,116,0.08) 0%, rgba(212,165,116,0.02) 100%);
+            border-color: rgba(212,165,116,0.12);
+        }
+        .box-panelB::before { background: radial-gradient(circle at 70% 30%, rgba(212,165,116,0.1), transparent 70%); }
+        .box-panelB:hover { border-color: rgba(212,165,116,0.3); box-shadow: 0 20px 60px rgba(212,165,116,0.1); }
+        .box-panelB .box-icon { background: rgba(212,165,116,0.12); color: #D4A574; }
+        .box-panelB .box-title { color: #D4A574; }
+
+        /* Standalone — Rose (actions) */
+        .box-standalone {
+            background: linear-gradient(135deg, rgba(196,120,107,0.08) 0%, rgba(196,120,107,0.02) 100%);
+            border-color: rgba(196,120,107,0.12);
+        }
+        .box-standalone::before { background: radial-gradient(circle at 50% 50%, rgba(196,120,107,0.1), transparent 70%); }
+        .box-standalone:hover { border-color: rgba(196,120,107,0.3); box-shadow: 0 20px 60px rgba(196,120,107,0.1); }
+        .box-standalone .box-icon { background: rgba(196,120,107,0.12); color: #C4786B; }
+        .box-standalone .box-title { color: #C4786B; }
+
+        /* ---- PANEL LABEL ---- */
+        .panel-label {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0.4;
+        }
+
+        /* ---- MODULE VIEWS ---- */
+        .module-view {
+            position: fixed; inset: 0;
+            background: #0A0A0A;
+            z-index: 90;
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+            overflow-y: auto;
+        }
+        .module-view.active { transform: translateX(0); }
+        .module-header {
+            position: sticky; top: 0; z-index: 5;
+            background: rgba(10,10,10,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(245,240,235,0.04);
+        }
+        .module-back {
+            width: 40px; height: 40px;
+            border-radius: 14px;
+            background: rgba(245,240,235,0.04);
+            border: 1px solid rgba(245,240,235,0.06);
+            color: #F5F0EB;
+            font-size: 18px;
+            cursor: pointer;
+            display: grid; place-items: center;
+            transition: all 0.2s;
+        }
+        .module-back:hover { background: rgba(245,240,235,0.08); }
+
+        /* ---- TRUST BADGES ---- */
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #7B9E87;
+            background: rgba(123,158,135,0.1);
+            padding: 4px 10px;
+            border-radius: 100px;
+            letter-spacing: 0.02em;
+        }
+        .badge-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #D4A574;
+        }
+
+        /* ---- LISTING CARDS ---- */
+        .listing-card {
+            background: #111111;
+            border: 1px solid rgba(245,240,235,0.04);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        .listing-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(245,240,235,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+        .listing-img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            background: rgba(245,240,235,0.02);
+        }
+
+        /* ---- LOAD ROW ---- */
+        .load-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: rgba(245,240,235,0.02);
+            border: 1px solid rgba(245,240,235,0.04);
+            border-radius: 18px;
+            transition: all 0.3s;
+        }
+        .load-row:hover {
+            border-color: rgba(245,240,235,0.1);
+            background: rgba(245,240,235,0.04);
+        }
+
+        /* ---- TREND CARD ---- */
+        .trend-card {
+            background: rgba(245,240,235,0.02);
+            border: 1px solid rgba(245,240,235,0.04);
+            border-radius: 18px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .trend-card:hover {
+            border-color: rgba(245,240,235,0.1);
+            background: rgba(245,240,235,0.04);
+        }
+
+        /* ---- CHAT ---- */
+        .chat-fab {
+            position: fixed;
+            bottom: 28px; right: 28px;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #D4A574, #C4786B);
+            color: #0A0A0A;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 80;
+            box-shadow: 0 8px 32px rgba(212,165,116,0.3);
+            display: grid; place-items: center;
+            transition: all 0.3s;
+        }
+        .chat-fab:hover { transform: scale(1.08); box-shadow: 0 12px 40px rgba(212,165,116,0.4); }
+        .chat-panel {
+            position: fixed;
+            bottom: 0; right: 0;
+            width: min(420px, 100vw);
+            height: min(540px, 82vh);
+            background: #111111;
+            border-radius: 24px 24px 0 0;
+            z-index: 81;
+            transform: translateY(100%);
+            transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(245,240,235,0.06);
+            border-bottom: none;
+        }
+        .chat-panel.open { transform: translateY(0); }
+        .chat-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid rgba(245,240,235,0.04);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .chat-messages {
+            flex: 1; overflow-y: auto;
+            padding: 18px 22px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .chat-msg {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .chat-msg.sent {
+            background: linear-gradient(135deg, #D4A574, #C4786B);
+            color: #0A0A0A;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+            font-weight: 500;
+        }
+        .chat-msg.received {
+            background: rgba(245,240,235,0.06);
+            color: #F5F0EB;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+        .chat-input-row {
+            display: flex; gap: 10px;
+            padding: 14px 18px;
+            border-top: 1px solid rgba(245,240,235,0.04);
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(245,240,235,0.04);
+            border: 1px solid rgba(245,240,235,0.06);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: #F5F0EB;
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input:focus { border-color: rgba(212,165,116,0.3); }
+        .chat-send {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #D4A574, #C4786B);
+            color: #0A0A0A;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: grid; place-items: center;
+            transition: all 0.2s;
+        }
+        .chat-send:hover { transform: scale(1.05); }
+
+        /* ---- CREATE BUTTONS ---- */
+        .create-cat-btn {
+            transition: all 0.25s;
+        }
+        .create-cat-btn:hover { transform: translateY(-2px); }
+
+        /* ---- FOOTER ---- */
+        .site-footer {
+            background: #0A0A0A;
+            border-top: 1px solid rgba(245,240,235,0.04);
+        }
+
+        /* ---- SCROLLBAR ---- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(245,240,235,0.08); border-radius: 3px; }
+
+        /* ---- ANIMATIONS ---- */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-up { animation: fadeUp 0.8s ease forwards; opacity: 0; }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .fade-up { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) forwards; opacity: 0; }
+        .fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; }
+        .slide-right { animation: slideRight 0.6s cubic-bezier(0.22,1,0.36,1) forwards; opacity: 0; }
+        .scale-in { animation: scaleIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards; opacity: 0; }
 
-        details > summary { list-style: none; }
-        details > summary::-webkit-details-marker { display: none; }
-        details[open] summary ~ * { animation: fadeUp 0.3s ease-in-out; }
-        details[open] .icon-rotate { transform: rotate(180deg); }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+        .delay-6 { animation-delay: 0.6s; }
+        .delay-7 { animation-delay: 0.7s; }
+
+        /* ---- DIAGONAL ACCENT LINE ---- */
+        .accent-line {
+            position: absolute;
+            width: 1px;
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, rgba(212,165,116,0.3), transparent);
+            transform: rotate(15deg);
+        }
     </style>
 </head>
-<body class="antialiased selection:bg-primaryBlue selection:text-white">
+<body>
 
-    <!-- Splash Screen -->
-    <div id="splash-screen">
-        <div class="door-panel door-left"></div>
-        <div class="door-panel door-right"></div>
-        <div class="splash-content">
-            <img class="splash-logo" src="34.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Heavy Logistics">
-            <h1 class="splash-catchphrase">Logistics, Redefined.</h1>
-            <button class="splash-skip" onclick="closeSplashScreen()">Skip Intro</button>
+<!-- MESH BACKGROUND -->
+<div class="mesh-bg"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="fixed top-0 inset-x-0 z-50 glass" style="border-bottom:1px solid rgba(245,240,235,0.04);">
+    <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+        <a href="#" class="flex items-center gap-3" onclick="closeAllModules(); return false;">
+            <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#D4A574,#C4786B);display:grid;place-items:center;">
+                <svg width="16" height="16" fill="none" stroke="#0A0A0A" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            </div>
+            <span class="font-display font-semibold text-lg tracking-tight" style="color:#F5F0EB;">Sourc'n</span>
+        </a>
+        <button class="city-pill" onclick="openCityModal()" id="city-pill-btn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <span id="city-name-display">Bakersfield</span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+    </div>
+</header>
+
+<!-- ============ CITY MODAL ============ -->
+<div class="modal-bg" id="city-modal" onclick="if(event.target===this)closeCityModal()">
+    <div class="modal-panel p-6 pt-10">
+        <button class="modal-close" onclick="closeCityModal()">&times;</button>
+        <h2 class="font-display font-semibold text-2xl mb-1" style="color:#F5F0EB;">Select your city</h2>
+        <p class="text-sm mb-6" style="color:#8A8078;">Browse local listings near you.</p>
+        <input type="text" class="search-bar mb-6" placeholder="Search cities..." id="city-search" oninput="filterCities()">
+        <div id="city-list"></div>
+    </div>
+</div>
+
+<!-- ============ MAIN ============ -->
+<main class="relative z-10 pt-28 pb-24 px-5 max-w-6xl mx-auto">
+
+    <!-- HERO -->
+    <div class="mb-14 fade-up" style="max-width:640px;">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style="background:rgba(212,165,116,0.08); border:1px solid rgba(212,165,116,0.15);">
+            <span style="width:6px;height:6px;border-radius:50%;background:#7B9E87;"></span>
+            <span class="text-xs font-semibold" style="color:#D4A574; letter-spacing:0.04em;">LOCAL MARKETS & COMMERCE</span>
+        </div>
+        <h1 class="font-display font-semibold text-4xl sm:text-5xl md:text-6xl leading-[1.05] mb-5" style="color:#F5F0EB; letter-spacing:-0.03em;">
+            Find what's<br>
+            <span style="background:linear-gradient(135deg,#D4A574,#C4786B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">nearby.</span>
+        </h1>
+        <p class="text-lg leading-relaxed mb-8" style="color:#8A8078; max-width:480px;">
+            Services, drivers, deals, and local work — all in your city. No algorithms. Just neighbors.
+        </p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="mb-14 fade-up delay-2" style="max-width:520px;">
+        <div class="relative">
+            <svg class="absolute left-5 top-1/2 -translate-y-1/2" width="18" height="18" fill="none" stroke="#5A5550" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" class="search-bar" style="padding-left:48px;" placeholder="Search for anything local..." id="main-search" onkeydown="if(event.key==='Enter')handleSearch()">
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="fixed top-0 inset-x-0 z-50 glass-header">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-2">
-                <img src="34.jpg" onerror="this.onerror=null; this.src='sovr1n-logo.svg'" alt="Sovr1n Logo" class="header-logo">
-            </a>
-            <nav class="hidden lg:flex items-center gap-8 text-[15px] font-medium text-textMuted">
-                <a href="#services" class="hover:text-primaryBlue transition-colors">Services</a>
-                <a href="#how-it-works" class="hover:text-primaryBlue transition-colors">How It Works</a>
-                <a href="#business" class="hover:text-primaryBlue transition-colors">Business Delivery</a>
-                <a href="#coverage" class="hover:text-primaryBlue transition-colors">Coverage</a>
-                <a href="#faq" class="hover:text-primaryBlue transition-colors">FAQ</a>
-            </nav>
-            <div class="flex items-center gap-5">
-                <a href="tel:+18001234567" class="hidden md:block text-sm font-semibold text-textPrimary hover:text-secondaryBlue transition-colors">Call or Text</a>
-                <div class="flex items-center gap-3">
-                    <a href="javascript:void(0)" onclick="openBookingModal()" class="btn-primary text-[15px] font-semibold px-6 py-2.5 rounded-lg flex items-center gap-2">
-                        Get Quote
-                    </a>
-                </div>
+    <!-- 6-BOX ACTION GRID -->
+    <div class="mb-16 fade-up delay-3">
+        <!-- Panel A -->
+        <p class="panel-label mb-4" style="color:#7B9E87;">For Buyers</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <div class="action-box box-panelA" onclick="openModule('services-buyer')">
+                <div class="box-icon">🛒</div>
+                <div class="box-title">Services</div>
+                <div class="box-sub">Find local pros — plumbing, lawn, cleaning, and more.</div>
+            </div>
+            <div class="action-box box-panelA" onclick="openModule('drivers')">
+                <div class="box-icon">🚛</div>
+                <div class="box-title">For Drivers</div>
+                <div class="box-sub">Browse delivery runs and gigs in your area.</div>
             </div>
         </div>
-        <!-- Trust micro-line -->
-        <div class="w-full bg-surface2 border-b border-borderLight text-center py-1.5 hidden md:block">
-            <p class="text-xs text-textMuted font-medium flex items-center justify-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-successGreen"></span> Same-day local delivery available in your area
-            </p>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="relative pt-36 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-base">
-        <div class="absolute inset-0 bg-grid opacity-30"></div>
-        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-primaryBlue opacity-[0.07] blur-[120px] rounded-full pointer-events-none"></div>
-        
-        <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-            
-            <!-- Left Copy -->
-            <div class="max-w-xl animate-fade-up">
-                <div class="inline-flex items-center gap-2 text-secondaryBlue text-sm font-bold uppercase tracking-wide mb-5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Local oversized delivery, done right
-                </div>
-                <h1 class="font-display font-black text-5xl lg:text-6xl leading-[1.05] text-textPrimary mb-6">
-                    From marketplace finds to wholesale pickups — <span class="text-primaryBlue">Sovr1n gets it home safely.</span>
-                </h1>
-                <p class="text-lg text-textMuted mb-10 leading-relaxed font-sans">
-                    White-glove local delivery for furniture, bulk goods, restaurant orders, and vendor logistics across your city.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 mb-10">
-                    <a href="javascript:void(0)" onclick="openBookingModal()" class="btn-primary text-center text-base font-bold px-8 py-4 rounded-xl flex-1 sm:flex-none">
-                        Get My Quote
-                    </a>
-                    <a href="#how-it-works" class="bg-surface border border-borderLight hover:bg-surface2 text-textPrimary text-center text-base font-semibold px-8 py-4 rounded-xl transition-colors flex-1 sm:flex-none">
-                        See How It Works
-                    </a>
-                </div>
-                
-                <!-- Trust Points -->
-                <div class="grid grid-cols-2 gap-4 text-sm font-medium text-textMuted">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Same-day options
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Large-item friendly
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Business scheduling
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-successGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Careful handling
-                    </div>
-                </div>
+        <!-- Panel B -->
+        <p class="panel-label mb-4" style="color:#D4A574;">For Sellers</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <div class="action-box box-panelB" onclick="openModule('service-providers')">
+                <div class="box-icon">🔧</div>
+                <div class="box-title">Service Providers</div>
+                <div class="box-sub">Offer your services to local buyers.</div>
             </div>
-            
-            <!-- Right Visual (Mock Booking/Operations Interface) -->
-            <div class="relative animate-fade-up delay-200">
-                <div class="bg-surface rounded-2xl border border-borderLight p-6 shadow-card relative z-10 backdrop-blur-sm">
-                    <div class="flex justify-between items-center mb-6 border-b border-borderLight pb-4">
-                        <h3 class="font-display font-bold text-lg text-textPrimary">Live Logistics Network</h3>
-                        <span class="px-2 py-1 bg-successGreen/10 text-successGreen text-xs font-bold rounded flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-successGreen animate-pulse"></span> Active
-                        </span>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <!-- Route Mock 1 -->
-                        <div class="bg-surface2 rounded-xl p-4 border border-borderLight flex items-start gap-4">
-                            <div class="mt-1 flex flex-col items-center">
-                                <div class="w-3 h-3 rounded-full bg-primaryBlue"></div>
-                                <div class="w-0.5 h-8 bg-borderLight my-1"></div>
-                                <div class="w-3 h-3 rounded-full bg-accentAmber"></div>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-xs font-semibold text-primaryBlue mb-1">Marketplace Pickup</p>
-                                <p class="text-sm font-bold text-textPrimary">Vintage Sectional Couch</p>
-                                <p class="text-xs text-textMuted mt-1">Est. arrival: 14 mins</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Route Mock 2 -->
-                        <div class="bg-surface2 rounded-xl p-4 border border-borderLight flex items-start gap-4">
-                            <div class="mt-1 flex flex-col items-center">
-                                <div class="w-3 h-3 rounded-full bg-primaryBlue"></div>
-                                <div class="w-0.5 h-8 bg-borderLight my-1"></div>
-                                <div class="w-3 h-3 rounded-full bg-successGreen"></div>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-xs font-semibold text-primaryBlue mb-1">Commercial Run</p>
-                                <p class="text-sm font-bold text-textPrimary">Farmers Market Stall Setup</p>
-                                <p class="text-xs text-textMuted mt-1">Status: Loading</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="action-box box-panelB" onclick="openModule('load-board')">
+                <div class="box-icon">📦</div>
+                <div class="box-title">Load Board</div>
+                <div class="box-sub">Post or find freight and hauling work.</div>
+            </div>
+        </div>
+
+        <!-- Standalone -->
+        <p class="panel-label mb-4" style="color:#C4786B;">Quick Actions</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="action-box box-standalone" onclick="openModule('create')">
+                <div class="box-icon">✏️</div>
+                <div class="box-title">Create</div>
+                <div class="box-sub">Post a listing, job, or service offer.</div>
+            </div>
+            <div class="action-box box-standalone" onclick="openModule('share')">
+                <div class="box-icon">🔗</div>
+                <div class="box-title">Share</div>
+                <div class="box-sub">Send Sourc'n to a friend or neighbor.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRENDING -->
+    <section class="mb-16 fade-up delay-4">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="font-display font-semibold text-xl" style="color:#F5F0EB;">Trending in <span id="trending-city-name">Bakersfield</span></h2>
+            <span class="text-xs font-semibold px-3 py-1.5 rounded-full" style="background:rgba(245,240,235,0.04); color:#8A8078; border:1px solid rgba(245,240,235,0.06);">Coming soon</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="trending-grid">
+            <div class="trend-card">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(123,158,135,0.1); color:#7B9E87;">Service</span>
+                    <span class="text-xs" style="color:#5A5550;">12 posts today</span>
                 </div>
-                
-                <!-- Decorative Elements -->
-                <div class="absolute -right-6 -bottom-6 bg-surface border border-borderLight p-4 rounded-xl shadow-lg z-20 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-primaryBlue/10 flex items-center justify-center text-primaryBlue">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-xs text-textMuted">Avg Response</p>
-                        <p class="font-display font-bold text-lg text-textPrimary">22 mins</p>
-                    </div>
+                <p class="font-display font-semibold text-base mb-1" style="color:#F5F0EB;">Moving & Hauling</p>
+                <p class="text-xs" style="color:#8A8078;">4 active providers near you</p>
+            </div>
+            <div class="trend-card">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(212,165,116,0.1); color:#D4A574;">Load</span>
+                    <span class="text-xs" style="color:#5A5550;">8 posts today</span>
                 </div>
+                <p class="font-display font-semibold text-base mb-1" style="color:#F5F0EB;">Furniture Delivery Runs</p>
+                <p class="text-xs" style="color:#8A8078;">3 drivers available now</p>
+            </div>
+            <div class="trend-card">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(196,120,107,0.1); color:#C4786B;">Marketplace</span>
+                    <span class="text-xs" style="color:#5A5550;">5 posts today</span>
+                </div>
+                <p class="font-display font-semibold text-base mb-1" style="color:#F5F0EB;">Used Appliances</p>
+                <p class="text-xs" style="color:#8A8078;">New listings just added</p>
             </div>
         </div>
     </section>
 
-        <!-- Splash control script -->
-        <script>
-            // Close the splash by animating the doors and then removing the element
-            function closeSplashScreen() {
-                const splash = document.getElementById('splash-screen');
-                if (!splash) return;
-                // add class to animate doors open
-                splash.classList.add('doors-open');
-                // after animation, remove the element so it no longer blocks interaction
-                setTimeout(() => {
-                    try { splash.parentNode && splash.parentNode.removeChild(splash); } catch (e) { splash.style.display = 'none'; }
-                }, 1400);
-                // remember user's preference (optional)
-                try { localStorage.setItem('sovr1n_splash_seen','1'); } catch(e){}
-            }
-
-            // Auto-open the doors shortly after load unless user already dismissed
-            function autoOpenSplash() {
-                const splash = document.getElementById('splash-screen');
-                if (!splash) return;
-                // if previously dismissed, remove immediately
-                try { if (localStorage.getItem('sovr1n_splash_seen') === '1') { splash.parentNode && splash.parentNode.removeChild(splash); return; } } catch(e){}
-                // Ensure the logo can be clicked to dismiss
-                const logo = splash.querySelector('.splash-logo');
-                if (logo) logo.addEventListener('click', closeSplashScreen);
-                // open doors after a short intro delay
-                setTimeout(() => { splash.classList.add('doors-open'); setTimeout(() => { try { splash.parentNode && splash.parentNode.removeChild(splash); } catch(e){splash.style.display='none'} }, 1400); }, 1700);
-            }
-
-            // Start behavior on page load
-            window.addEventListener('load', () => {
-                // Small delay to allow paint, then auto-open
-                setTimeout(autoOpenSplash, 120);
-            });
-        </script>
-
-    <!-- Trust Strip -->
-    <section class="border-y border-borderLight bg-surface py-8 relative z-20">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-wrap justify-center lg:justify-between items-center gap-8 text-center sm:text-left">
-                <div>
-                    <p class="font-display font-bold text-2xl text-textPrimary">5,000+</p>
-                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">Local Deliveries</p>
-                </div>
-                <div class="hidden sm:block w-px h-10 bg-borderLight"></div>
-                <div>
-                    <p class="font-display font-bold text-2xl text-textPrimary flex items-center justify-center sm:justify-start gap-1">
-                        4.9 <svg class="w-5 h-5 text-accentAmber" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                    </p>
-                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">Customer Rating</p>
-                </div>
-                <div class="hidden md:block w-px h-10 bg-borderLight"></div>
-                <div>
-                    <p class="font-display font-bold text-lg text-textPrimary">Oversized Specialists</p>
-                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">White-glove handling</p>
-                </div>
-                <div class="hidden lg:block w-px h-10 bg-borderLight"></div>
-                <div>
-                    <p class="font-display font-bold text-lg text-textPrimary">Local Vendor Logistics</p>
-                    <p class="text-xs text-textMuted uppercase tracking-wider font-semibold mt-1">Recurring reliable routes</p>
-                </div>
-            </div>
+    <!-- ZERO-RESULT HINT -->
+    <section class="fade-up delay-5">
+        <div class="rounded-2xl p-5 text-center" style="background:rgba(245,240,235,0.015); border:1px solid rgba(245,240,235,0.03);">
+            <p class="text-xs" style="color:#5A5550;">Can't find what you need? Searches with no results help us know what to add next.</p>
         </div>
     </section>
 
-    <!-- Services (Use-case Cards) -->
-    <section id="services" class="py-24 bg-base relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-16">
-                <h2 class="font-display font-bold text-4xl text-textPrimary mb-4">Specialized Local Transport</h2>
-                <p class="text-textMuted max-w-2xl text-lg">We don't just move boxes. We solve high-friction local logistics for consumers and businesses.</p>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer py-12 px-5">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
+        <div class="flex items-center gap-3">
+            <div style="width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#D4A574,#C4786B);display:grid;place-items:center;">
+                <svg width="12" height="12" fill="none" stroke="#0A0A0A" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
             </div>
-            
-            <div class="grid lg:grid-cols-12 gap-6">
-                <!-- Dominant Card -->
-                <div class="lg:col-span-8 card-surface rounded-2xl p-8 lg:p-10 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-primaryBlue opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-opacity"></div>
-                    <div class="relative z-10 flex flex-col h-full justify-between">
-                        <div>
-                            <div class="w-12 h-12 bg-primaryBlue/10 text-primaryBlue rounded-xl flex items-center justify-center mb-6">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-7h14l2 7M3 12v6h18v-6M3 12h18M7 18v2M17 18v2"></path></svg>
-                            </div>
-                            <h3 class="font-display font-bold text-3xl text-textPrimary mb-3">Marketplace Delivery</h3>
-                            <p class="text-textMuted text-lg max-w-xl mb-6">
-                                Found a couch, dining table, or appliance online? We coordinate pickup with the seller and bring it to your door without the truck rental headache.
-                            </p>
-                        </div>
-                        <ul class="space-y-2 text-sm text-textMuted">
-                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Seller coordination handled</li>
-                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Careful loading & blanketing</li>
-                            <li class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Direct-to-door delivery</li>
-                        </ul>
+            <span class="font-display font-semibold text-sm" style="color:#5A5550;">Sourc'n</span>
+        </div>
+        <div class="flex items-center gap-8 text-xs font-medium" style="color:#5A5550;">
+            <a href="#" class="hover:text-warm transition-colors">About</a>
+            <a href="#" class="hover:text-warm transition-colors">Safety</a>
+            <a href="#" class="hover:text-warm transition-colors">Privacy</a>
+            <a href="#" class="hover:text-warm transition-colors">Terms</a>
+            <a href="#" class="hover:text-warm transition-colors">Contact</a>
+        </div>
+    </div>
+</footer>
+
+<!-- ============ CHAT FAB ============ -->
+<button class="chat-fab" id="chat-fab" onclick="toggleChat()" title="Messages">
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+</button>
+
+<!-- ============ CHAT PANEL ============ -->
+<div class="chat-panel" id="chat-panel">
+    <div class="chat-header">
+        <div>
+            <div class="font-display font-semibold text-base" style="color:#F5F0EB;">Messages</div>
+            <div class="text-xs" style="color:#5A5550;">Local conversations</div>
+        </div>
+        <button class="module-back" onclick="toggleChat()">&times;</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg received">Hey! Is the couch still available?</div>
+        <div class="chat-msg sent">Yes — can you pick up this weekend?</div>
+        <div class="chat-msg received">Saturday works. What time?</div>
+    </div>
+    <div class="chat-input-row">
+        <input type="text" class="chat-input" placeholder="Type a message..." id="chat-input" onkeydown="if(event.key==='Enter')sendChatMsg()">
+        <button class="chat-send" onclick="sendChatMsg()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
+        </button>
+    </div>
+</div>
+
+<!-- ============ MODULE: SERVICES (BUYER) ============ -->
+<div class="module-view" id="mod-services-buyer">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="closeModule('services-buyer')">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Services near <span class="module-city">Bakersfield</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <input type="text" class="search-bar mb-6" placeholder="Search services..." oninput="handleModuleSearch(this, 'services-buyer')">
+        <div class="space-y-4" id="list-services-buyer">
+            <div class="listing-card">
+                <div class="listing-img" style="display:grid;place-items:center;font-size:40px;background:linear-gradient(135deg,rgba(123,158,135,0.06),rgba(123,158,135,0.01));">🧹</div>
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <h3 class="font-display font-semibold text-base" style="color:#F5F0EB;">Sparkle Clean Co.</h3>
+                        <span class="badge-verified"><svg width="10" height="10" fill="#7B9E87" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg> Verified</span>
+                    </div>
+                    <p class="text-sm mb-3" style="color:#8A8078;">Residential & commercial cleaning. Same-day availability.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="badge-rating"><svg width="12" height="12" fill="#D4A574" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 4.9</span>
+                        <span class="text-sm font-semibold" style="color:#7B9E87;">From $80</span>
                     </div>
                 </div>
-
-                <!-- Secondary Column -->
-                <div class="lg:col-span-4 flex flex-col gap-6">
-                    <div class="card-surface rounded-2xl p-6 flex-1 group">
-                        <div class="w-10 h-10 bg-successGreen/10 text-successGreen rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
-                        </div>
-                        <h3 class="font-display font-bold text-xl text-textPrimary mb-2">Farmers Market Logistics</h3>
-                        <p class="text-textMuted text-sm mb-4">
-                            Bulk produce, packaged goods, stalls, and end-of-day transport for vendors and buyers.
-                        </p>
-                        <p class="text-xs text-primaryBlue font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                            Learn more <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </p>
+            </div>
+            <div class="listing-card">
+                <div class="listing-img" style="display:grid;place-items:center;font-size:40px;background:linear-gradient(135deg,rgba(123,158,135,0.06),rgba(123,158,135,0.01));">🔧</div>
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <h3 class="font-display font-semibold text-base" style="color:#F5F0EB;">Valley Plumbing Pros</h3>
+                        <span class="badge-verified"><svg width="10" height="10" fill="#7B9E87" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg> Verified</span>
                     </div>
-                    
-                    <div class="card-surface rounded-2xl p-6 flex-1 group">
-                        <div class="w-10 h-10 bg-accentAmber/10 text-accentAmber rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path></svg>
-                        </div>
-                        <h3 class="font-display font-bold text-xl text-textPrimary mb-2">Restaurant & Catering</h3>
-                        <p class="text-textMuted text-sm mb-4">
-                            Large food runs with timing discipline and temperature-aware handling.
-                        </p>
-                        <p class="text-xs text-primaryBlue font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                            Learn more <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </p>
+                    <p class="text-sm mb-3" style="color:#8A8078;">Licensed plumber. Emergency calls available.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="badge-rating"><svg width="12" height="12" fill="#D4A574" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 4.8</span>
+                        <span class="text-sm font-semibold" style="color:#7B9E87;">From $120</span>
+                    </div>
+                </div>
+            </div>
+            <div class="listing-card">
+                <div class="listing-img" style="display:grid;place-items:center;font-size:40px;background:linear-gradient(135deg,rgba(123,158,135,0.06),rgba(123,158,135,0.01));">🌿</div>
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <h3 class="font-display font-semibold text-base" style="color:#F5F0EB;">Green Thumb Landscaping</h3>
+                    </div>
+                    <p class="text-sm mb-3" style="color:#8A8078;">Lawn care, irrigation, and hardscape installs.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="badge-rating"><svg width="12" height="12" fill="#D4A574" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 4.7</span>
+                        <span class="text-sm font-semibold" style="color:#7B9E87;">From $50</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- How It Works (Timeline) -->
-    <section id="how-it-works" class="py-24 bg-surface border-y border-borderLight relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="font-display font-bold text-4xl text-textPrimary mb-4">Operational Precision</h2>
-                <p class="text-textMuted">Four steps from confirmation to your front door.</p>
+<!-- ============ MODULE: DRIVERS ============ -->
+<div class="module-view" id="mod-drivers">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="closeModule('drivers')">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Driver Gigs near <span class="module-city">Bakersfield</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <input type="text" class="search-bar mb-6" placeholder="Search gigs..." oninput="handleModuleSearch(this, 'drivers')">
+        <div class="space-y-3" id="list-drivers">
+            <div class="load-row">
+                <div style="width:48px;height:48px;border-radius:14px;background:rgba(123,158,135,0.1);display:grid;place-items:center;font-size:20px;">🛋️</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display font-semibold text-sm truncate" style="color:#F5F0EB;">Couch pickup — Oak St to 24th St</p>
+                    <p class="text-xs mt-0.5" style="color:#8A8078;">Est. $35 payout · 4.2 mi</p>
+                </div>
+                <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(123,158,135,0.1); color:#7B9E87;">Open</span>
             </div>
-            
-            <div class="relative">
-                <!-- Desktop Line -->
-                <div class="hidden md:block absolute top-6 left-0 w-full h-px bg-borderLight"></div>
-                <div class="hidden md:block absolute top-6 left-0 w-1/3 h-px bg-primaryBlue shadow-[0_0_10px_rgba(25,118,255,0.8)]"></div>
-                
-                <div class="grid md:grid-cols-4 gap-8 relative z-10">
-                    <!-- Step 1 -->
-                    <div class="relative pt-4 md:pt-0">
-                        <div class="w-12 h-12 rounded-full bg-base border-2 border-primaryBlue flex items-center justify-center text-primaryBlue font-bold mb-6 mx-auto md:mx-0 shadow-glow">
-                            1
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Request a quote</h4>
-                            <p class="text-sm text-textMuted">Share the item details, dimensions, pickup point, and delivery address.</p>
-                        </div>
+            <div class="load-row">
+                <div style="width:48px;height:48px;border-radius:14px;background:rgba(212,165,116,0.1);display:grid;place-items:center;font-size:20px;">📦</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display font-semibold text-sm truncate" style="color:#F5F0EB;">Appliance delivery — Home Depot to Rosedale</p>
+                    <p class="text-xs mt-0.5" style="color:#8A8078;">Est. $50 payout · 8.1 mi</p>
+                </div>
+                <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(212,165,116,0.1); color:#D4A574;">Urgent</span>
+            </div>
+            <div class="load-row">
+                <div style="width:48px;height:48px;border-radius:14px;background:rgba(196,120,107,0.1);display:grid;place-items:center;font-size:20px;">🍎</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display font-semibold text-sm truncate" style="color:#F5F0EB;">Farmers market produce run — 4 stops</p>
+                    <p class="text-xs mt-0.5" style="color:#8A8078;">Est. $65 payout · 12.5 mi</p>
+                </div>
+                <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(196,120,107,0.1); color:#C4786B;">Scheduled</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MODULE: SERVICE PROVIDERS ============ -->
+<div class="module-view" id="mod-service-providers">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="closeModule('service-providers')">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Service Providers</h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(212,165,116,0.06),rgba(196,120,107,0.03)); border:1px solid rgba(212,165,116,0.1);">
+            <p class="font-display font-semibold text-lg mb-2" style="color:#D4A574;">List your service on Sourc'n</p>
+            <p class="text-sm mb-5" style="color:#8A8078;">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees — 10% per completed job.</p>
+            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;" onclick="openModule('create')">Get Started</button>
+        </div>
+        <input type="text" class="search-bar mb-6" placeholder="Browse providers..." oninput="handleModuleSearch(this, 'service-providers')">
+        <div class="space-y-4" id="list-service-providers">
+            <div class="listing-card">
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <h3 class="font-display font-semibold text-base" style="color:#F5F0EB;">Mike's Electric</h3>
+                        <span class="badge-verified"><svg width="10" height="10" fill="#7B9E87" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg> Verified</span>
                     </div>
-                    <!-- Step 2 -->
-                    <div class="relative pt-4 md:pt-0">
-                        <div class="w-12 h-12 rounded-full bg-surface2 border-2 border-borderLight flex items-center justify-center text-textMuted font-bold mb-6 mx-auto md:mx-0">
-                            2
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Confirm details</h4>
-                            <p class="text-sm text-textMuted">We confirm timing, access details (stairs, elevators), and handling requirements.</p>
-                        </div>
+                    <p class="text-sm mb-3" style="color:#8A8078;">Licensed electrician. Residential rewiring, panel upgrades, EV charger installs.</p>
+                    <div class="flex items-center gap-3">
+                        <span class="badge-rating"><svg width="12" height="12" fill="#D4A574" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 5.0</span>
+                        <span class="text-xs" style="color:#8A8078;">23 reviews</span>
                     </div>
-                    <!-- Step 3 -->
-                    <div class="relative pt-4 md:pt-0">
-                        <div class="w-12 h-12 rounded-full bg-surface2 border-2 border-borderLight flex items-center justify-center text-textMuted font-bold mb-6 mx-auto md:mx-0">
-                            3
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Collection & Transport</h4>
-                            <p class="text-sm text-textMuted">Our team manages pickup and transport with route-aware coordination.</p>
-                        </div>
+                </div>
+            </div>
+            <div class="listing-card">
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <h3 class="font-display font-semibold text-base" style="color:#F5F0EB;">ABQ Auto Detail</h3>
                     </div>
-                    <!-- Step 4 -->
-                    <div class="relative pt-4 md:pt-0">
-                        <div class="w-12 h-12 rounded-full bg-surface2 border-2 border-borderLight flex items-center justify-center text-textMuted font-bold mb-6 mx-auto md:mx-0">
-                            4
-                        </div>
-                        <div class="text-center md:text-left">
-                            <h4 class="font-display font-bold text-lg text-textPrimary mb-2">Order arrives</h4>
-                            <p class="text-sm text-textMuted">Delivery completed with door-to-door care and photo confirmation.</p>
-                        </div>
+                    <p class="text-sm mb-3" style="color:#8A8078;">Mobile detailing. Interior, exterior, ceramic coating. We come to you.</p>
+                    <div class="flex items-center gap-3">
+                        <span class="badge-rating"><svg width="12" height="12" fill="#D4A574" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 4.6</span>
+                        <span class="text-xs" style="color:#8A8078;">11 reviews</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- Why Sovr1n -->
-    <section class="py-24 bg-base">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div>
-                    <h2 class="font-display font-bold text-4xl text-textPrimary mb-6">Why local logistics require a specialist.</h2>
-                    <p class="text-lg text-textMuted mb-8">We reframe delivery from random gig help into specialized, reliable local logistics.</p>
-                    <a href="javascript:void(0)" onclick="openBookingModal()" class="text-primaryBlue font-semibold flex items-center gap-2 hover:text-secondaryBlue transition-colors">
-                        Get started with Sovr1n <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </a>
+<!-- ============ MODULE: LOAD BOARD ============ -->
+<div class="module-view" id="mod-load-board">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="closeModule('load-board')">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Load Board</h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="flex gap-3 mb-6">
+            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(212,165,116,0.1); color:#D4A574; border:1px solid rgba(212,165,116,0.15);">Browse Loads</button>
+            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(245,240,235,0.03); color:#8A8078; border:1px solid rgba(245,240,235,0.06);" onclick="openModule('create')">Post a Load</button>
+        </div>
+        <input type="text" class="search-bar mb-6" placeholder="Search loads..." oninput="handleModuleSearch(this, 'load-board')">
+        <div class="space-y-3" id="list-load-board">
+            <div class="load-row">
+                <div style="width:48px;height:48px;border-radius:14px;background:rgba(212,165,116,0.1);display:grid;place-items:center;font-size:20px;">🪑</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display font-semibold text-sm truncate" style="color:#F5F0EB;">Dining set — 6 chairs + table</p>
+                    <p class="text-xs mt-0.5" style="color:#8A8078;">Bakersfield → Tehachapi · Est. $75</p>
                 </div>
-                
-                <div class="grid sm:grid-cols-2 gap-6">
-                    <div class="card-surface p-6 rounded-xl">
-                        <h4 class="font-bold text-textPrimary mb-2 text-lg">Built for oversized items</h4>
-                        <p class="text-sm text-textMuted">Furniture, bulky orders, vendor loads, and awkward pickups are the job, not the exception.</p>
-                    </div>
-                    <div class="card-surface p-6 rounded-xl">
-                        <h4 class="font-bold text-textPrimary mb-2 text-lg">White-glove care</h4>
-                        <p class="text-sm text-textMuted">Careful loading, secure transport, and a more professional customer experience than informal hauling.</p>
-                    </div>
-                    <div class="card-surface p-6 rounded-xl">
-                        <h4 class="font-bold text-textPrimary mb-2 text-lg">Local business friendly</h4>
-                        <p class="text-sm text-textMuted">Reliable recurring support for restaurants, markets, and neighborhood businesses.</p>
-                    </div>
-                    <div class="card-surface p-6 rounded-xl">
-                        <h4 class="font-bold text-textPrimary mb-2 text-lg">Flexible scheduling</h4>
-                        <p class="text-sm text-textMuted">Faster coordination than national freight and less friction than renting a truck yourself.</p>
-                    </div>
+                <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(123,158,135,0.1); color:#7B9E87;">Open</span>
+            </div>
+            <div class="load-row">
+                <div style="width:48px;height:48px;border-radius:14px;background:rgba(212,165,116,0.1);display:grid;place-items:center;font-size:20px;">🧊</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display font-semibold text-sm truncate" style="color:#F5F0EB;">Commercial fridge — needs 2 people</p>
+                    <p class="text-xs mt-0.5" style="color:#8A8078;">Home Depot → Chester Ave · Est. $90</p>
                 </div>
+                <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(212,165,116,0.1); color:#D4A574;">Urgent</span>
+            </div>
+            <div class="load-row">
+                <div style="width:48px;height:48px;border-radius:14px;background:rgba(196,120,107,0.1);display:grid;place-items:center;font-size:20px;">🏗️</div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-display font-semibold text-sm truncate" style="color:#F5F0EB;">Pallet of tile — 1200 lbs</p>
+                    <p class="text-xs mt-0.5" style="color:#8A8078;">Lowe's → Rosedale · Est. $110</p>
+                </div>
+                <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(196,120,107,0.1); color:#C4786B;">Scheduled</span>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- For Businesses -->
-    <section id="business" class="py-24 bg-surface2 border-y border-borderLight relative overflow-hidden">
-        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#1976FF 1px, transparent 1px); background-size: 30px 30px;"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="max-w-3xl mb-16">
-                <div class="inline-flex items-center gap-2 bg-surface border border-borderLight px-3 py-1 rounded-full text-xs font-bold text-textMuted tracking-wider uppercase mb-4">
-                    B2B Operations
-                </div>
-                <h2 class="font-display font-bold text-4xl md:text-5xl text-textPrimary mb-6">Delivery support for businesses that outgrow basic couriers.</h2>
-                <p class="text-xl text-textMuted">Stop managing ad-hoc deliveries. Sovr1n provides recurring, scheduled logistics that scale with your local operations.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8 mb-12">
-                <div class="bg-base/50 backdrop-blur border border-borderLight p-6 rounded-xl">
-                    <h4 class="font-bold text-textPrimary mb-2">Restaurants & Caterers</h4>
-                    <p class="text-sm text-textMuted">Handling large-volume catering orders that require timing precision and specialized space.</p>
-                </div>
-                <div class="bg-base/50 backdrop-blur border border-borderLight p-6 rounded-xl">
-                    <h4 class="font-bold text-textPrimary mb-2">Market Vendors</h4>
-                    <p class="text-sm text-textMuted">Recurring transport of inventory, tents, and supplies to and from weekend markets.</p>
-                </div>
-                <div class="bg-base/50 backdrop-blur border border-borderLight p-6 rounded-xl">
-                    <h4 class="font-bold text-textPrimary mb-2">Local Retailers</h4>
-                    <p class="text-sm text-textMuted">Fulfillment for oversized items purchased in-store, ensuring professional customer handoffs.</p>
-                </div>
-            </div>
-            
-            <div class="flex flex-wrap gap-4 text-sm font-medium text-textPrimary">
-                <span class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Recurring scheduling</span>
-                <span class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Flexible fulfillment</span>
-                <span class="flex items-center gap-2"><svg class="w-4 h-4 text-primaryBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Branded professionalism</span>
-            </div>
-            
-            <div class="mt-12">
-                <a href="javascript:void(0)" onclick="openBookingModal()" class="bg-white text-base font-bold px-8 py-3 rounded-lg hover:bg-gray-200 transition-colors">
-                    Talk About Business Delivery
-                </a>
-            </div>
+<!-- ============ MODULE: CREATE ============ -->
+<div class="module-view" id="mod-create">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="closeModule('create')">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Create a Listing</h2>
         </div>
-    </section>
-
-    <!-- Coverage Area -->
-    <section id="coverage" class="py-24 bg-base">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="space-y-5">
             <div>
-                <h2 class="font-display font-bold text-4xl text-textPrimary mb-6">Service Area & Operations</h2>
-                <p class="text-textMuted mb-6">We operate extensive routes across the greater metropolitan area, providing rapid response and scheduled runs.</p>
-                
-                <ul class="space-y-4 mb-8 text-sm">
-                    <li class="flex items-start gap-3">
-                        <div class="w-6 h-6 rounded bg-surface2 border border-borderLight flex items-center justify-center text-primaryBlue shrink-0 mt-0.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-                        <div>
-                            <p class="font-bold text-textPrimary">Delivery Windows</p>
-                            <p class="text-textMuted">Same-day available if booked before 2 PM. Scheduled delivery 7 days a week.</p>
-                        </div>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <div class="w-6 h-6 rounded bg-surface2 border border-borderLight flex items-center justify-center text-primaryBlue shrink-0 mt-0.5"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-                        <div>
-                            <p class="font-bold text-textPrimary">Item Acceptance</p>
-                            <p class="text-textMuted">Furniture, appliances, boxed inventory, pallets. (Hazardous materials excluded).</p>
-                        </div>
-                    </li>
-                </ul>
-                <p class="text-sm text-textMuted italic">Need a custom route outside standard zones? <a href="#contact" class="text-primaryBlue hover:underline">Contact us</a>.</p>
-            </div>
-            
-            <div class="bg-surface2 rounded-2xl border border-borderLight p-2 relative">
-                <!-- Abstract Map Graphic -->
-                <div class="aspect-video bg-base rounded-xl overflow-hidden relative border border-borderLight">
-                    <div class="absolute inset-0 bg-grid opacity-50"></div>
-                    <!-- Nodes -->
-                    <div class="absolute top-[30%] left-[20%] w-4 h-4 bg-primaryBlue rounded-full shadow-[0_0_15px_#1976FF]"></div>
-                    <div class="absolute top-[60%] left-[40%] w-3 h-3 bg-secondaryBlue rounded-full"></div>
-                    <div class="absolute top-[40%] left-[70%] w-3 h-3 bg-accentAmber rounded-full"></div>
-                    <!-- Lines -->
-                    <svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-                        <path d="M 20 30 L 40 60 L 70 40" fill="none" stroke="rgba(25, 118, 255, 0.4)" stroke-width="2" stroke-dasharray="2 2"></path>
-                    </svg>
-                    <!-- Overlay label -->
-                    <div class="absolute bottom-4 left-4 bg-surface/90 backdrop-blur border border-borderLight px-3 py-1.5 rounded-lg text-xs font-bold text-textPrimary">
-                        Active Local Zones
-                    </div>
+                <label class="text-xs font-bold mb-2 block" style="color:#8A8078; letter-spacing:0.04em;">CATEGORY</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="create-cat-btn text-sm font-semibold py-4 rounded-xl border" style="background:rgba(123,158,135,0.06); border-color:rgba(123,158,135,0.15); color:#7B9E87;" onclick="selectCat(this)">Service Offer</button>
+                    <button class="create-cat-btn text-sm font-semibold py-4 rounded-xl border" style="background:rgba(212,165,116,0.06); border-color:rgba(212,165,116,0.15); color:#D4A574;" onclick="selectCat(this)">Load / Delivery</button>
+                    <button class="create-cat-btn text-sm font-semibold py-4 rounded-xl border" style="background:rgba(196,120,107,0.06); border-color:rgba(196,120,107,0.15); color:#C4786B;" onclick="selectCat(this)">Item for Sale</button>
+                    <button class="create-cat-btn text-sm font-semibold py-4 rounded-xl border" style="background:rgba(245,240,235,0.02); border-color:rgba(245,240,235,0.06); color:#8A8078;" onclick="selectCat(this)">Request</button>
                 </div>
             </div>
+            <div>
+                <label class="text-xs font-bold mb-2 block" style="color:#8A8078; letter-spacing:0.04em;">TITLE</label>
+                <input type="text" class="search-bar" placeholder="e.g. Moving help needed Saturday" id="create-title">
+            </div>
+            <div>
+                <label class="text-xs font-bold mb-2 block" style="color:#8A8078; letter-spacing:0.04em;">DESCRIPTION</label>
+                <textarea class="search-bar" rows="4" placeholder="Details, location, timing..." id="create-desc" style="resize:vertical;"></textarea>
+            </div>
+            <div>
+                <label class="text-xs font-bold mb-2 block" style="color:#8A8078; letter-spacing:0.04em;">PRICE / PAYOUT</label>
+                <input type="text" class="search-bar" placeholder="$0" id="create-price">
+            </div>
+            <button class="w-full text-sm font-bold py-4 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;" onclick="submitListing()">Post Listing</button>
+            <p class="text-xs text-center" style="color:#5A5550;">Platform fee: 10% on completed transactions.</p>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- Testimonials -->
-    <section class="py-24 bg-surface border-t border-borderLight">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="font-display font-bold text-3xl text-textPrimary mb-12 text-center">Trusted locally.</h2>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="card-surface p-8 rounded-2xl">
-                    <div class="flex text-accentAmber mb-4">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                    </div>
-                    <p class="text-textPrimary italic text-sm mb-6">"Picked up our marketplace sectional same day and got it upstairs without damage. Way easier than renting a truck."</p>
-                    <div>
-                        <p class="font-bold text-textPrimary text-sm">Sarah J.</p>
-                        <p class="text-xs text-textMuted">Marketplace Buyer</p>
-                    </div>
-                </div>
-                
-                <div class="card-surface p-8 rounded-2xl">
-                    <div class="flex text-accentAmber mb-4">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                    </div>
-                    <p class="text-textPrimary italic text-sm mb-6">"Reliable enough to use for our recurring weekend vendor transport. We don't worry about logistics anymore."</p>
-                    <div>
-                        <p class="font-bold text-textPrimary text-sm">Marcus D.</p>
-                        <p class="text-xs text-textMuted">Local Vendor</p>
-                    </div>
-                </div>
-                
-                <div class="card-surface p-8 rounded-2xl">
-                    <div class="flex text-accentAmber mb-4">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                    </div>
-                    <p class="text-textPrimary italic text-sm mb-6">"Saved us during a large catering run. The timing was perfect and everything arrived intact."</p>
-                    <div>
-                        <p class="font-bold text-textPrimary text-sm">Elena R.</p>
-                        <p class="text-xs text-textMuted">Catering Manager</p>
-                    </div>
-                </div>
-            </div>
+<!-- ============ MODULE: SHARE ============ -->
+<div class="module-view" id="mod-share">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="closeModule('share')">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Share Sourc'n</h2>
         </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="py-24 bg-base border-t border-borderLight">
-        <div class="max-w-3xl mx-auto px-6">
-            <h2 class="font-display font-bold text-3xl text-textPrimary mb-10 text-center">Frequently Asked Questions</h2>
-            
-            <div class="space-y-4">
-                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
-                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
-                        What kinds of items do you deliver?
-                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </summary>
-                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
-                        We specialize in oversized, bulky, or fragile items that don't fit in a standard car. This includes furniture, large appliances, bulk restaurant supplies, and event setups.
-                    </div>
-                </details>
-                
-                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
-                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
-                        Do you handle Facebook Marketplace pickups?
-                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </summary>
-                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
-                        Yes. If you buy a couch, dining set, or dresser online, we coordinate the pickup with the seller and deliver it safely to your door.
-                    </div>
-                </details>
-
-                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
-                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
-                        Can you help local businesses on a recurring basis?
-                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </summary>
-                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
-                        Absolutely. We offer scheduled routes for restaurants, caterers, farmers market vendors, and local retailers to handle their specific logistical needs.
-                    </div>
-                </details>
-
-                <details class="bg-surface rounded-xl border border-borderLight overflow-hidden group">
-                    <summary class="p-6 font-semibold text-textPrimary cursor-pointer flex justify-between items-center hover:bg-surface2 transition-colors">
-                        How does pricing work?
-                        <svg class="w-5 h-5 text-textMuted icon-rotate transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </summary>
-                    <div class="p-6 pt-0 text-sm text-textMuted border-t border-borderLight mt-2">
-                        Pricing is based on distance, item size, and handling requirements (e.g., stairs). You'll receive a clear, upfront quote before booking.
-                    </div>
-                </details>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section id="quote" class="py-24 bg-surface2 border-y border-borderLight">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="font-display font-bold text-4xl md:text-5xl text-textPrimary mb-6">Need help moving something big?</h2>
-            <p class="text-lg text-textMuted mb-10">Stop borrowing trucks. Book a professional local delivery in minutes.</p>
-            <a href="javascript:void(0)" onclick="openBookingModal()" class="btn-primary inline-block text-lg font-bold px-12 py-5 rounded-xl shadow-glow">
-                Get a Quote
-            </a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-base pt-16 pb-8 border-t border-borderLight">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid md:grid-cols-4 gap-10 mb-16">
-                <div class="md:col-span-1">
-                    <img src="34.webp" alt="Sovr1n Logo" class="h-8 object-contain mb-4">
-                    <p class="text-sm text-textMuted leading-relaxed">
-                        Premium local delivery for oversized purchases and business logistics.
-                    </p>
-                </div>
-                
-                <div>
-                    <h4 class="font-bold text-textPrimary mb-4">Services</h4>
-                    <ul class="space-y-2 text-sm text-textMuted">
-                        <li><a href="#" class="hover:text-primaryBlue">Marketplace Delivery</a></li>
-                        <li><a href="#" class="hover:text-primaryBlue">B2B Logistics</a></li>
-                        <li><a href="#" class="hover:text-primaryBlue">Farmers Markets</a></li>
-                        <li><a href="#" class="hover:text-primaryBlue">Restaurant Runs</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-bold text-textPrimary mb-4">Operations</h4>
-                    <ul class="space-y-2 text-sm text-textMuted">
-                        <li><a href="#how-it-works" class="hover:text-primaryBlue">How it Works</a></li>
-                        <li><a href="#coverage" class="hover:text-primaryBlue">Service Area</a></li>
-                        <li><a href="#faq" class="hover:text-primaryBlue">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-bold text-textPrimary mb-4">Contact</h4>
-                    <ul class="space-y-2 text-sm text-textMuted">
-                        <li><a href="javascript:void(0)" onclick="openBookingModal()" class="hover:text-primaryBlue">Get a Quote</a></li>
-                        <li><a href="javascript:void(0)" onclick="openBookingModal()" class="hover:text-primaryBlue">Business Inquiry</a></li>
-                        <li><a href="tel:+18001234567" class="hover:text-primaryBlue">1-800-123-4567</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="pt-8 border-t border-borderLight flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-textMuted">
-                <p>&copy; 2026 Sovr1n Logistics. All rights reserved.</p>
-                <div class="flex gap-4">
-                    <a href="#" class="hover:text-textPrimary">Privacy Policy</a>
-                    <a href="#" class="hover:text-textPrimary">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script>
-        function closeSplashScreen() {
-            const splash = document.getElementById('splash-screen');
-            splash.classList.add('doors-open');
-            setTimeout(() => {
-                splash.style.pointerEvents = 'none';
-            }, 1500);
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            // Auto open doors after 3 seconds
-            setTimeout(() => {
-                closeSplashScreen();
-            }, 3000);
-            
-            // Header scroll effect
-            const header = document.querySelector('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 10) {
-                    header.classList.add('shadow-card');
-                } else {
-                    header.classList.remove('shadow-card');
-                }
-            });
-        });
-            
-            // Booking Modal Logic
-            window.openBookingModal = () => {
-                document.getElementById('booking-modal').classList.add('active');
-                document.body.style.overflow = 'hidden';
-            };
-            window.closeBookingModal = () => {
-                document.getElementById('booking-modal').classList.remove('active');
-                document.body.style.overflow = '';
-                setTimeout(() => { goToStep(1); }, 300);
-            };
-            
-            window.goToStep = (step) => {
-                document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('step-' + step).classList.add('active');
-                
-                // Update dots
-                document.querySelectorAll('.step-dot').forEach((d, idx) => {
-                    if (idx < step) d.classList.add('bg-primaryBlue');
-                    else d.classList.remove('bg-primaryBlue');
-                    
-                    if (idx === step - 1) d.classList.remove('opacity-50');
-                    else d.classList.add('opacity-50');
-                });
-            };
-
-            window.selectCategory = (elem) => {
-                document.querySelectorAll('.select-card').forEach(c => c.classList.remove('selected'));
-                elem.classList.add('selected');
-            };
-            
-            window.submitDemoForm = () => {
-                const btn = document.getElementById('submit-btn');
-                btn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
-                setTimeout(() => {
-                    goToStep(4);
-                    btn.innerHTML = 'Complete Booking';
-                }, 1500);
-            };
-        });
-    </script>
-
-    <!-- Booking Modal -->
-    <div id="booking-modal" class="fixed inset-0 z-[100] modal-overlay flex items-center justify-center px-4 sm:px-6">
-        <div class="absolute inset-0 bg-base/80 backdrop-blur-sm" onclick="closeBookingModal()"></div>
-        
-        <div class="modal-content relative w-full max-w-2xl bg-surface border border-borderLight rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            
-            <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-borderLight flex items-center justify-between bg-surface2/50 shrink-0">
-                <h3 class="font-display font-bold text-xl text-textPrimary">Book a Delivery</h3>
-                <button onclick="closeBookingModal()" class="text-textMuted hover:text-textPrimary transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            
-            <!-- Progress Tracker -->
-            <div class="px-6 py-4 border-b border-borderLight flex gap-2 shrink-0">
-                <div class="step-dot h-1.5 flex-1 rounded-full bg-primaryBlue transition-colors"></div>
-                <div class="step-dot h-1.5 flex-1 rounded-full bg-borderLight opacity-50 transition-colors"></div>
-                <div class="step-dot h-1.5 flex-1 rounded-full bg-borderLight opacity-50 transition-colors"></div>
-            </div>
-
-            <!-- Modal Body (Scrollable) -->
-            <div class="p-6 overflow-y-auto custom-scrollbar">
-                
-                <!-- Step 1: Category -->
-                <div id="step-1" class="step-panel active">
-                    <h4 class="font-bold text-textPrimary text-lg mb-2">What are we moving?</h4>
-                    <p class="text-textMuted text-sm mb-6">Select the category that best fits your load.</p>
-                    
-                    <div class="grid sm:grid-cols-2 gap-4 mb-8">
-                        <div onclick="selectCategory(this)" class="select-card selected rounded-xl p-4 flex items-start gap-4">
-                            <div class="w-10 h-10 rounded bg-primaryBlue/10 text-primaryBlue flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-7h14l2 7M3 12v6h18v-6M3 12h18M7 18v2M17 18v2"></path></svg>
-                            </div>
-                            <div>
-                                <p class="font-bold text-textPrimary text-sm">Marketplace Purchase</p>
-                                <p class="text-textMuted text-xs mt-1">Couch, table, dresser, etc.</p>
-                            </div>
-                        </div>
-                        <div onclick="selectCategory(this)" class="select-card rounded-xl p-4 flex items-start gap-4">
-                            <div class="w-10 h-10 rounded bg-accentAmber/10 text-accentAmber flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            </div>
-                            <div>
-                                <p class="font-bold text-textPrimary text-sm">Business Logistics</p>
-                                <p class="text-textMuted text-xs mt-1">Restaurant supplies, market stalls.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-end">
-                        <button onclick="goToStep(2)" class="btn-primary px-6 py-2.5 rounded-lg font-bold text-sm">Continue</button>
-                    </div>
-                </div>
-
-                <!-- Step 2: Details & Route -->
-                <div id="step-2" class="step-panel">
-                    <h4 class="font-bold text-textPrimary text-lg mb-6">Route Details</h4>
-                    
-                    <div class="space-y-4 mb-8">
-                        <div>
-                            <label class="block text-xs font-bold text-textMuted uppercase tracking-wider mb-2">Pickup Location</label>
-                            <input type="text" placeholder="123 Origin St or Zip Code" class="w-full form-input rounded-lg px-4 py-3 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-textMuted uppercase tracking-wider mb-2">Dropoff Location</label>
-                            <input type="text" placeholder="456 Destination Ave or Zip Code" class="w-full form-input rounded-lg px-4 py-3 text-sm">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-textMuted uppercase tracking-wider mb-2">Item Description</label>
-                                <input type="text" placeholder="E.g., 3-seat sofa" class="w-full form-input rounded-lg px-4 py-3 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-textMuted uppercase tracking-wider mb-2">Stairs / Elevator?</label>
-                                <select class="w-full form-input rounded-lg px-4 py-3 text-sm appearance-none">
-                                    <option>Ground floor (No stairs)</option>
-                                    <option>Elevator available</option>
-                                    <option>1-2 flights of stairs</option>
-                                    <option>3+ flights of stairs</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between">
-                        <button onclick="goToStep(1)" class="text-textMuted hover:text-textPrimary font-bold text-sm px-4 py-2.5">Back</button>
-                        <button onclick="goToStep(3)" class="btn-primary px-6 py-2.5 rounded-lg font-bold text-sm">Review & Calculate</button>
-                    </div>
-                </div>
-
-                <!-- Step 3: Review & Submit -->
-                <div id="step-3" class="step-panel">
-                    <h4 class="font-bold text-textPrimary text-lg mb-6">Instant Estimate</h4>
-                    
-                    <div class="bg-surface2 rounded-xl p-6 border border-borderLight mb-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-textMuted text-sm">Base Rate (Under 10 miles)</span>
-                            <span class="text-textPrimary font-bold">$75.00</span>
-                        </div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-textMuted text-sm">Oversized / Heavy Handling</span>
-                            <span class="text-textPrimary font-bold">$15.00</span>
-                        </div>
-                        <div class="w-full h-px bg-borderLight my-4"></div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-textPrimary font-bold">Estimated Total</span>
-                            <span class="text-primaryBlue font-display font-bold text-2xl">$90.00</span>
-                        </div>
-                        <p class="text-xs text-textMuted mt-4 italic">*This is a demo estimate. Final price confirmed upon driver acceptance.</p>
-                    </div>
-                    
-                    <div class="mb-8">
-                        <label class="block text-xs font-bold text-textMuted uppercase tracking-wider mb-2">Phone Number</label>
-                        <input type="tel" placeholder="(555) 000-0000" class="w-full form-input rounded-lg px-4 py-3 text-sm">
-                    </div>
-
-                    <div class="flex justify-between">
-                        <button onclick="goToStep(2)" class="text-textMuted hover:text-textPrimary font-bold text-sm px-4 py-2.5">Back</button>
-                        <button id="submit-btn" onclick="submitDemoForm()" class="bg-successGreen text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">Complete Booking</button>
-                    </div>
-                </div>
-
-                <!-- Step 4: Success -->
-                <div id="step-4" class="step-panel text-center py-8">
-                    <div class="w-16 h-16 bg-successGreen/10 text-successGreen rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <h4 class="font-display font-bold text-2xl text-textPrimary mb-2">Request Received!</h4>
-                    <p class="text-textMuted text-sm mb-8 max-w-sm mx-auto">This is a demo environment. In the live version, our logistics team would review your request and send a confirmation text within 5 minutes.</p>
-                    
-                    <button onclick="closeBookingModal()" class="bg-surface2 hover:bg-borderLight border border-borderLight text-textPrimary px-8 py-3 rounded-xl font-bold text-sm transition-colors">Return to Site</button>
-                </div>
-
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="rounded-2xl p-10 text-center" style="background:linear-gradient(135deg,rgba(196,120,107,0.04),rgba(212,165,116,0.02)); border:1px solid rgba(196,120,107,0.08);">
+            <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(212,165,116,0.1),rgba(196,120,107,0.1));display:grid;place-items:center;margin:0 auto 20px;font-size:28px;">🔗</div>
+            <p class="font-display font-semibold text-xl mb-2" style="color:#F5F0EB;">Spread the word</p>
+            <p class="text-sm mb-8" style="color:#8A8078; max-width:320px; margin:0 auto;">Tell your friends and neighbors about Sourc'n — the more people join, the better the local marketplace gets.</p>
+            <div class="flex flex-col gap-3" style="max-width:280px; margin:0 auto;">
+                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;" onclick="shareCopy()">Copy Link</button>
+                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:rgba(245,240,235,0.04); color:#F5F0EB; border:1px solid rgba(245,240,235,0.06);" onclick="shareNative()">Share via...</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+(function(){
+    const CITIES = [
+        { name:'Bakersfield', region:'Kern County', nearby:['Oildale','Shafter','Arvin','Tehachapi'] },
+        { name:'Oildale', region:'Kern County', nearby:['Bakersfield','Wasco','Lost Hills'] },
+        { name:'Shafter', region:'Kern County', nearby:['Bakersfield','Wasco','McFarland'] },
+        { name:'Arvin', region:'Kern County', nearby:['Bakersfield','Lamont','Tehachapi'] },
+        { name:'Tehachapi', region:'Kern County', nearby:['Bakersfield','Arvin','California City'] },
+        { name:'Wasco', region:'Kern County', nearby:['Bakersfield','Shafter','Delano'] },
+        { name:'McFarland', region:'Kern County', nearby:['Bakersfield','Shafter','Delano'] },
+        { name:'Delano', region:'Kern County', nearby:['McFarland','Wasco','Bakersfield'] },
+        { name:'California City', region:'Kern County', nearby:['Tehachapi','Mojave','Bakersfield'] },
+        { name:'Mojave', region:'Kern County', nearby:['California City','Tehachapi','Ridgecrest'] },
+        { name:'Ridgecrest', region:'Kern County', nearby:['Mojave','California City','Trona'] },
+        { name:'Lamont', region:'Kern County', nearby:['Arvin','Bakersfield'] },
+        { name:'Lost Hills', region:'Kern County', nearby:['Wasco','Bakersfield','Kettleman City'] },
+        { name:'East Bakersfield', region:'Kern County', nearby:['Bakersfield','Arvin'] },
+        { name:'Oceanside', region:'San Diego County', nearby:['Vista','Carlsbad','San Marcos'] },
+        { name:'Vista', region:'San Diego County', nearby:['Oceanside','Carlsbad','Escondido'] },
+        { name:'Carlsbad', region:'San Diego County', nearby:['Oceanside','Vista','Encinitas'] },
+    ];
+
+    let currentCity = 'Bakersfield';
+    let chatOpen = false;
+
+    window.openCityModal = function(){
+        document.getElementById('city-modal').classList.add('open');
+        document.getElementById('city-search').value = '';
+        document.getElementById('city-search').focus();
+        renderCityList(CITIES);
+    };
+    window.closeCityModal = function(){
+        document.getElementById('city-modal').classList.remove('open');
+    };
+    window.filterCities = function(){
+        const q = document.getElementById('city-search').value.toLowerCase().trim();
+        const filtered = CITIES.filter(c => c.name.toLowerCase().includes(q) || c.region.toLowerCase().includes(q));
+        renderCityList(filtered);
+        if(!filtered.length) logZeroResult('city:' + q);
+    };
+    function renderCityList(cities){
+        const el = document.getElementById('city-list');
+        if(!cities.length){ el.innerHTML = '<p class="text-sm text-center py-6" style="color:#5A5550;">No cities found</p>'; return; }
+        el.innerHTML = cities.map(c =>
+            '<button class="w-full text-left px-5 py-4 rounded-2xl flex items-center justify-between transition-all mb-1.5" ' +
+            'style="background:' + (c.name===currentCity ? 'rgba(212,165,116,0.06)' : 'transparent') + '; border:1px solid ' + (c.name===currentCity ? 'rgba(212,165,116,0.15)' : 'rgba(245,240,235,0.03)') + '; border-radius:18px;" ' +
+            'onclick="setCity(\'' + c.name + '\')">' +
+            '<div><span class="font-display font-semibold text-sm" style="color:#F5F0EB;">' + c.name + '</span> <span class="text-xs ml-2" style="color:#5A5550;">' + c.region + '</span></div>' +
+            (c.name===currentCity ? '<span class="text-xs font-bold" style="color:#D4A574;">Current</span>' : '') +
+            '</button>'
+        ).join('');
+    }
+    window.setCity = function(name){
+        currentCity = name;
+        document.getElementById('city-name-display').textContent = name;
+        document.getElementById('trending-city-name').textContent = name;
+        document.querySelectorAll('.module-city').forEach(el => el.textContent = name);
+        closeCityModal();
+    };
+
+    window.openModule = function(id){
+        closeAllModules();
+        const el = document.getElementById('mod-' + id);
+        if(el) el.classList.add('active');
+    };
+    window.closeModule = function(id){
+        const el = document.getElementById('mod-' + id);
+        if(el) el.classList.remove('active');
+    };
+    window.closeAllModules = function(){
+        document.querySelectorAll('.module-view').forEach(v => v.classList.remove('active'));
+    };
+
+    const searchLog = [];
+    window.handleSearch = function(){
+        const q = document.getElementById('main-search').value.trim();
+        if(q) logZeroResult('global:' + q);
+    };
+    window.handleModuleSearch = function(input, module){
+        const q = input.value.trim();
+        if(!q) return;
+        const listEl = document.getElementById('list-' + module);
+        if(listEl){
+            const items = listEl.querySelectorAll('.listing-card, .load-row');
+            let found = false;
+            items.forEach(item => {
+                const match = item.textContent.toLowerCase().includes(q.toLowerCase());
+                item.style.display = match ? '' : 'none';
+                if(match) found = true;
+            });
+            if(!found) logZeroResult(module + ':' + q);
+        }
+    };
+    function logZeroResult(query){
+        const entry = { query, city:currentCity, ts:Date.now() };
+        searchLog.push(entry);
+        try { localStorage.setItem('sourcn_search_log', JSON.stringify(searchLog)); } catch(e){}
+        console.log('[ZeroResult]', entry);
+    }
+
+    let selectedCat = null;
+    window.selectCat = function(btn){
+        document.querySelectorAll('.create-cat-btn').forEach(b => { b.style.opacity = '.4'; b.style.transform = 'scale(0.97)'; });
+        btn.style.opacity = '1'; btn.style.transform = 'scale(1)';
+        selectedCat = btn.textContent.trim();
+    };
+    window.submitListing = function(){
+        const title = document.getElementById('create-title').value.trim();
+        const desc = document.getElementById('create-desc').value.trim();
+        const price = document.getElementById('create-price').value.trim();
+        if(!title){ alert('Please enter a title.'); return; }
+        const listing = { cat:selectedCat||'General', title, desc, price, city:currentCity, ts:Date.now() };
+        let listings = [];
+        try { listings = JSON.parse(localStorage.getItem('sourcn_listings')||'[]'); } catch(e){}
+        listings.push(listing);
+        try { localStorage.setItem('sourcn_listings', JSON.stringify(listings)); } catch(e){}
+        alert('Listing posted! (saved locally)');
+        document.getElementById('create-title').value = '';
+        document.getElementById('create-desc').value = '';
+        document.getElementById('create-price').value = '';
+        closeModule('create');
+    };
+
+    window.shareCopy = function(){
+        try { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); } catch(e){ alert('Copy: ' + window.location.href); }
+    };
+    window.shareNative = function(){
+        if(navigator.share) navigator.share({ title:"Sourc'n", text:'Check out Sourc\'n — local markets & commerce.', url:window.location.href });
+        else window.shareCopy();
+    };
+
+    window.toggleChat = function(){
+        chatOpen = !chatOpen;
+        document.getElementById('chat-panel').classList.toggle('open', chatOpen);
+        if(chatOpen) document.getElementById('chat-input').focus();
+    };
+    window.sendChatMsg = function(){
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if(!text) return;
+        const msgs = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = 'chat-msg sent';
+        div.textContent = text;
+        msgs.appendChild(div);
+        input.value = '';
+        msgs.scrollTop = msgs.scrollHeight;
+        setTimeout(function(){
+            const r = document.createElement('div');
+            r.className = 'chat-msg received';
+            r.textContent = 'Got it — someone will respond soon.';
+            msgs.appendChild(r);
+            msgs.scrollTop = msgs.scrollHeight;
+        }, 1200);
+    };
+
+})();
+</script>
 </body>
 </html>
