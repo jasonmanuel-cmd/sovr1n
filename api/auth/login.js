@@ -1,5 +1,4 @@
-const { supabase } = require('../../lib/supabase');
-const { badRequest, unauthorized, serverError } = require('../../lib/errors');
+const { createClient } = require('@supabase/supabase-js');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -9,20 +8,31 @@ module.exports = async function handler(req, res) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return badRequest(res, 'Email and password are required');
+    return res.status(400).json({ error: 'Email and password are required' });
   }
 
   try {
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      return unauthorized(res, 'Invalid email or password');
+      console.error('[Login] Auth error:', error.message);
+      return res.status(401).json({ error: error.message });
     }
 
-    const { data: profile } = await supabase
+    const admin = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    );
+
+    const { data: profile } = await admin
       .from('users')
       .select('*')
       .eq('id', data.user.id)
@@ -32,7 +42,7 @@ module.exports = async function handler(req, res) {
       user: {
         id: data.user.id,
         email: data.user.email,
-        fullName: profile?.full_name || '',
+        fullName: profile?.full_name || data.user.user_metadata?.full_name || '',
         phone: profile?.phone || '',
         city: profile?.city || 'Bakersfield',
         roles: profile?.roles || [],
@@ -46,6 +56,7 @@ module.exports = async function handler(req, res) {
       },
     });
   } catch (err) {
-    return serverError(res, err.message);
+    console.error('[Login] Server error:', err.message);
+    return res.status(500).json({ error: err.message });
   }
 };

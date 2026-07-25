@@ -9,7 +9,6 @@
     <meta property="og:description" content="Bakersfield's local marketplace. Services, drivers, load boards, and deals — all nearby.">
     <meta property="og:type" content="website">
 
-    <!-- Fonts: Clash Display (display) + Outfit (body) — NOT Inter -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700,500&f[]=outfit@400,500,600,700&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,19 +18,19 @@
         theme: {
             extend: {
                 colors: {
-                    base:      '#0A0A0A',
-                    surface:   '#111111',
-                    surface2:  '#1A1A1A',
-                    surface3:  '#222222',
-                    warm:      '#F5F0EB',
-                    muted:     '#9A9490',
-                    copper:    '#D4A574',
-                    copperDim: 'rgba(212,165,116,0.12)',
-                    sage:      '#7B9E87',
-                    sageDim:   'rgba(123,158,135,0.12)',
-                    rose:      '#C4786B',
-                    roseDim:   'rgba(196,120,107,0.12)',
-                    cream:     '#F5F0EB',
+                    base:      '#FAF9F7',
+                    surface:   '#FFFFFF',
+                    surface2:  '#F5F3EF',
+                    surface3:  '#EDEAE5',
+                    warm:      '#1A1917',
+                    muted:     '#6B6560',
+                    copper:    '#C87D3A',
+                    copperDim: 'rgba(200,125,58,0.10)',
+                    sage:      '#22A06B',
+                    sageDim:   'rgba(34,160,107,0.10)',
+                    rose:      '#D95B3F',
+                    roseDim:   'rgba(217,91,63,0.10)',
+                    cream:     '#FAF9F7',
                 },
                 fontFamily: {
                     display: ['Clash Display','sans-serif'],
@@ -45,76 +44,58 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: #0A0A0A;
-            color: #F5F0EB;
+            background: #FAF9F7;
+            color: #1A1917;
             font-family: 'Outfit', sans-serif;
             overflow-x: clip;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ---- NOISE GRAIN OVERLAY ---- */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.035;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
-        }
-
-        /* ---- GRADIENT MESH BACKGROUND ---- */
         .mesh-bg {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
             background:
-                radial-gradient(ellipse 600px 400px at 15% 20%, rgba(212,165,116,0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 500px 500px at 85% 70%, rgba(123,158,135,0.04) 0%, transparent 70%),
-                radial-gradient(ellipse 400px 300px at 50% 90%, rgba(196,120,107,0.03) 0%, transparent 70%);
+                radial-gradient(ellipse 600px 400px at 15% 20%, rgba(34,160,107,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 500px at 85% 70%, rgba(200,125,58,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 300px at 50% 90%, rgba(217,91,63,0.04) 0%, transparent 70%);
         }
 
-        /* ---- TYPOGRAPHY ---- */
         .font-display { font-family: 'Clash Display', sans-serif; }
         .font-body { font-family: 'Outfit', sans-serif; }
 
-        /* ---- GLASS PANEL ---- */
         .glass {
-            background: rgba(17,17,17,0.6);
+            background: rgba(255,255,255,0.72);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(245,240,235,0.06);
+            border: 1px solid rgba(0,0,0,0.06);
         }
 
-        /* ---- CITY PILL ---- */
         .city-pill {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(245,240,235,0.04);
-            border: 1px solid rgba(245,240,235,0.08);
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 100px;
             padding: 8px 18px;
             cursor: pointer;
-            transition: all 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: all 0.3s ease;
             font-size: 13px;
             font-weight: 600;
-            color: #F5F0EB;
+            color: #1A1917;
             letter-spacing: 0.01em;
         }
         .city-pill:hover {
-            background: rgba(212,165,116,0.08);
-            border-color: rgba(212,165,116,0.2);
+            background: rgba(200,125,58,0.06);
+            border-color: rgba(200,125,58,0.2);
             transform: translateY(-1px);
         }
 
-        /* ---- MODAL ---- */
         .modal-bg {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0,0,0,0.35);
             z-index: 100;
             opacity: 0; pointer-events: none;
             transition: opacity 0.3s;
@@ -123,34 +104,33 @@
         .modal-bg.open { opacity: 1; pointer-events: auto; }
         .modal-panel {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: #111111;
+            background: #FFFFFF;
             border-radius: 28px 28px 0 0;
             z-index: 101;
             transform: translateY(100%);
-            transition: transform 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1);
             max-height: 85vh;
             overflow-y: auto;
-            border-top: 1px solid rgba(245,240,235,0.06);
+            border-top: 1px solid rgba(0,0,0,0.06);
         }
         .modal-bg.open .modal-panel { transform: translateY(0); }
         .modal-close {
             position: absolute; top: 20px; right: 20px;
             width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(245,240,235,0.06);
-            border: 1px solid rgba(245,240,235,0.08);
-            color: #F5F0EB; font-size: 20px; cursor: pointer;
+            background: rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.06);
+            color: #1A1917; font-size: 20px; cursor: pointer;
             display: grid; place-items: center;
             transition: all 0.2s;
         }
-        .modal-close:hover { background: rgba(245,240,235,0.1); }
+        .modal-close:hover { background: rgba(0,0,0,0.08); }
 
-        /* ---- SEARCH ---- */
         .search-bar {
-            background: rgba(245,240,235,0.03);
-            border: 1px solid rgba(245,240,235,0.08);
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.10);
             border-radius: 16px;
             padding: 14px 18px;
-            color: #F5F0EB;
+            color: #1A1917;
             font-size: 15px;
             font-family: 'Outfit', sans-serif;
             width: 100%;
@@ -158,19 +138,17 @@
             transition: all 0.3s;
         }
         .search-bar:focus {
-            border-color: rgba(212,165,116,0.3);
-            background: rgba(245,240,235,0.05);
-            box-shadow: 0 0 0 3px rgba(212,165,116,0.06);
+            border-color: rgba(200,125,58,0.4);
+            box-shadow: 0 0 0 3px rgba(200,125,58,0.08);
         }
-        .search-bar::placeholder { color: #7A7570; }
+        .search-bar::placeholder { color: #9A9490; }
 
-        /* ---- ACTION BOXES (Double-Bezel Architecture) ---- */
         .action-box {
             position: relative;
             border-radius: 28px;
             padding: 3px;
             cursor: pointer;
-            transition: all 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
             display: flex;
             flex-direction: column;
             min-height: 160px;
@@ -184,8 +162,9 @@
             flex-direction: column;
             gap: 14px;
             height: 100%;
-            background: rgba(10,10,10,0.4);
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.04);
+            background: #FFFFFF;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.04);
         }
         .action-box::before {
             content: '';
@@ -193,15 +172,14 @@
             inset: 0;
             border-radius: 28px;
             opacity: 0;
-            transition: opacity 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1);
         }
-        .action-box:hover { transform: translateY(-8px) scale(1.01); }
+        .action-box:hover { transform: translateY(-6px) scale(1.01); }
         .action-box:hover::before { opacity: 1; }
         .action-box:active { transform: translateY(-2px) scale(0.98); }
 
-        /* ---- PREMIUM HOVER PHYSICS (Magnetic Feel) ---- */
         .action-box .action-box-inner {
-            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1), box-shadow 0.5s cubic-bezier(0.32,0.72,0,1);
+            transition: transform 0.4s cubic-bezier(0.32,0.72,0,1), box-shadow 0.4s cubic-bezier(0.32,0.72,0,1);
         }
         .action-box:hover .action-box-inner {
             transform: translateX(2px);
@@ -210,16 +188,16 @@
             opacity: 1;
             transform: translateX(0);
         }
-        .box-panelA:hover .action-box-inner { box-shadow: inset 0 0 24px rgba(123,158,135,0.06); }
-        .box-panelB:hover .action-box-inner { box-shadow: inset 0 0 24px rgba(212,165,116,0.06); }
-        .box-standalone:hover .action-box-inner { box-shadow: inset 0 0 24px rgba(196,120,107,0.06); }
+        .box-panelA:hover .action-box-inner { box-shadow: 0 8px 24px rgba(34,160,107,0.12); }
+        .box-panelB:hover .action-box-inner { box-shadow: 0 8px 24px rgba(200,125,58,0.12); }
+        .box-standalone:hover .action-box-inner { box-shadow: 0 8px 24px rgba(217,91,63,0.12); }
 
         .action-box .box-icon {
             width: 52px; height: 52px;
             border-radius: 16px;
             display: grid; place-items: center;
             font-size: 24px;
-            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1);
+            transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
         }
         .action-box:hover .box-icon { transform: scale(1.12) rotate(-4deg); }
         .action-box .box-title {
@@ -231,12 +209,11 @@
         }
         .action-box .box-sub {
             font-size: 13px;
-            opacity: 0.7;
+            opacity: 0.65;
             line-height: 1.5;
             font-weight: 400;
         }
 
-        /* Arrow trailing icon for action boxes */
         .box-arrow {
             position: absolute;
             bottom: 20px;
@@ -248,91 +225,82 @@
             place-items: center;
             opacity: 0;
             transform: translateX(8px);
-            transition: all 0.5s cubic-bezier(0.32,0.72,0,1);
+            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
         }
         .action-box:hover .box-arrow {
             opacity: 1;
             transform: translateX(0);
         }
 
-        /* Panel A — Sage (buyers/green) */
         .box-panelA {
-            background: linear-gradient(135deg, rgba(123,158,135,0.2) 0%, rgba(123,158,135,0.05) 100%);
+            background: linear-gradient(135deg, rgba(34,160,107,0.08) 0%, rgba(34,160,107,0.02) 100%);
         }
-        .box-panelA::before { background: radial-gradient(circle at 30% 30%, rgba(123,158,135,0.12), transparent 70%); }
-        .box-panelA:hover { box-shadow: 0 24px 64px rgba(123,158,135,0.12); }
-        .box-panelA .box-icon { background: rgba(123,158,135,0.12); color: #7B9E87; }
-        .box-panelA .box-title { color: #7B9E87; }
-        .box-panelA .box-arrow { background: rgba(123,158,135,0.12); color: #7B9E87; }
+        .box-panelA::before { background: radial-gradient(circle at 30% 30%, rgba(34,160,107,0.08), transparent 70%); }
+        .box-panelA .box-icon { background: rgba(34,160,107,0.10); color: #22A06B; }
+        .box-panelA .box-title { color: #1A8A5B; }
+        .box-panelA .box-arrow { background: rgba(34,160,107,0.10); color: #22A06B; }
 
-        /* Panel B — Copper (sellers/amber) */
         .box-panelB {
-            background: linear-gradient(135deg, rgba(212,165,116,0.2) 0%, rgba(212,165,116,0.05) 100%);
+            background: linear-gradient(135deg, rgba(200,125,58,0.08) 0%, rgba(200,125,58,0.02) 100%);
         }
-        .box-panelB::before { background: radial-gradient(circle at 70% 30%, rgba(212,165,116,0.12), transparent 70%); }
-        .box-panelB:hover { box-shadow: 0 24px 64px rgba(212,165,116,0.12); }
-        .box-panelB .box-icon { background: rgba(212,165,116,0.12); color: #D4A574; }
-        .box-panelB .box-title { color: #D4A574; }
-        .box-panelB .box-arrow { background: rgba(212,165,116,0.12); color: #D4A574; }
+        .box-panelB::before { background: radial-gradient(circle at 70% 30%, rgba(200,125,58,0.08), transparent 70%); }
+        .box-panelB .box-icon { background: rgba(200,125,58,0.10); color: #C87D3A; }
+        .box-panelB .box-title { color: #B06E2F; }
+        .box-panelB .box-arrow { background: rgba(200,125,58,0.10); color: #C87D3A; }
 
-        /* Standalone — Rose (actions) */
         .box-standalone {
-            background: linear-gradient(135deg, rgba(196,120,107,0.2) 0%, rgba(196,120,107,0.05) 100%);
+            background: linear-gradient(135deg, rgba(217,91,63,0.08) 0%, rgba(217,91,63,0.02) 100%);
         }
-        .box-standalone::before { background: radial-gradient(circle at 50% 50%, rgba(196,120,107,0.12), transparent 70%); }
-        .box-standalone:hover { box-shadow: 0 24px 64px rgba(196,120,107,0.12); }
-        .box-standalone .box-icon { background: rgba(196,120,107,0.12); color: #C4786B; }
-        .box-standalone .box-title { color: #C4786B; }
-        .box-standalone .box-arrow { background: rgba(196,120,107,0.12); color: #C4786B; }
+        .box-standalone::before { background: radial-gradient(circle at 50% 50%, rgba(217,91,63,0.08), transparent 70%); }
+        .box-standalone .box-icon { background: rgba(217,91,63,0.10); color: #D95B3F; }
+        .box-standalone .box-title { color: #C04E35; }
+        .box-standalone .box-arrow { background: rgba(217,91,63,0.10); color: #D95B3F; }
 
-        /* ---- PANEL LABEL ---- */
         .panel-label {
             font-family: 'Clash Display', sans-serif;
             font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            opacity: 0.55;
+            opacity: 0.6;
         }
 
-        /* ---- MODULE VIEWS ---- */
         .module-view {
             position: fixed; inset: 0;
-            background: #0A0A0A;
+            background: #FAF9F7;
             z-index: 90;
             transform: translateX(100%);
-            transition: transform 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1);
             overflow-y: auto;
         }
         .module-view.active { transform: translateX(0); }
         .module-header {
             position: sticky; top: 0; z-index: 5;
-            background: rgba(10,10,10,0.9);
+            background: rgba(250,249,247,0.92);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(245,240,235,0.04);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
         }
         .module-back {
             width: 44px; height: 44px;
             border-radius: 14px;
-            background: rgba(245,240,235,0.04);
-            border: 1px solid rgba(245,240,235,0.06);
-            color: #F5F0EB;
+            background: rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.06);
+            color: #1A1917;
             font-size: 18px;
             cursor: pointer;
             display: grid; place-items: center;
             transition: all 0.2s;
         }
-        .module-back:hover { background: rgba(245,240,235,0.08); }
+        .module-back:hover { background: rgba(0,0,0,0.08); }
 
-        /* ---- TRUST BADGES ---- */
         .badge-verified {
             display: inline-flex;
             align-items: center;
             gap: 4px;
             font-size: 11px;
             font-weight: 700;
-            color: #7B9E87;
-            background: rgba(123,158,135,0.1);
+            color: #1A8A5B;
+            background: rgba(34,160,107,0.08);
             padding: 4px 10px;
             border-radius: 100px;
             letter-spacing: 0.02em;
@@ -343,94 +311,94 @@
             gap: 4px;
             font-size: 12px;
             font-weight: 600;
-            color: #D4A574;
+            color: #C87D3A;
         }
 
-        /* ---- LISTING CARDS ---- */
         .listing-card {
-            background: #111111;
-            border: 1px solid rgba(245,240,235,0.04);
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.06);
             border-radius: 20px;
             overflow: hidden;
-            transition: all 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
         .listing-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(245,240,235,0.1);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+            transform: translateY(-4px);
+            border-color: rgba(0,0,0,0.1);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.08);
         }
         .listing-img {
             width: 100%;
             aspect-ratio: 4/3;
             object-fit: cover;
-            background: rgba(245,240,235,0.02);
+            background: #F5F3EF;
         }
 
-        /* ---- LOAD ROW ---- */
         .load-row {
             display: flex;
             align-items: center;
             gap: 14px;
             padding: 16px 18px;
-            background: rgba(245,240,235,0.02);
-            border: 1px solid rgba(245,240,235,0.04);
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.06);
             border-radius: 18px;
-            transition: all 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
         .load-row:hover {
-            border-color: rgba(245,240,235,0.1);
-            background: rgba(245,240,235,0.04);
+            border-color: rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
         }
 
-        /* ---- TREND CARD ---- */
         .trend-card {
-            background: rgba(245,240,235,0.02);
-            border: 1px solid rgba(245,240,235,0.04);
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.06);
             border-radius: 18px;
             padding: 20px;
-            transition: all 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
         .trend-card:hover {
-            border-color: rgba(245,240,235,0.1);
-            background: rgba(245,240,235,0.04);
+            border-color: rgba(0,0,0,0.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         }
 
-        /* ---- CHAT ---- */
         .chat-fab {
             position: fixed;
             bottom: 28px; right: 28px;
             width: 60px; height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #D4A574, #C4786B);
-            color: #0A0A0A;
+            background: linear-gradient(135deg, #C87D3A, #D95B3F);
+            color: #FFFFFF;
             border: none;
             font-size: 24px;
             cursor: pointer;
             z-index: 80;
-            box-shadow: 0 8px 32px rgba(212,165,116,0.3);
+            box-shadow: 0 6px 20px rgba(200,125,58,0.35);
             display: grid; place-items: center;
-            transition: all 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
         }
-        .chat-fab:hover { transform: scale(1.08); box-shadow: 0 12px 40px rgba(212,165,116,0.4); }
+        .chat-fab:hover { transform: scale(1.08); box-shadow: 0 10px 30px rgba(200,125,58,0.45); }
         .chat-panel {
             position: fixed;
             bottom: 0; right: 0;
             width: min(420px, 100vw);
             height: min(540px, 82vh);
-            background: #111111;
+            background: #FFFFFF;
             border-radius: 24px 24px 0 0;
             z-index: 81;
             transform: translateY(100%);
-            transition: transform 0.7s cubic-bezier(0.32,0.72,0,1);
+            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1);
             display: flex; flex-direction: column;
             overflow: hidden;
-            border: 1px solid rgba(245,240,235,0.06);
+            border: 1px solid rgba(0,0,0,0.06);
             border-bottom: none;
+            box-shadow: 0 -8px 32px rgba(0,0,0,0.08);
         }
         .chat-panel.open { transform: translateY(0); }
         .chat-header {
             padding: 18px 22px;
-            border-bottom: 1px solid rgba(245,240,235,0.04);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
             display: flex; align-items: center; justify-content: space-between;
         }
         .chat-messages {
@@ -446,41 +414,41 @@
             line-height: 1.5;
         }
         .chat-msg.sent {
-            background: linear-gradient(135deg, #D4A574, #C4786B);
-            color: #0A0A0A;
+            background: linear-gradient(135deg, #C87D3A, #D95B3F);
+            color: #FFFFFF;
             align-self: flex-end;
             border-bottom-right-radius: 6px;
             font-weight: 500;
         }
         .chat-msg.received {
-            background: rgba(245,240,235,0.06);
-            color: #F5F0EB;
+            background: #F5F3EF;
+            color: #1A1917;
             align-self: flex-start;
             border-bottom-left-radius: 6px;
         }
         .chat-input-row {
             display: flex; gap: 10px;
             padding: 14px 18px;
-            border-top: 1px solid rgba(245,240,235,0.04);
+            border-top: 1px solid rgba(0,0,0,0.06);
         }
         .chat-input {
             flex: 1;
-            background: rgba(245,240,235,0.04);
-            border: 1px solid rgba(245,240,235,0.06);
+            background: #F5F3EF;
+            border: 1px solid rgba(0,0,0,0.06);
             border-radius: 14px;
             padding: 12px 16px;
-            color: #F5F0EB;
+            color: #1A1917;
             font-size: 14px;
             font-family: 'Outfit', sans-serif;
             outline: none;
             transition: border-color 0.2s;
         }
-        .chat-input:focus { border-color: rgba(212,165,116,0.3); }
+        .chat-input:focus { border-color: rgba(200,125,58,0.3); }
         .chat-send {
             width: 44px; height: 44px;
             border-radius: 14px;
-            background: linear-gradient(135deg, #D4A574, #C4786B);
-            color: #0A0A0A;
+            background: linear-gradient(135deg, #C87D3A, #D95B3F);
+            color: #FFFFFF;
             border: none;
             font-size: 18px;
             cursor: pointer;
@@ -489,17 +457,13 @@
         }
         .chat-send:hover { transform: scale(1.05); }
 
-        /* ---- CREATE BUTTONS ---- */
-        .create-cat-btn {
-            transition: all 0.25s;
-        }
+        .create-cat-btn { transition: all 0.25s; }
         .create-cat-btn:hover { transform: translateY(-2px); }
 
-        /* ---- DYNAMIC LISTING ELEMENTS ---- */
         .empty-state {
             text-align: center;
             padding: 48px 24px;
-            color: #7A7570;
+            color: #9A9490;
             font-size: 14px;
         }
         .listing-info { padding: 18px; }
@@ -507,12 +471,12 @@
             font-family: 'Clash Display', sans-serif;
             font-weight: 600;
             font-size: 16px;
-            color: #F5F0EB;
+            color: #1A1917;
             margin-bottom: 6px;
         }
         .listing-desc {
             font-size: 13px;
-            color: #9A9490;
+            color: #6B6560;
             margin-bottom: 10px;
             line-height: 1.5;
         }
@@ -520,7 +484,7 @@
             font-family: 'Clash Display', sans-serif;
             font-weight: 700;
             font-size: 18px;
-            color: #D4A574;
+            color: #C87D3A;
             margin-bottom: 10px;
         }
         .listing-meta {
@@ -528,27 +492,27 @@
             align-items: center;
             gap: 10px;
             font-size: 12px;
-            color: #7A7570;
+            color: #9A9490;
         }
-        .listing-time { color: #7A7570; }
+        .listing-time { color: #9A9490; }
         .listing-rating {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 13px;
-            color: #D4A574;
+            color: #C87D3A;
             margin-bottom: 8px;
         }
         .stars { display: inline-flex; gap: 1px; }
-        .star { color: rgba(245,240,235,0.15); font-size: 14px; }
-        .star.filled { color: #D4A574; }
-        .rating-count { color: #7A7570; font-size: 12px; margin-left: 4px; }
+        .star { color: rgba(0,0,0,0.12); font-size: 14px; }
+        .star.filled { color: #C87D3A; }
+        .rating-count { color: #9A9490; font-size: 12px; margin-left: 4px; }
         .listing-photo {
             width: 100%;
             aspect-ratio: 4/3;
             overflow: hidden;
             border-radius: 18px 18px 0 0;
-            background: rgba(245,240,235,0.02);
+            background: #F5F3EF;
         }
         .listing-photo img {
             width: 100%;
@@ -561,18 +525,18 @@
             display: grid;
             place-items: center;
             font-size: 32px;
-            background: rgba(245,240,235,0.02);
+            background: #F5F3EF;
         }
         .listing-seller {
-            color: #9A9490;
+            color: #6B6560;
             font-weight: 600;
         }
         .listing-category {
             display: inline-block;
             padding: 3px 10px;
             border-radius: 8px;
-            background: rgba(123,158,135,0.08);
-            color: #7B9E87;
+            background: rgba(34,160,107,0.08);
+            color: #1A8A5B;
             font-size: 11px;
             font-weight: 600;
         }
@@ -585,17 +549,16 @@
             font-size: 11px;
             font-weight: 600;
         }
-        .cargo-small { background: rgba(123,158,135,0.08); color: #7B9E87; }
-        .cargo-medium { background: rgba(212,165,116,0.08); color: #D4A574; }
-        .cargo-large { background: rgba(196,120,107,0.08); color: #C4786B; }
+        .cargo-small { background: rgba(34,160,107,0.08); color: #1A8A5B; }
+        .cargo-medium { background: rgba(200,125,58,0.08); color: #C87D3A; }
+        .cargo-large { background: rgba(217,91,63,0.08); color: #D95B3F; }
 
-        /* ---- LOAD ROW DYNAMIC ---- */
         .load-info { flex: 1; min-width: 0; }
         .load-title {
             font-family: 'Clash Display', sans-serif;
             font-weight: 600;
             font-size: 15px;
-            color: #F5F0EB;
+            color: #1A1917;
             margin-bottom: 4px;
         }
         .load-route {
@@ -603,30 +566,29 @@
             align-items: center;
             gap: 8px;
             font-size: 12px;
-            color: #9A9490;
+            color: #6B6560;
         }
-        .load-arrow { color: #D4A574; font-weight: 700; }
+        .load-arrow { color: #C87D3A; font-weight: 700; }
         .load-details {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 4px;
         }
-        .load-weight { font-size: 11px; color: #7A7570; }
+        .load-weight { font-size: 11px; color: #9A9490; }
         .load-price {
             font-family: 'Clash Display', sans-serif;
             font-weight: 700;
             font-size: 16px;
-            color: #D4A574;
+            color: #C87D3A;
             white-space: nowrap;
         }
         .load-time {
             font-size: 11px;
-            color: #7A7570;
+            color: #9A9490;
             white-space: nowrap;
         }
 
-        /* ---- TOAST ---- */
         .toast {
             position: fixed;
             bottom: 100px;
@@ -641,18 +603,9 @@
             animation: toastIn 0.3s ease forwards, toastOut 0.3s ease 2.5s forwards;
             pointer-events: none;
         }
-        .toast-success {
-            background: rgba(123,158,135,0.95);
-            color: #0A0A0A;
-        }
-        .toast-error {
-            background: rgba(196,120,107,0.95);
-            color: #0A0A0A;
-        }
-        .toast-info {
-            background: rgba(212,165,116,0.95);
-            color: #0A0A0A;
-        }
+        .toast-success { background: #22A06B; color: #FFFFFF; }
+        .toast-error { background: #D95B3F; color: #FFFFFF; }
+        .toast-info { background: #C87D3A; color: #FFFFFF; }
         @keyframes toastIn {
             from { opacity: 0; transform: translateX(-50%) translateY(20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -662,18 +615,15 @@
             to { opacity: 0; }
         }
 
-        /* ---- FOOTER ---- */
         .site-footer {
-            background: #0A0A0A;
-            border-top: 1px solid rgba(245,240,235,0.04);
+            background: #FFFFFF;
+            border-top: 1px solid rgba(0,0,0,0.06);
         }
 
-        /* ---- SCROLLBAR ---- */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(245,240,235,0.08); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.10); border-radius: 3px; }
 
-        /* ---- ANIMATIONS ---- */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
@@ -690,13 +640,8 @@
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
         .fade-up { animation: fadeUp 0.5s cubic-bezier(0.32,0.72,0,1) forwards; opacity: 0; }
         .fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; }
-        .slide-right { animation: slideRight 0.6s cubic-bezier(0.32,0.72,0,1) forwards; opacity: 0; }
         .scale-in { animation: scaleIn 0.5s cubic-bezier(0.32,0.72,0,1) forwards; opacity: 0; }
 
         .delay-1 { animation-delay: 0.05s; }
@@ -707,7 +652,6 @@
         .delay-6 { animation-delay: 0.3s; }
         .delay-7 { animation-delay: 0.35s; }
 
-        /* ---- SCROLL REVEAL (IntersectionObserver-driven) ---- */
         .scroll-reveal {
             opacity: 0;
             transform: translateY(24px);
@@ -742,21 +686,11 @@
             .module-view {
                 transition-duration: 0.01ms !important;
             }
-            /* Kill GSAP ScrollTrigger animations for reduced-motion users */
             .action-box, .trend-card, .hero-gsap-reveal {
                 opacity: 1 !important;
                 transform: none !important;
                 filter: none !important;
             }
-        }
-
-        /* ---- DIAGONAL ACCENT LINE ---- */
-        .accent-line {
-            position: absolute;
-            width: 1px;
-            height: 120px;
-            background: linear-gradient(to bottom, transparent, rgba(212,165,116,0.3), transparent);
-            transform: rotate(15deg);
         }
 
         @media (max-width: 640px) {
@@ -774,17 +708,16 @@
 </head>
 <body>
 
-<!-- MESH BACKGROUND -->
 <div class="mesh-bg"></div>
 
 <!-- ============ HEADER ============ -->
-<header class="fixed top-0 inset-x-0 z-50 glass" style="border-bottom:1px solid rgba(245,240,235,0.04);">
+<header class="fixed top-0 inset-x-0 z-50 glass" style="border-bottom:1px solid rgba(0,0,0,0.06);">
     <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
         <a href="#" class="flex items-center gap-3" onclick="App.closeAllModules(); return false;">
-            <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#D4A574,#C4786B);display:grid;place-items:center;">
-                <svg width="16" height="16" fill="none" stroke="#0A0A0A" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
+                <svg width="16" height="16" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
             </div>
-            <span class="font-display font-semibold text-lg tracking-tight" style="color:#F5F0EB;">Sourc'n</span>
+            <span class="font-display font-semibold text-lg tracking-tight" style="color:#1A1917;">Sourc'n</span>
         </a>
         <div class="flex items-center gap-3">
             <button class="city-pill" onclick="App.openCityModal()" id="city-pill-btn">
@@ -793,12 +726,12 @@
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div id="auth-buttons" class="flex items-center gap-2">
-                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:rgba(245,240,235,0.04); color:#F5F0EB; border:1px solid rgba(245,240,235,0.08);" onclick="Auth.openModal('login-modal')">Sign In</button>
-                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;" onclick="Auth.openModal('register-modal')">Sign Up</button>
+                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:#FFFFFF; color:#1A1917; border:1px solid rgba(0,0,0,0.10);" onclick="Auth.openModal('login-modal')">Sign In</button>
+                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="Auth.openModal('register-modal')">Sign Up</button>
             </div>
             <div id="user-menu" class="hidden items-center gap-2">
-                <span class="text-xs font-semibold" style="color:#D4A574;" id="user-name"></span>
-                <button class="text-xs font-semibold px-3 py-1.5 rounded-lg" style="background:rgba(245,240,235,0.04); color:#9A9490;" onclick="Auth.logout()">Sign Out</button>
+                <span class="text-xs font-semibold" style="color:#C87D3A;" id="user-name"></span>
+                <button class="text-xs font-semibold px-3 py-1.5 rounded-lg" style="background:rgba(0,0,0,0.04); color:#6B6560;" onclick="Auth.logout()">Sign Out</button>
             </div>
         </div>
     </div>
@@ -808,8 +741,8 @@
 <div class="modal-bg" id="city-modal" role="dialog" aria-modal="true" aria-labelledby="city-modal-title" onclick="if(event.target===this)App.closeCityModal()">
     <div class="modal-panel p-6 pt-10">
         <button class="modal-close" onclick="App.closeCityModal()">&times;</button>
-        <h2 id="city-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:#F5F0EB;">Select your city</h2>
-        <p class="text-sm mb-6" style="color:#9A9490;">Browse local listings near you.</p>
+        <h2 id="city-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:#1A1917;">Select your city</h2>
+        <p class="text-sm mb-6" style="color:#6B6560;">Browse local listings near you.</p>
         <input type="text" class="search-bar mb-6" placeholder="Search cities..." id="city-search" oninput="App.filterCities()">
         <div id="city-list"></div>
     </div>
@@ -819,19 +752,19 @@
 <div class="modal-bg auth-modal" id="login-modal" onclick="if(event.target===this)Auth.closeAllModals()">
     <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
         <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
-        <h2 class="font-display font-semibold text-2xl mb-1" style="color:#F5F0EB;">Welcome back</h2>
-        <p class="text-sm mb-6" style="color:#9A9490;">Sign in to your Sourc'n account.</p>
+        <h2 class="font-display font-semibold text-2xl mb-1" style="color:#1A1917;">Welcome back</h2>
+        <p class="text-sm mb-6" style="color:#6B6560;">Sign in to your Sourc'n account.</p>
         <form id="login-form" class="space-y-4">
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">EMAIL</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">EMAIL</label>
                 <input type="email" class="search-bar" placeholder="you@email.com" id="login-email" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">PASSWORD</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">PASSWORD</label>
                 <input type="password" class="search-bar" placeholder="Your password" id="login-password" required>
             </div>
-            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;">Sign In</button>
-            <p class="text-xs text-center" style="color:#7A7570;">Don't have an account? <a href="#" class="auth-switch" data-target="register-modal" style="color:#D4A574;">Sign up</a></p>
+            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;">Sign In</button>
+            <p class="text-xs text-center" style="color:#9A9490;">Don't have an account? <a href="#" class="auth-switch" data-target="register-modal" style="color:#C87D3A;">Sign up</a></p>
         </form>
     </div>
 </div>
@@ -840,23 +773,23 @@
 <div class="modal-bg auth-modal" id="register-modal" onclick="if(event.target===this)Auth.closeAllModals()">
     <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
         <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
-        <h2 class="font-display font-semibold text-2xl mb-1" style="color:#F5F0EB;">Join Sourc'n</h2>
-        <p class="text-sm mb-6" style="color:#9A9490;">Create your local marketplace account.</p>
+        <h2 class="font-display font-semibold text-2xl mb-1" style="color:#1A1917;">Join Sourc'n</h2>
+        <p class="text-sm mb-6" style="color:#6B6560;">Create your local marketplace account.</p>
         <form id="register-form" class="space-y-4">
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">FULL NAME</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">FULL NAME</label>
                 <input type="text" class="search-bar" placeholder="Your name" id="register-name" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">EMAIL</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">EMAIL</label>
                 <input type="email" class="search-bar" placeholder="you@email.com" id="register-email" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">PASSWORD</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">PASSWORD</label>
                 <input type="password" class="search-bar" placeholder="Create a password" id="register-password" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">CITY</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">CITY</label>
                 <select class="search-bar" id="register-city">
                     <option value="Bakersfield">Bakersfield</option>
                     <option value="Oildale">Oildale</option>
@@ -867,8 +800,8 @@
                     <option value="Ridgecrest">Ridgecrest</option>
                 </select>
             </div>
-            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;">Create Account</button>
-            <p class="text-xs text-center" style="color:#7A7570;">Already have an account? <a href="#" class="auth-switch" data-target="login-modal" style="color:#D4A574;">Sign in</a></p>
+            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;">Create Account</button>
+            <p class="text-xs text-center" style="color:#9A9490;">Already have an account? <a href="#" class="auth-switch" data-target="login-modal" style="color:#C87D3A;">Sign in</a></p>
         </form>
     </div>
 </div>
@@ -878,15 +811,15 @@
 
     <!-- HERO -->
     <div class="mb-16 fade-up" style="max-width:640px;">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style="background:rgba(212,165,116,0.08); border:1px solid rgba(212,165,116,0.15);">
-            <span style="width:6px;height:6px;border-radius:50%;background:#7B9E87;"></span>
-            <span class="text-xs font-semibold" style="color:#D4A574; letter-spacing:0.04em;">LOCAL MARKETS & COMMERCE</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style="background:rgba(34,160,107,0.06); border:1px solid rgba(34,160,107,0.12);">
+            <span style="width:6px;height:6px;border-radius:50%;background:#22A06B;"></span>
+            <span class="text-xs font-semibold" style="color:#1A8A5B; letter-spacing:0.04em;">LOCAL MARKETS & COMMERCE</span>
         </div>
-        <h1 class="font-display font-semibold text-4xl sm:text-5xl md:text-6xl leading-[1.05] mb-5" style="color:#F5F0EB; letter-spacing:-0.03em; max-width:520px;">
+        <h1 class="font-display font-semibold text-4xl sm:text-5xl md:text-6xl leading-[1.05] mb-5" style="color:#1A1917; letter-spacing:-0.03em; max-width:520px;">
             Find what's
-            <span style="background:linear-gradient(135deg,#D4A574,#C4786B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">nearby.</span>
+            <span style="background:linear-gradient(135deg,#C87D3A,#D95B3F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">nearby.</span>
         </h1>
-        <p class="text-lg leading-relaxed mb-8" style="color:#9A9490; max-width:480px;">
+        <p class="text-lg leading-relaxed mb-8" style="color:#6B6560; max-width:480px;">
             Services, drivers, deals, and local work — all in your city. No algorithms. Just neighbors.
         </p>
     </div>
@@ -894,15 +827,14 @@
     <!-- SEARCH -->
     <div class="mb-16 fade-up delay-2" style="max-width:520px;">
         <div class="relative">
-            <svg class="absolute left-5 top-1/2 -translate-y-1/2" width="18" height="18" fill="none" stroke="#7A7570" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <svg class="absolute left-5 top-1/2 -translate-y-1/2" width="18" height="18" fill="none" stroke="#9A9490" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
             <input type="text" class="search-bar" style="padding-left:48px;" placeholder="Search for anything local..." id="main-search" onkeydown="if(event.key==='Enter')Search.handleSearch(this.value, 'all')">
         </div>
     </div>
 
     <!-- 6-BOX ACTION GRID -->
     <div class="mb-16 fade-up delay-3">
-        <!-- Panel A -->
-        <p class="panel-label mb-4" style="color:#7B9E87;">For Buyers</p>
+        <p class="panel-label mb-4" style="color:#1A8A5B;">For Buyers</p>
         <div class="grid grid-cols-2 gap-4 mb-8 grid-flow-dense">
             <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('services-buyer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('services-buyer')}">
                 <div class="action-box-inner">
@@ -922,8 +854,7 @@
             </div>
         </div>
 
-        <!-- Panel B -->
-        <p class="panel-label mb-4" style="color:#D4A574;">For Sellers</p>
+        <p class="panel-label mb-4" style="color:#C87D3A;">For Sellers</p>
         <div class="grid grid-cols-2 gap-4 mb-8 grid-flow-dense">
             <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('service-providers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('service-providers')}">
                 <div class="action-box-inner">
@@ -943,8 +874,7 @@
             </div>
         </div>
 
-        <!-- Standalone -->
-        <p class="panel-label mb-4" style="color:#C4786B;">Quick Actions</p>
+        <p class="panel-label mb-4" style="color:#D95B3F;">Quick Actions</p>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 grid-flow-dense">
             <div class="action-box box-standalone" role="button" tabindex="0" onclick="App.openModule('create')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('create')}">
                 <div class="action-box-inner">
@@ -968,45 +898,44 @@
     <!-- TRENDING -->
     <section class="mb-16 scroll-reveal delay-1">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="font-display font-semibold text-xl" style="color:#F5F0EB;">Trending in <span id="trending-city-name">Bakersfield</span></h2>
-            <span class="text-xs font-semibold px-3 py-1.5 rounded-full" style="background:rgba(245,240,235,0.04); color:#9A9490; border:1px solid rgba(245,240,235,0.06);">Coming soon</span>
+            <h2 class="font-display font-semibold text-xl" style="color:#1A1917;">Trending in <span id="trending-city-name">Bakersfield</span></h2>
+            <span class="text-xs font-semibold px-3 py-1.5 rounded-full" style="background:#FFFFFF; color:#6B6560; border:1px solid rgba(0,0,0,0.08);">Coming soon</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="trending-grid">
             <div class="trend-card">
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(123,158,135,0.1); color:#7B9E87;">Service</span>
-                    <span class="text-xs" style="color:#7A7570;">12 posts today</span>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(34,160,107,0.08); color:#1A8A5B;">Service</span>
+                    <span class="text-xs" style="color:#9A9490;">12 posts today</span>
                 </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:#F5F0EB;">Moving & Hauling</p>
-                <p class="text-xs" style="color:#9A9490;">4 active providers near you</p>
+                <p class="font-display font-semibold text-base mb-1" style="color:#1A1917;">Moving & Hauling</p>
+                <p class="text-xs" style="color:#6B6560;">4 active providers near you</p>
             </div>
             <div class="trend-card">
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(212,165,116,0.1); color:#D4A574;">Load</span>
-                    <span class="text-xs" style="color:#7A7570;">8 posts today</span>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(200,125,58,0.08); color:#C87D3A;">Load</span>
+                    <span class="text-xs" style="color:#9A9490;">8 posts today</span>
                 </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:#F5F0EB;">Furniture Delivery Runs</p>
-                <p class="text-xs" style="color:#9A9490;">3 drivers available now</p>
+                <p class="font-display font-semibold text-base mb-1" style="color:#1A1917;">Furniture Delivery Runs</p>
+                <p class="text-xs" style="color:#6B6560;">3 drivers available now</p>
             </div>
             <div class="trend-card">
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(196,120,107,0.1); color:#C4786B;">Marketplace</span>
-                    <span class="text-xs" style="color:#7A7570;">5 posts today</span>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(217,91,63,0.08); color:#D95B3F;">Marketplace</span>
+                    <span class="text-xs" style="color:#9A9490;">5 posts today</span>
                 </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:#F5F0EB;">Used Appliances</p>
-                <p class="text-xs" style="color:#9A9490;">New listings just added</p>
+                <p class="font-display font-semibold text-base mb-1" style="color:#1A1917;">Used Appliances</p>
+                <p class="text-xs" style="color:#6B6560;">New listings just added</p>
             </div>
         </div>
     </section>
 
     <!-- ZERO-RESULT HINT -->
     <section class="scroll-reveal delay-2">
-        <div class="rounded-2xl p-5 text-center" style="background:rgba(245,240,235,0.015); border:1px solid rgba(245,240,235,0.03);">
-            <p class="text-xs" style="color:#7A7570;">Can't find what you need? Searches with no results help us know what to add next.</p>
+        <div class="rounded-2xl p-5 text-center" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.04);">
+            <p class="text-xs" style="color:#9A9490;">Can't find what you need? Searches with no results help us know what to add next.</p>
         </div>
     </section>
 
-    <!-- ACCESSIBILITY: Live region for dynamic announcements -->
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
 
 </main>
@@ -1015,17 +944,17 @@
 <footer class="site-footer py-12 px-5">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
         <div class="flex items-center gap-3">
-            <div style="width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#D4A574,#C4786B);display:grid;place-items:center;">
-                <svg width="12" height="12" fill="none" stroke="#0A0A0A" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            <div style="width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
+                <svg width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
             </div>
-            <span class="font-display font-semibold text-sm" style="color:#7A7570;">Sourc'n</span>
+            <span class="font-display font-semibold text-sm" style="color:#9A9490;">Sourc'n</span>
         </div>
-        <div class="flex items-center gap-8 text-xs font-medium" style="color:#7A7570;">
-            <a href="#" class="hover:text-warm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper transition-colors">About</a>
-            <a href="#" class="hover:text-warm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper transition-colors">Safety</a>
-            <a href="#" class="hover:text-warm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper transition-colors">Privacy</a>
-            <a href="#" class="hover:text-warm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper transition-colors">Terms</a>
-            <a href="#" class="hover:text-warm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper transition-colors">Contact</a>
+        <div class="flex items-center gap-8 text-xs font-medium" style="color:#9A9490;">
+            <a href="#" class="hover:text-warm transition-colors">About</a>
+            <a href="#" class="hover:text-warm transition-colors">Safety</a>
+            <a href="#" class="hover:text-warm transition-colors">Privacy</a>
+            <a href="#" class="hover:text-warm transition-colors">Terms</a>
+            <a href="#" class="hover:text-warm transition-colors">Contact</a>
         </div>
     </div>
 </footer>
@@ -1039,8 +968,8 @@
 <div class="chat-panel" id="chat-panel">
     <div class="chat-header">
         <div>
-            <div class="font-display font-semibold text-base" style="color:#F5F0EB;">Messages</div>
-            <div class="text-xs" style="color:#7A7570;">Local conversations</div>
+            <div class="font-display font-semibold text-base" style="color:#1A1917;">Messages</div>
+            <div class="text-xs" style="color:#9A9490;">Local conversations</div>
         </div>
         <button class="module-back" onclick="App.toggleChat()">&times;</button>
     </div>
@@ -1062,7 +991,7 @@
     <div class="module-header">
         <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
             <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Services near <span class="module-city">Bakersfield</span></h2>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Services near <span class="module-city">Bakersfield</span></h2>
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
@@ -1077,7 +1006,7 @@
     <div class="module-header">
         <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
             <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Driver Gigs near <span class="module-city">Bakersfield</span></h2>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Driver Gigs near <span class="module-city">Bakersfield</span></h2>
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
@@ -1092,14 +1021,14 @@
     <div class="module-header">
         <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
             <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Service Providers</h2>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Service Providers</h2>
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
-        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(212,165,116,0.06),rgba(196,120,107,0.03)); border:1px solid rgba(212,165,116,0.1);">
-            <p class="font-display font-semibold text-lg mb-2" style="color:#D4A574;">List your service on Sourc'n</p>
-            <p class="text-sm mb-5" style="color:#9A9490;">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees — 10% per completed job.</p>
-            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;" onclick="App.openModule('create')">Get Started</button>
+        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(200,125,58,0.06),rgba(217,91,63,0.03)); border:1px solid rgba(200,125,58,0.10);">
+            <p class="font-display font-semibold text-lg mb-2" style="color:#C87D3A;">List your service on Sourc'n</p>
+            <p class="text-sm mb-5" style="color:#6B6560;">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees — 10% per completed job.</p>
+            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="App.openModule('create')">Get Started</button>
         </div>
         <input type="text" class="search-bar mb-6" placeholder="Browse providers..." data-module="service-providers" oninput="Search.handleSearch(this.value, 'service-providers')">
         <div id="search-results-service-providers" class="mb-4"></div>
@@ -1112,13 +1041,13 @@
     <div class="module-header">
         <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
             <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Load Board</h2>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Load Board</h2>
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
         <div class="flex gap-3 mb-6">
-            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(212,165,116,0.1); color:#D4A574; border:1px solid rgba(212,165,116,0.15);">Browse Loads</button>
-            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(245,240,235,0.03); color:#9A9490; border:1px solid rgba(245,240,235,0.06);" onclick="App.openModule('create')">Post a Load</button>
+            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(200,125,58,0.08); color:#C87D3A; border:1px solid rgba(200,125,58,0.12);">Browse Loads</button>
+            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:#FFFFFF; color:#6B6560; border:1px solid rgba(0,0,0,0.08);" onclick="App.openModule('create')">Post a Load</button>
         </div>
         <input type="text" class="search-bar mb-6" placeholder="Search loads..." data-module="load-board" oninput="Search.handleSearch(this.value, 'load-board')">
         <div id="search-results-load-board" class="mb-4"></div>
@@ -1131,40 +1060,40 @@
     <div class="module-header">
         <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
             <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Create a Listing</h2>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Create a Listing</h2>
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
         <form id="create-listing-form" class="space-y-5">
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">TYPE</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">TYPE</label>
                 <div class="grid grid-cols-2 gap-3">
-                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(123,158,135,0.06); border-color:rgba(123,158,135,0.15); color:#7B9E87;">
+                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(34,160,107,0.04); border-color:rgba(34,160,107,0.12); color:#1A8A5B;">
                         <input type="radio" name="type" value="market" class="hidden" checked> Item for Sale
                     </label>
-                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(212,165,116,0.06); border-color:rgba(212,165,116,0.15); color:#D4A574;">
+                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(200,125,58,0.04); border-color:rgba(200,125,58,0.12); color:#C87D3A;">
                         <input type="radio" name="type" value="service" class="hidden"> Service Offer
                     </label>
                 </div>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">TITLE</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">TITLE</label>
                 <input type="text" class="search-bar" placeholder="e.g. Moving help needed Saturday" name="title" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">DESCRIPTION</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">DESCRIPTION</label>
                 <textarea class="search-bar" rows="4" placeholder="Details, location, timing..." name="description" style="resize:vertical;"></textarea>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">PRICE</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">PRICE</label>
                 <input type="number" class="search-bar" placeholder="$0.00" name="price" step="0.01" min="0">
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">TAGS (comma separated)</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">TAGS (comma separated)</label>
                 <input type="text" class="search-bar" placeholder="e.g. furniture, moving, urgent" name="tags">
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#9A9490; letter-spacing:0.04em;">CATEGORY</label>
+                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">CATEGORY</label>
                 <select class="search-bar" name="category">
                     <option value="">Select category...</option>
                     <option value="Furniture">Furniture</option>
@@ -1179,8 +1108,8 @@
                     <option value="Other">Other</option>
                 </select>
             </div>
-            <button type="submit" class="w-full text-sm font-bold py-4 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;">Post Listing</button>
-            <p class="text-xs text-center" style="color:#7A7570;">Platform fee: 10% on completed transactions.</p>
+            <button type="submit" class="w-full text-sm font-bold py-4 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;">Post Listing</button>
+            <p class="text-xs text-center" style="color:#9A9490;">Platform fee: 10% on completed transactions.</p>
         </form>
     </div>
 </div>
@@ -1190,17 +1119,17 @@
     <div class="module-header">
         <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
             <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#F5F0EB;">Share Sourc'n</h2>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Share Sourc'n</h2>
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
-        <div class="rounded-2xl p-10 text-center" style="background:linear-gradient(135deg,rgba(196,120,107,0.04),rgba(212,165,116,0.02)); border:1px solid rgba(196,120,107,0.08);">
-            <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(212,165,116,0.1),rgba(196,120,107,0.1));display:grid;place-items:center;margin:0 auto 20px;font-size:28px;">🔗</div>
-            <p class="font-display font-semibold text-xl mb-2" style="color:#F5F0EB;">Spread the word</p>
-            <p class="text-sm mb-8" style="color:#9A9490; max-width:320px; margin:0 auto;">Tell your friends and neighbors about Sourc'n — the more people join, the better the local marketplace gets.</p>
+        <div class="rounded-2xl p-10 text-center" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.06);">
+            <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(200,125,58,0.08),rgba(217,91,63,0.08));display:grid;place-items:center;margin:0 auto 20px;font-size:28px;">🔗</div>
+            <p class="font-display font-semibold text-xl mb-2" style="color:#1A1917;">Spread the word</p>
+            <p class="text-sm mb-8" style="color:#6B6560; max-width:320px; margin:0 auto;">Tell your friends and neighbors about Sourc'n — the more people join, the better the local marketplace gets.</p>
             <div class="flex flex-col gap-3" style="max-width:280px; margin:0 auto;">
-                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#D4A574,#C4786B); color:#0A0A0A;" onclick="shareCopy()">Copy Link</button>
-                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:rgba(245,240,235,0.04); color:#F5F0EB; border:1px solid rgba(245,240,235,0.06);" onclick="shareNative()">Share via...</button>
+                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="shareCopy()">Copy Link</button>
+                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:#FFFFFF; color:#1A1917; border:1px solid rgba(0,0,0,0.08);" onclick="shareNative()">Share via...</button>
             </div>
         </div>
     </div>
@@ -1214,74 +1143,35 @@
 <script>
 (function(){
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-
-    // Respect reduced-motion preference
     var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
-
     gsap.registerPlugin(ScrollTrigger);
 
-    // ---- Hero text scrub reveal ----
-    // The h1 starts at opacity 0.1 and scrubs to 1.0 as user scrolls
     var heroH1 = document.querySelector('h1.font-display');
     if (heroH1) {
         gsap.fromTo(heroH1,
             { opacity: 0.1 },
-            {
-                opacity: 1,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: heroH1,
-                    start: 'top 90%',
-                    end: 'top 30%',
-                    scrub: 0.5
-                }
-            }
+            { opacity: 1, ease: 'none', scrollTrigger: { trigger: heroH1, start: 'top 90%', end: 'top 30%', scrub: 0.5 } }
         );
     }
 
-    // ---- Action boxes stagger entrance ----
-    // Each action box staggers in from below with a slight blur
     var actionBoxes = document.querySelectorAll('.action-box');
     if (actionBoxes.length > 0) {
         gsap.fromTo(actionBoxes,
             { y: 40, opacity: 0, filter: 'blur(4px)' },
-            {
-                y: 0,
-                opacity: 1,
-                filter: 'blur(0px)',
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: actionBoxes[0].closest('.grid'),
-                    start: 'top 85%',
-                    toggleActions: 'play none none none'
-                }
-            }
+            { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, stagger: 0.1, ease: 'power3.out',
+              scrollTrigger: { trigger: actionBoxes[0].closest('.grid'), start: 'top 85%', toggleActions: 'play none none none' } }
         );
     }
 
-    // ---- Trending cards scale + fade ----
     var trendCards = document.querySelectorAll('.trend-card');
     if (trendCards.length > 0) {
         gsap.fromTo(trendCards,
             { scale: 0.95, opacity: 0 },
-            {
-                scale: 1,
-                opacity: 1,
-                duration: 0.7,
-                stagger: 0.12,
-                ease: 'power2.out',
-                scrollTrigger: {
-                    trigger: trendCards[0].closest('.grid'),
-                    start: 'top 85%',
-                    toggleActions: 'play none none none'
-                }
-            }
+            { scale: 1, opacity: 1, duration: 0.7, stagger: 0.12, ease: 'power2.out',
+              scrollTrigger: { trigger: trendCards[0].closest('.grid'), start: 'top 85%', toggleActions: 'play none none none' } }
         );
     }
-
 })();
 </script>
 
@@ -1323,7 +1213,6 @@
         document.querySelectorAll('.module-city').forEach(el => el.textContent = name);
     };
 
-    const originalOpenCityModal = App.openCityModal;
     App.openCityModal = function() {
         document.getElementById('city-modal').classList.add('open');
         document.getElementById('city-search').value = '';
@@ -1344,15 +1233,15 @@
     App.renderCityList = function(cities) {
         const el = document.getElementById('city-list');
         if (!cities.length) {
-            el.innerHTML = '<p class="text-sm text-center py-6" style="color:#7A7570;">No cities found</p>';
+            el.innerHTML = '<p class="text-sm text-center py-6" style="color:#9A9490;">No cities found</p>';
             return;
         }
         el.innerHTML = cities.map(c =>
             '<button class="w-full text-left px-5 py-4 rounded-2xl flex items-center justify-between transition-all mb-1.5" ' +
-            'style="background:' + (c.name === App.currentCity ? 'rgba(212,165,116,0.06)' : 'transparent') + '; border:1px solid ' + (c.name === App.currentCity ? 'rgba(212,165,116,0.15)' : 'rgba(245,240,235,0.03)') + '; border-radius:18px;" ' +
+            'style="background:' + (c.name === App.currentCity ? 'rgba(200,125,58,0.06)' : 'transparent') + '; border:1px solid ' + (c.name === App.currentCity ? 'rgba(200,125,58,0.15)' : 'rgba(0,0,0,0.04)') + '; border-radius:18px;" ' +
             'onclick="App.setCity(\'' + c.name + '\')">' +
-            '<div><span class="font-display font-semibold text-sm" style="color:#F5F0EB;">' + c.name + '</span> <span class="text-xs ml-2" style="color:#7A7570;">' + c.region + '</span></div>' +
-            (c.name === App.currentCity ? '<span class="text-xs font-bold" style="color:#D4A574;">Current</span>' : '') +
+            '<div><span class="font-display font-semibold text-sm" style="color:#1A1917;">' + c.name + '</span> <span class="text-xs ml-2" style="color:#9A9490;">' + c.region + '</span></div>' +
+            (c.name === App.currentCity ? '<span class="text-xs font-bold" style="color:#C87D3A;">Current</span>' : '') +
             '</button>'
         ).join('');
     };
