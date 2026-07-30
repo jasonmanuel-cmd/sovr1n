@@ -1,6 +1,7 @@
 const App = {
   currentCity: CONFIG.DEFAULT_CITY,
   activeModule: null,
+  _listingsCache: {},
 
   init() {
     this.loadCity();
@@ -71,6 +72,8 @@ const App = {
   closeCityModal() {
     document.getElementById('city-modal')?.classList.remove('active');
     document.body.style.overflow = '';
+    const cityPillBtn = document.getElementById('city-pill-btn');
+    if (cityPillBtn) cityPillBtn.setAttribute('aria-expanded', 'false');
   },
 
   bindModuleNav() {
@@ -102,26 +105,42 @@ const App = {
 
   async loadModuleData(moduleId) {
     const city = this.currentCity;
+    const skeletonMap = {
+      'services-buyer': 'listings-services',
+      'drivers': 'listings-drivers',
+      'service-providers': 'listings-providers',
+      'load-board': 'listings-load-board',
+    };
+    if (skeletonMap[moduleId]) {
+      Listings.renderSkeletons(4, skeletonMap[moduleId]);
+    }
     try {
       switch (moduleId) {
         case 'services-buyer': {
           const listings = await Listings.load(city, 'service');
+          listings.forEach(l => { this._listingsCache[l.id] = l; });
           Listings.renderList(listings, 'listings-services');
           break;
         }
         case 'drivers': {
-          const loads = await Utils.api('GET', `/loads?city=${encodeURIComponent(city)}&status=open&limit=20`);
-          this.renderDriverGigs(loads.loads || [], 'listings-drivers');
+          const data = await Utils.api('GET', `/loads?city=${encodeURIComponent(city)}&status=open&limit=20`);
+          const loads = data.loads || [];
+          loads.forEach(l => { this._listingsCache[l.id] = l; });
+          this.renderDriverGigs(loads, 'listings-drivers');
           break;
         }
         case 'service-providers': {
-          const providers = await Utils.api('GET', `/providers?city=${encodeURIComponent(city)}&limit=20`);
-          this.renderProviders(providers.providers || [], 'listings-providers');
+          const data = await Utils.api('GET', `/providers?city=${encodeURIComponent(city)}&limit=20`);
+          const providers = data.providers || [];
+          providers.forEach(p => { this._listingsCache[p.id] = p; });
+          this.renderProviders(providers, 'listings-providers');
           break;
         }
         case 'load-board': {
-          const loads = await Utils.api('GET', `/loads?city=${encodeURIComponent(city)}&status=open&limit=20`);
-          this.renderLoadBoard(loads.loads || [], 'listings-load-board');
+          const data = await Utils.api('GET', `/loads?city=${encodeURIComponent(city)}&status=open&limit=20`);
+          const loads = data.loads || [];
+          loads.forEach(l => { this._listingsCache[l.id] = l; });
+          this.renderLoadBoard(loads, 'listings-load-board');
           break;
         }
         case 'create': {
@@ -130,22 +149,94 @@ const App = {
         }
       }
     } catch (err) {
+      const containerId = skeletonMap[moduleId];
+      if (containerId) Listings.renderError(err.message, containerId);
       console.error(`Failed to load ${moduleId}:`, err);
     }
+  },
+
+  showSkeletons(containerId, count = 6) {
+    Listings.renderSkeletons(count, containerId);
+  },
+
+  openDetailView(listingId) {
+    const listing = this._listingsCache[listingId];
+    if (!listing) {
+      Utils.showToast('Listing not found', 'error');
+      return;
+    }
+    const overlay = document.getElementById('listing-detail-overlay');
+    const panel = document.getElementById('listing-detail-panel');
+    if (!overlay || !panel) return;
+
+    const photo = listing.photos?.[0] || '';
+    const user = listing.users;
+    const priceHtml = listing.price
+      ? Utils.formatPrice(listing.price)
+      : '';
+
+    panel.innerHTML = `
+      <button class="modal-close detail-close" onclick="App.closeDetailView()" aria-label="Close details">&times;</button>
+      <div class="detail-header">
+        ${photo ? `<img src="${photo}" alt="${Utils.escapeHtml(listing.title)}" class="detail-photo">` : `<div class="detail-photo-placeholder" aria-hidden="true">📦</div>`}
+        <div class="detail-header-info">
+          <h3 class="detail-title" id="detail-title">${Utils.escapeHtml(listing.title)}</h3>
+          ${priceHtml ? `<div class="detail-price">${priceHtml}</div>` : ''}
+          <div class="detail-meta">
+            ${user ? `<span class="detail-seller">${Utils.escapeHtml(user.full_name || user.fullName || '')}</span>` : ''}
+            <span class="detail-time">${Utils.timeAgo(listing.created_at)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <h4 class="detail-section-title">Description</h4>
+        <p class="detail-desc">${Utils.escapeHtml(listing.description || 'No description provided.')}</p>
+      </div>
+      ${listing.tags?.length ? `
+      <div class="detail-section">
+        <h4 class="detail-section-title">Tags</h4>
+        <div class="detail-tags">
+          ${listing.tags.map(t => `<span class="detail-tag">${Utils.escapeHtml(t)}</span>`).join('')}
+        </div>
+      </div>` : ''}
+      <button class="detail-msg-btn" onclick="App.closeDetailView()">Contact Seller</button>
+    `;
+
+    overlay.classList.add('active');
+    panel.classList.add('active');
+    document.body.classList.add('scroll-lock');
+
+    requestAnimationFrame(() => {
+      const closeBtn = panel.querySelector('.detail-close');
+      if (closeBtn) closeBtn.focus();
+    });
+  },
+
+  closeDetailView() {
+    const overlay = document.getElementById('listing-detail-overlay');
+    const panel = document.getElementById('listing-detail-panel');
+    if (overlay) overlay.classList.remove('active');
+    if (panel) panel.classList.remove('active');
+    document.body.classList.remove('scroll-lock');
   },
 
   async loadListingsForCurrentCity() {
     const trending = document.getElementById('trending-grid');
     if (!trending) return;
 
+    this.showSkeletons('trending-grid', 6);
+
     try {
       const market = await Listings.load(this.currentCity, 'market');
       if (market.length > 0) {
-        trending.innerHTML = market.slice(0, 6).map(l => Utils.renderListingCard(l)).join('');
+        const sliced = market.slice(0, 6);
+        sliced.forEach(l => { this._listingsCache[l.id] = l; });
+        trending.innerHTML = sliced.map(l => Utils.renderListingCard(l)).join('');
       } else {
         trending.innerHTML = '<div class="empty-state"><p>No trending items yet. Be the first to post!</p></div>';
       }
     } catch (err) {
+      Listings.renderError(err.message, 'trending-grid');
       console.error('Failed to load trending:', err);
     }
   },
@@ -268,4 +359,28 @@ window.currentCity = CONFIG.DEFAULT_CITY;
 
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
+
+  const detailOverlay = document.getElementById('listing-detail-overlay');
+  if (detailOverlay) {
+    detailOverlay.addEventListener('click', (e) => {
+      if (e.target === detailOverlay) App.closeDetailView();
+    });
+  }
+
+  const cityPillBtn = document.getElementById('city-pill-btn');
+  if (cityPillBtn) {
+    cityPillBtn.addEventListener('click', () => {
+      const expanded = cityPillBtn.getAttribute('aria-expanded') === 'true';
+      cityPillBtn.setAttribute('aria-expanded', !expanded);
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') App.closeDetailView();
+  });
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  console.warn('Unhandled promise rejection:', e.reason);
+  Utils.showToast('Something went wrong. Please try again.', 'error');
 });

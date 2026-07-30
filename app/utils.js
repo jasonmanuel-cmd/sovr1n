@@ -94,9 +94,9 @@ const Utils = {
       : '';
 
     return `
-      <div class="listing-card" data-id="${listing.id}">
+      <div class="listing-card" data-id="${listing.id}" tabindex="0" role="button" onclick="App.openDetailView('${listing.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openDetailView('${listing.id}')}" aria-label="View details for ${this.escapeHtml(listing.title)}">
         <div class="listing-photo">
-          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder">📦</div>`}
+          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder" aria-hidden="true">📦</div>`}
         </div>
         <div class="listing-info">
           <h4 class="listing-title">${this.escapeHtml(listing.title)}</h4>

@@ -44,6 +44,34 @@ const Listings = {
     this.cache = {};
   },
 
+  renderSkeletons(count, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = Array(count).fill(`
+      <div class="listing-card skeleton-card" aria-hidden="true">
+        <div class="listing-photo">
+          <div class="skeleton skeleton-image"></div>
+        </div>
+        <div class="listing-info">
+          <div class="skeleton skeleton-line w-3/4"></div>
+          <div class="skeleton skeleton-line w-full mt-2"></div>
+          <div class="skeleton skeleton-line w-1/3 mt-2"></div>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  renderError(message, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = `
+      <div class="error-banner" role="alert">
+        <span class="error-banner-icon" aria-hidden="true">!</span>
+        <span>${Utils.escapeHtml(message)}</span>
+      </div>
+    `;
+  },
+
   renderList(listings, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourc'n — Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand: #F4EFE6;
+  --cream: #FAF8F3;
+  --warm-white: #FFFDF9;
+  --clay: #D4794A;
+  --clay-deep: #B85E32;
+  --sage: #5B8A5C;
+  --sage-deep: #3F6E40;
+  --mesquite: #2B241C;
+  --dust: #7A7268;
+  --border: #E5DDD2;
+  --shadow: rgba(43,36,28,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--sand);
+  color: var(--mesquite);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  padding: 2rem;
+}
+.container { max-width: 960px; margin: 0 auto; }
+h1, h2, h3 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+h1 { font-size: clamp(1.75rem, 4vw, 2.75rem); margin-bottom: .25em; }
+h2 { font-size: 1.5rem; margin: 2rem 0 1rem; }
+h3 { font-size: 1.125rem; margin-bottom: .5rem; }
+.tagline { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.25rem; color: var(--dust); margin-bottom: 2rem; }
+.section { background: var(--warm-white); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid var(--border); box-shadow: 0 1px 3px var(--shadow); }
+.colors { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 12px; }
+.swatch { border-radius: 12px; padding: 1rem; min-height: 80px; display: flex; flex-direction: column; justify-content: end; font-size: .75rem; font-weight: 600; }
+.text-swatch { background: transparent; border: 1px solid var(--border); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 1rem 0; }
+.btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 1.5rem; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: .9375rem; border: none; cursor: default; }
+.btn-primary { background: var(--clay); color: var(--warm-white); }
+.btn-secondary { background: var(--warm-white); color: var(--mesquite); border: 1.5px solid var(--clay); }
+.btn-ghost { background: transparent; color: var(--mesquite); }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px; }
+.card { background: var(--warm-white); border-radius: 12px; padding: 1rem; border: 1px solid var(--border); box-shadow: 0 1px 3px var(--shadow); }
+.card .img { aspect-ratio: 16/9; background: var(--border); border-radius: 8px; margin-bottom: .75rem; }
+.card h4 { font-family: 'DM Serif Display', serif; font-weight: 400; font-size: 1rem; }
+.card p { color: var(--dust); font-size: .8125rem; margin-top: .25rem; }
+.pill { display: inline-flex; align-items: center; height: 32px; padding: 0 1rem; border-radius: 9999px; font-size: .8125rem; font-weight: 500; border: 1.5px solid; margin: 4px; }
+.pill-clay { border-color: var(--clay); color: var(--clay); }
+.pill-sage { border-color: var(--sage); color: var(--sage); }
+.field { margin: 1rem 0; }
+.field label { display: block; font-size: .8125rem; font-weight: 600; margin-bottom: 4px; color: var(--mesquite); }
+.field input { width: 100%; height: 48px; border-radius: 12px; border: 1.5px solid var(--border); padding: 0 1rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: .9375rem; background: var(--warm-white); }
+.field input:focus { outline: none; border-color: var(--clay); box-shadow: 0 0 0 3px rgba(212,121,74,0.15); }
+.tag { display: inline-flex; align-items: center; gap: 4px; background: var(--cream); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; font-size: .75rem; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Sourc'n</h1>
+  <div class="tagline">Desert Modern — Design Preview</div>
+
+  <div class="section">
+    <h3>Colors</h3>
+    <div class="colors">
+      <div class="swatch" style="background:var(--sand);border:1px solid var(--border);color:var(--mesquite)">Sand<br>#F4EFE6</div>
+      <div class="swatch" style="background:var(--cream);border:1px solid var(--border);color:var(--mesquite)">Cream<br>#FAF8F3</div>
+      <div class="swatch" style="background:var(--warm-white);border:1px solid var(--border);color:var(--mesquite)">Warm White<br>#FFFDF9</div>
+      <div class="swatch" style="background:var(--clay);color:var(--warm-white)">Clay<br>#D4794A</div>
+      <div class="swatch" style="background:var(--clay-deep);color:var(--warm-white)">Clay Deep<br>#B85E32</div>
+      <div class="swatch" style="background:var(--sage);color:var(--warm-white)">Sage<br>#5B8A5C</div>
+      <div class="swatch" style="background:var(--sage-deep);color:var(--warm-white)">Sage Deep<br>#3F6E40</div>
+      <div class="swatch" style="background:var(--mesquite);color:var(--cream)">Mesquite<br>#2B241C</div>
+      <div class="swatch" style="background:var(--dust);color:var(--cream)">Dust<br>#7A7268</div>
+      <div class="swatch" style="background:var(--border);color:var(--mesquite)">Border<br>#E5DDD2</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Typography</h3>
+    <p style="font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:.5rem">DM Serif Display — The quick brown fox</p>
+    <p style="font-family:'Instrument Serif',serif;font-style:italic;font-size:1.25rem;color:var(--dust);margin-bottom:.5rem">Instrument Serif Italic — The quick brown fox</p>
+    <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:400;font-size:1rem">Plus Jakarta Sans Regular — Body text size</p>
+    <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;font-size:.875rem">Plus Jakarta Sans Medium — 0.875rem / labels</p>
+    <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.8125rem">Plus Jakarta Sans Semibold — 0.8125rem / small UI</p>
+  </div>
+
+  <div class="section">
+    <h3>Buttons</h3>
+    <div class="btn-row">
+      <button class="btn btn-primary" disabled>Primary CTA</button>
+      <button class="btn btn-secondary" disabled>Secondary</button>
+      <button class="btn btn-ghost" disabled>Ghost</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Tags / Pills</h3>
+    <div>
+      <span class="pill pill-clay">Delivery</span>
+      <span class="pill pill-sage">Available</span>
+      <span class="pill pill-clay">Handyman</span>
+      <span class="tag">Bakersfield</span>
+      <span class="tag">CA</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Form Fields</h3>
+    <div class="field">
+      <label>Search services…</label>
+      <input type="text" placeholder="e.g. plumbing, moving, tutoring...">
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Cards</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="img"></div>
+        <h4>Fix-a-Leak Plumbing</h4>
+        <p>Bakersfield • $$</p>
+      </div>
+      <div class="card">
+        <div class="img"></div>
+        <h4>Maria's Catering</h4>
+        <p>Bakersfield • $</p>
+      </div>
+      <div class="card">
+        <div class="img"></div>
+        <h4>Quick Haul + Junk</h4>
+        <p>Bakersfield • $$$</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
