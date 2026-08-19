@@ -43,15 +43,37 @@ const App = {
     document.querySelectorAll('.city-name').forEach(el => {
       el.textContent = this.currentCity;
     });
+    const display = document.getElementById('city-name-display');
+    if (display) display.textContent = this.currentCity;
     const select = document.getElementById('city-select');
     if (select) select.value = this.currentCity;
   },
 
+  openCityModal() {
+    document.getElementById('city-modal')?.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this._renderCityList('');
+    setTimeout(() => document.getElementById('city-search')?.focus(), 100);
+  },
+
+  filterCities() {
+    const q = (document.getElementById('city-search')?.value || '').toLowerCase();
+    this._renderCityList(q);
+  },
+
+  _renderCityList(query) {
+    const list = document.getElementById('city-list');
+    if (!list) return;
+    const cities = CONFIG.CITIES.filter(c => !query || c.toLowerCase().includes(query));
+    list.innerHTML = cities.map(c => `
+      <div onclick="App.setCity('${c}')" style="padding:13px 14px;border-radius:14px;cursor:pointer;font-size:14px;font-weight:${c===this.currentCity?'700':'500'};color:${c===this.currentCity?'#C87D3A':'#1A1917'};background:${c===this.currentCity?'rgba(200,125,58,0.06)':'transparent'};transition:background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.03)'" onmouseout="this.style.background='${c===this.currentCity?'rgba(200,125,58,0.06)':'transparent'}'">
+        ${c}${c===this.currentCity?' ✓':''}
+      </div>
+    `).join('');
+  },
+
   bindCitySelector() {
-    document.getElementById('open-city-modal')?.addEventListener('click', () => {
-      document.getElementById('city-modal')?.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
+    document.getElementById('open-city-modal')?.addEventListener('click', () => this.openCityModal());
 
     document.getElementById('city-select')?.addEventListener('change', (e) => {
       this.setCity(e.target.value);
