@@ -124,6 +124,36 @@ const App = {
           this.renderLoadBoard(loads.loads || [], 'listings-load-board');
           break;
         }
+        case 'market-shoppers': {
+          const listings = await Listings.load(city, 'market');
+          Listings.renderList(listings, 'listings-market');
+          break;
+        }
+        case 'market-shops': {
+          if (Auth.isLoggedIn()) {
+            const listings = await Listings.load(city, 'market');
+            const mine = listings.filter(l => l.user_id === Auth.currentUser?.id);
+            Listings.renderList(mine, 'listings-my-market');
+          }
+          break;
+        }
+        case 'rentals-seek': {
+          const listings = await Utils.api('GET', `/listings?city=${encodeURIComponent(city)}&vertical=rentals&limit=20`).catch(() => ({ listings: [] }));
+          Listings.renderList(listings.listings || [], 'listings-rentals');
+          break;
+        }
+        case 'rentals-offer': {
+          if (Auth.isLoggedIn()) {
+            const listings = await Utils.api('GET', `/listings?city=${encodeURIComponent(city)}&vertical=rentals&limit=20`).catch(() => ({ listings: [] }));
+            const mine = (listings.listings || []).filter(l => l.user_id === Auth.currentUser?.id);
+            Listings.renderList(mine, 'listings-my-rentals');
+          }
+          break;
+        }
+        case 'dashboard': {
+          this.loadDashboard();
+          break;
+        }
         case 'create': {
           this.initCreateForm();
           break;
@@ -132,6 +162,141 @@ const App = {
     } catch (err) {
       console.error(`Failed to load ${moduleId}:`, err);
     }
+  },
+
+  // ===== DRAWER =====
+  openDrawer() {
+    document.getElementById('drawer-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  },
+
+  closeDrawer() {
+    document.getElementById('drawer-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  },
+
+  // ===== DASHBOARD =====
+  async loadDashboard() {
+    if (!Auth.isLoggedIn()) {
+      Auth.openModal('login-modal');
+      this.closeAllModules();
+      return;
+    }
+    const user = Auth.currentUser;
+
+    // Profile card
+    const name = user.fullName || user.email || 'You';
+    const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const avatarEl = document.getElementById('dash-avatar');
+    const nameEl = document.getElementById('dash-display-name');
+    const ageEl = document.getElementById('dash-age');
+    const ratingEl = document.getElementById('dash-rating');
+
+    if (avatarEl) {
+      if (user.avatarUrl) {
+        avatarEl.innerHTML = `<img src="${Utils.escapeHtml(user.avatarUrl)}" alt="Avatar">`;
+      } else {
+        avatarEl.textContent = initials;
+      }
+    }
+    if (nameEl) nameEl.textContent = name;
+    if (ageEl) ageEl.textContent = this._profileAge(user.createdAt || user.created_at);
+    if (ratingEl) ratingEl.innerHTML = Utils.renderStars(user.average_rating || 0, user.rating_count || 0);
+
+    // Load provider listings
+    try {
+      const r = await Utils.api('GET', `/listings?user_id=${user.id}&limit=50`).catch(() => ({ listings: [] }));
+      const all = r.listings || [];
+      const shopItems = all.filter(l => l.vertical === 'market' || l.type === 'market');
+      const svcItems = all.filter(l => l.vertical === 'services' || l.type === 'service');
+      const rentalItems = all.filter(l => l.vertical === 'rentals');
+
+      this._renderAccordionListings('acc-shop-listings', shopItems, 'shop-badge');
+      this._renderAccordionListings('acc-services-listings', svcItems, 'services-badge');
+      this._renderAccordionListings('acc-rentals-listings', rentalItems, 'rentals-badge');
+    } catch (_) {}
+
+    // Load orders (requesting by default)
+    this.switchOrderTab('requesting');
+  },
+
+  _profileAge(createdAt) {
+    if (!createdAt) return 'New member';
+    const ms = Date.now() - new Date(createdAt).getTime();
+    const days = Math.floor(ms / 86400000);
+    if (days < 7) return `Member for ${days}d`;
+    const weeks = Math.floor(days / 7);
+    if (weeks < 5) return `Member for ${weeks}w`;
+    const months = Math.floor(days / 30);
+    if (months < 13) return `Member for ${months} mo`;
+    const years = Math.floor(days / 365);
+    return `Member for ${years} yr${years > 1 ? 's' : ''}`;
+  },
+
+  _renderAccordionListings(containerId, listings, badgeId) {
+    const el = document.getElementById(containerId);
+    const badge = document.getElementById(badgeId);
+    if (!el) return;
+    if (badge) {
+      if (listings.length > 0) { badge.textContent = listings.length; badge.style.display = 'grid'; }
+      else badge.style.display = 'none';
+    }
+    if (listings.length === 0) {
+      el.innerHTML = '<p style="color:#9A9490;font-size:13px;">None yet.</p>';
+      return;
+    }
+    el.innerHTML = listings.map(l => `
+      <div class="order-row" style="padding:10px 12px;">
+        <div class="font-semibold text-sm" style="color:#1A1917;">${Utils.escapeHtml(l.title)}</div>
+        <div class="text-xs" style="color:#9A9490;margin-top:2px;">${l.price ? Utils.formatPrice(l.price) : 'No price set'} · ${Utils.timeAgo(l.created_at)}</div>
+      </div>
+    `).join('');
+  },
+
+  async switchOrderTab(status) {
+    document.querySelectorAll('.order-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.trim().toLowerCase().replace(' ', '_') === status
+        || (status === 'in_progress' && btn.textContent.includes('Progress'))
+        || (status === 'requesting' && btn.textContent.includes('Requesting'))
+        || (status === 'completed' && btn.textContent.includes('Completed')));
+    });
+
+    const listEl = document.getElementById('orders-list');
+    if (!listEl) return;
+    listEl.innerHTML = '<div class="empty-state"><p>Loading…</p></div>';
+
+    try {
+      const r = await Utils.api('GET', `/orders?status=${status}`);
+      const orders = r.orders || [];
+      if (orders.length === 0) {
+        listEl.innerHTML = '<div class="empty-state"><p>No ' + status.replace('_', ' ') + ' orders.</p></div>';
+        return;
+      }
+      listEl.innerHTML = orders.map(o => {
+        const other = o.buyer?.id === Auth.currentUser?.id ? o.seller : o.buyer;
+        const listingTitle = o.listing?.title || 'Order';
+        return `
+          <div class="order-row">
+            <div class="flex items-start justify-between gap-2 mb-1.5">
+              <div class="font-semibold text-sm" style="color:#1A1917;">${Utils.escapeHtml(listingTitle)}</div>
+              <span class="order-status-pill status-${o.status}">${o.status.replace('_', ' ')}</span>
+            </div>
+            <div class="text-xs" style="color:#6B6560;">
+              ${other ? 'With ' + Utils.escapeHtml(other.full_name || 'User') + ' · ' : ''}${Utils.timeAgo(o.created_at)}
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (_) {
+      listEl.innerHTML = '<div class="empty-state"><p>Could not load orders.</p></div>';
+    }
+  },
+
+  // ===== ACCORDION =====
+  toggleAccordion(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('open');
   },
 
   async loadListingsForCurrentCity() {

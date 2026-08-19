@@ -118,14 +118,17 @@ const Auth = {
     const authBtns = document.getElementById('auth-buttons');
     const userMenu = document.getElementById('user-menu');
     const userName = document.getElementById('user-name');
+    const drawerDash = document.getElementById('drawer-dashboard-item');
 
     if (this.currentUser) {
       if (authBtns) authBtns.style.display = 'none';
       if (userMenu) userMenu.style.display = 'flex';
       if (userName) userName.textContent = this.currentUser.fullName || this.currentUser.email;
+      if (drawerDash) drawerDash.style.display = 'flex';
     } else {
       if (authBtns) authBtns.style.display = 'flex';
       if (userMenu) userMenu.style.display = 'none';
+      if (drawerDash) drawerDash.style.display = 'none';
     }
   },
 

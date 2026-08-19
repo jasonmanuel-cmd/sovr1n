@@ -704,6 +704,187 @@
                 padding-bottom: 100px !important;
             }
         }
+
+        /* ===== MOBILE DRAWER ===== */
+        .hamburger-btn {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.08);
+            cursor: pointer;
+            display: grid; place-items: center;
+            transition: all 0.2s;
+            color: #1A1917; flex-shrink: 0;
+        }
+        .hamburger-btn:hover { background: rgba(0,0,0,0.04); }
+        .drawer-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 200;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+        .mobile-drawer {
+            position: absolute; top: 0; left: 0; bottom: 0;
+            width: min(300px, 85vw);
+            background: #FFFFFF;
+            transform: translateX(-100%);
+            transition: transform 0.45s cubic-bezier(0.32,0.72,0,1);
+            overflow-y: auto; padding: 24px 16px;
+            border-right: 1px solid rgba(0,0,0,0.06);
+        }
+        .drawer-overlay.open .mobile-drawer { transform: translateX(0); }
+        .drawer-nav-item {
+            display: flex; align-items: center; gap: 13px;
+            padding: 12px 13px; border-radius: 15px;
+            cursor: pointer; transition: all 0.2s;
+            margin-bottom: 3px;
+            font-size: 14px; font-weight: 600; color: #1A1917;
+        }
+        .drawer-nav-item:hover { background: rgba(0,0,0,0.04); }
+        .drawer-nav-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: grid; place-items: center; font-size: 16px; flex-shrink: 0;
+        }
+
+        /* ===== 4-PILLAR GRID ===== */
+        .pillar-section { margin-bottom: 20px; }
+        .pillar-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .pillar-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px; border-radius: 100px;
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .pillar-badge.market   { background: rgba(34,160,107,0.08);  color: #1A8A5B; border: 1px solid rgba(34,160,107,0.15); }
+        .pillar-badge.services { background: rgba(200,125,58,0.08);  color: #B06E2F; border: 1px solid rgba(200,125,58,0.15); }
+        .pillar-badge.rentals  { background: rgba(100,116,215,0.08); color: #4A5BC7; border: 1px solid rgba(100,116,215,0.15); }
+        .pillar-badge.transport{ background: rgba(217,91,63,0.08);   color: #C04E35; border: 1px solid rgba(217,91,63,0.15); }
+        .pillar-divider { flex: 1; height: 1px; background: rgba(0,0,0,0.06); }
+
+        .box-rentals { background: linear-gradient(135deg, rgba(100,116,215,0.08) 0%, rgba(100,116,215,0.02) 100%); }
+        .box-rentals::before { background: radial-gradient(circle at 30% 30%, rgba(100,116,215,0.08), transparent 70%); }
+        .box-rentals .box-icon  { background: rgba(100,116,215,0.10); color: #5B6AD4; }
+        .box-rentals .box-title { color: #4A5BC7; }
+        .box-rentals .box-arrow { background: rgba(100,116,215,0.10); color: #5B6AD4; }
+        .box-rentals:hover .action-box-inner { box-shadow: 0 8px 24px rgba(100,116,215,0.12); }
+
+        .box-rentals-offer { background: linear-gradient(135deg, rgba(147,100,215,0.08) 0%, rgba(147,100,215,0.02) 100%); }
+        .box-rentals-offer::before { background: radial-gradient(circle at 70% 30%, rgba(147,100,215,0.08), transparent 70%); }
+        .box-rentals-offer .box-icon  { background: rgba(147,100,215,0.10); color: #8B5CF6; }
+        .box-rentals-offer .box-title { color: #7C3AED; }
+        .box-rentals-offer .box-arrow { background: rgba(147,100,215,0.10); color: #8B5CF6; }
+        .box-rentals-offer:hover .action-box-inner { box-shadow: 0 8px 24px rgba(147,100,215,0.12); }
+
+        .box-transport { background: linear-gradient(135deg, rgba(217,91,63,0.08) 0%, rgba(217,91,63,0.02) 100%); }
+        .box-transport::before { background: radial-gradient(circle at 30% 30%, rgba(217,91,63,0.08), transparent 70%); }
+        .box-transport .box-icon  { background: rgba(217,91,63,0.10); color: #D95B3F; }
+        .box-transport .box-title { color: #C04E35; }
+        .box-transport .box-arrow { background: rgba(217,91,63,0.10); color: #D95B3F; }
+        .box-transport:hover .action-box-inner { box-shadow: 0 8px 24px rgba(217,91,63,0.12); }
+
+        .box-transport-post { background: linear-gradient(135deg, rgba(180,60,100,0.08) 0%, rgba(180,60,100,0.02) 100%); }
+        .box-transport-post::before { background: radial-gradient(circle at 70% 30%, rgba(180,60,100,0.08), transparent 70%); }
+        .box-transport-post .box-icon  { background: rgba(180,60,100,0.10); color: #B43C64; }
+        .box-transport-post .box-title { color: #A33358; }
+        .box-transport-post .box-arrow { background: rgba(180,60,100,0.10); color: #B43C64; }
+        .box-transport-post:hover .action-box-inner { box-shadow: 0 8px 24px rgba(180,60,100,0.12); }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard-profile-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FAF9F7 100%);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 22px; padding: 20px; margin-bottom: 14px;
+        }
+        .profile-avatar {
+            width: 66px; height: 66px; border-radius: 50%;
+            background: linear-gradient(135deg, #C87D3A, #D95B3F);
+            display: grid; place-items: center;
+            font-size: 24px; color: #FFFFFF;
+            font-family: 'Clash Display', sans-serif; font-weight: 700;
+            overflow: hidden; flex-shrink: 0;
+            border: 3px solid rgba(200,125,58,0.15);
+        }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-age-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 11px; font-weight: 600; color: #6B6560;
+            background: rgba(0,0,0,0.04); padding: 3px 9px; border-radius: 100px;
+        }
+        .inbox-btn {
+            width: 100%; display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 17px;
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 17px; cursor: pointer; transition: all 0.2s;
+            margin-bottom: 18px; text-align: left;
+        }
+        .inbox-btn:hover { border-color: rgba(200,125,58,0.2); background: rgba(200,125,58,0.02); }
+        .inbox-badge {
+            min-width: 20px; height: 20px; border-radius: 10px;
+            background: #D95B3F; color: #FFFFFF;
+            font-size: 11px; font-weight: 700;
+            display: grid; place-items: center; padding: 0 5px;
+        }
+        .section-title {
+            font-family: 'Clash Display', sans-serif;
+            font-weight: 600; font-size: 15px; color: #1A1917; margin-bottom: 10px;
+        }
+        .accordion-item {
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 17px; overflow: hidden; margin-bottom: 7px;
+        }
+        .accordion-item:hover { border-color: rgba(0,0,0,0.09); }
+        .accordion-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 17px; cursor: pointer; transition: background 0.2s;
+        }
+        .accordion-header:hover { background: rgba(0,0,0,0.02); }
+        .accordion-title { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #1A1917; }
+        .accordion-arrow { transition: transform 0.3s cubic-bezier(0.32,0.72,0,1); color: #9A9490; }
+        .accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.32,0.72,0,1); }
+        .accordion-item.open .accordion-body { max-height: 500px; }
+        .accordion-content { padding: 2px 17px 16px; }
+        .notif-badge {
+            min-width: 18px; height: 18px; border-radius: 9px;
+            background: #D95B3F; color: #FFFFFF;
+            font-size: 10px; font-weight: 700;
+            display: grid; place-items: center; padding: 0 4px;
+        }
+        .add-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 7px 13px; border-radius: 9px;
+            background: rgba(200,125,58,0.08); border: 1px solid rgba(200,125,58,0.12);
+            color: #C87D3A; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; margin-top: 9px;
+        }
+        .add-btn:hover { background: rgba(200,125,58,0.14); }
+        .order-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
+        .order-tabs::-webkit-scrollbar { display: none; }
+        .order-tab {
+            flex-shrink: 0; padding: 7px 15px; border-radius: 100px;
+            border: 1px solid rgba(0,0,0,0.08); background: #FFFFFF;
+            font-size: 12px; font-weight: 600; color: #6B6560;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .order-tab.active { background: #1A1917; color: #FFFFFF; border-color: #1A1917; }
+        .order-row {
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 14px; padding: 13px 15px; margin-bottom: 7px; transition: all 0.2s;
+        }
+        .order-row:hover { border-color: rgba(0,0,0,0.10); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .order-status-pill {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 8px; border-radius: 100px;
+            font-size: 10px; font-weight: 700; letter-spacing: 0.02em;
+        }
+        .status-requesting  { background: rgba(200,125,58,0.08);  color: #C87D3A; }
+        .status-in_progress { background: rgba(100,116,215,0.08); color: #5B6AD4; }
+        .status-completed   { background: rgba(34,160,107,0.08);  color: #1A8A5B; }
+        .status-cancelled   { background: rgba(0,0,0,0.06);       color: #9A9490; }
     </style>
 </head>
 <body>
@@ -712,30 +893,76 @@
 
 <!-- ============ HEADER ============ -->
 <header class="fixed top-0 inset-x-0 z-50 glass" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-    <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-        <a href="#" class="flex items-center gap-3" onclick="App.closeAllModules(); return false;">
-            <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
-                <svg width="16" height="16" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-            </div>
-            <span class="font-display font-semibold text-lg tracking-tight" style="color:#1A1917;">Sourc'n</span>
-        </a>
-        <div class="flex items-center gap-3">
-            <button class="city-pill" onclick="App.openCityModal()" id="city-pill-btn">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center gap-3">
+        <!-- Left: Hamburger -->
+        <button class="hamburger-btn" onclick="App.openDrawer()" aria-label="Open menu">
+            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+        </button>
+
+        <!-- Center: Brand + City picker -->
+        <div class="flex items-center gap-2.5 flex-1 justify-center min-w-0">
+            <a href="#" class="flex items-center gap-2 flex-shrink-0" onclick="App.closeAllModules(); return false;">
+                <div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
+                    <svg width="14" height="14" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+                </div>
+                <span class="font-display font-semibold text-base tracking-tight hidden sm:block" style="color:#1A1917;">Sourc'n</span>
+            </a>
+            <button class="city-pill" onclick="App.openCityModal()" id="city-pill-btn" style="padding:7px 14px; font-size:12px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
                 <span id="city-name-display">Bakersfield</span>
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div id="auth-buttons" class="flex items-center gap-2">
-                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:#FFFFFF; color:#1A1917; border:1px solid rgba(0,0,0,0.10);" onclick="Auth.openModal('login-modal')">Sign In</button>
-                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="Auth.openModal('register-modal')">Sign Up</button>
-            </div>
-            <div id="user-menu" class="hidden items-center gap-2">
-                <span class="text-xs font-semibold" style="color:#C87D3A;" id="user-name"></span>
-                <button class="text-xs font-semibold px-3 py-1.5 rounded-lg" style="background:rgba(0,0,0,0.04); color:#6B6560;" onclick="Auth.logout()">Sign Out</button>
-            </div>
+        </div>
+
+        <!-- Right: Auth / Profile portal -->
+        <div id="auth-buttons" class="flex items-center gap-2 flex-shrink-0">
+            <button class="text-xs font-semibold px-3.5 py-2 rounded-xl transition-all" style="background:#FFFFFF; color:#1A1917; border:1px solid rgba(0,0,0,0.10);" onclick="Auth.openModal('login-modal')">Sign In</button>
+            <button class="text-xs font-semibold px-3.5 py-2 rounded-xl transition-all hidden sm:block" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="Auth.openModal('register-modal')">Sign Up</button>
+        </div>
+        <div id="user-menu" class="hidden items-center gap-2 flex-shrink-0">
+            <button class="text-xs font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all" style="background:rgba(200,125,58,0.08); color:#C87D3A; border:1px solid rgba(200,125,58,0.12);" onclick="App.openModule('dashboard')">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                <span id="user-name" class="hidden sm:inline max-w-20 truncate"></span>
+                <span class="sm:hidden">Me</span>
+            </button>
+            <button class="text-xs font-semibold px-2.5 py-2 rounded-xl transition-all" title="Sign out" style="background:rgba(0,0,0,0.04); color:#6B6560;" onclick="Auth.logout()">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            </button>
         </div>
     </div>
 </header>
+
+<!-- ============ MOBILE DRAWER ============ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="if(event.target===this)App.closeDrawer()">
+    <div class="mobile-drawer">
+        <div class="flex items-center gap-3 mb-7 pt-1">
+            <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
+                <svg width="15" height="15" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            </div>
+            <span class="font-display font-semibold text-base" style="color:#1A1917;">Sourc'n</span>
+            <button style="margin-left:auto;width:34px;height:34px;border-radius:11px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);cursor:pointer;display:grid;place-items:center;color:#1A1917;font-size:18px;" onclick="App.closeDrawer()">&times;</button>
+        </div>
+        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('market-shoppers')">
+            <div class="drawer-nav-icon" style="background:rgba(34,160,107,0.08);color:#22A06B;">🛒</div>Shop Local Market
+        </div>
+        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('services-buyer')">
+            <div class="drawer-nav-icon" style="background:rgba(200,125,58,0.08);color:#C87D3A;">🔧</div>Find Services
+        </div>
+        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('rentals-seek')">
+            <div class="drawer-nav-icon" style="background:rgba(100,116,215,0.08);color:#5B6AD4;">🏠</div>Browse Rentals
+        </div>
+        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('drivers')">
+            <div class="drawer-nav-icon" style="background:rgba(217,91,63,0.08);color:#D95B3F;">🚛</div>Driver Gigs
+        </div>
+        <div style="height:1px;background:rgba(0,0,0,0.06);margin:10px 0;"></div>
+        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('create')">
+            <div class="drawer-nav-icon" style="background:rgba(217,91,63,0.06);color:#D95B3F;">✏️</div>Post a Listing
+        </div>
+        <div class="drawer-nav-item" id="drawer-dashboard-item" style="display:none;" onclick="App.closeDrawer();App.openModule('dashboard')">
+            <div class="drawer-nav-icon" style="background:rgba(200,125,58,0.08);color:#C87D3A;">👤</div>My Dashboard
+        </div>
+    </div>
+</div>
 
 <!-- ============ CITY MODAL ============ -->
 <div class="modal-bg" id="city-modal" role="dialog" aria-modal="true" aria-labelledby="city-modal-title" onclick="if(event.target===this)App.closeCityModal()">
@@ -832,67 +1059,113 @@
         </div>
     </div>
 
-    <!-- 6-BOX ACTION GRID -->
+    <!-- 4-PILLAR MARKETPLACE GRID -->
     <div class="mb-16 fade-up delay-3">
-        <p class="panel-label mb-4" style="color:#1A8A5B;">For Buyers</p>
-        <div class="grid grid-cols-2 gap-4 mb-8 grid-flow-dense">
-            <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('services-buyer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('services-buyer')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🛒</div>
-                    <div class="box-title">Services</div>
-                    <div class="box-sub">Find local pros — plumbing, lawn, cleaning, and more.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+
+        <!-- Market -->
+        <div class="pillar-section">
+            <div class="pillar-header">
+                <span class="pillar-badge market">🛍️ Market</span>
+                <div class="pillar-divider"></div>
             </div>
-            <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('drivers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('drivers')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🚛</div>
-                    <div class="box-title">For Drivers</div>
-                    <div class="box-sub">Browse delivery runs and gigs in your area.</div>
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('market-shoppers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('market-shoppers')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">🛒</div>
+                        <div class="box-title">Shoppers</div>
+                        <div class="box-sub">Browse local deals, goods & items for sale.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
                 </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('market-shops')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('market-shops')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">🏪</div>
+                        <div class="box-title">Shop Owners</div>
+                        <div class="box-sub">List your goods and sell to local buyers.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                </div>
             </div>
         </div>
 
-        <p class="panel-label mb-4" style="color:#C87D3A;">For Sellers</p>
-        <div class="grid grid-cols-2 gap-4 mb-8 grid-flow-dense">
-            <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('service-providers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('service-providers')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🔧</div>
-                    <div class="box-title">Service Providers</div>
-                    <div class="box-sub">Offer your services to local buyers.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        <!-- Services -->
+        <div class="pillar-section">
+            <div class="pillar-header">
+                <span class="pillar-badge services">🔧 Services</span>
+                <div class="pillar-divider"></div>
             </div>
-            <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('load-board')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('load-board')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">📦</div>
-                    <div class="box-title">Load Board</div>
-                    <div class="box-sub">Post or find freight and hauling work.</div>
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('services-buyer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('services-buyer')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">🙋</div>
+                        <div class="box-title">Customers</div>
+                        <div class="box-sub">Find local pros — cleaning, plumbing, lawn & more.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
                 </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('service-providers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('service-providers')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">🔧</div>
+                        <div class="box-title">Service Providers</div>
+                        <div class="box-sub">Offer your skills to local customers.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                </div>
             </div>
         </div>
 
-        <p class="panel-label mb-4" style="color:#D95B3F;">Quick Actions</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 grid-flow-dense">
-            <div class="action-box box-standalone" role="button" tabindex="0" onclick="App.openModule('create')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('create')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">✏️</div>
-                    <div class="box-title">Create</div>
-                    <div class="box-sub">Post a listing, job, or service offer.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        <!-- Rentals -->
+        <div class="pillar-section">
+            <div class="pillar-header">
+                <span class="pillar-badge rentals">🏠 Rentals</span>
+                <div class="pillar-divider"></div>
             </div>
-            <div class="action-box box-standalone" role="button" tabindex="0" onclick="App.openModule('share')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('share')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🔗</div>
-                    <div class="box-title">Share</div>
-                    <div class="box-sub">Send Sourc'n to a friend or neighbor.</div>
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                <div class="action-box box-rentals" role="button" tabindex="0" onclick="App.openModule('rentals-seek')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('rentals-seek')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">🔍</div>
+                        <div class="box-title">Rentees</div>
+                        <div class="box-sub">Find equipment, spaces & items to rent locally.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
                 </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                <div class="action-box box-rentals-offer" role="button" tabindex="0" onclick="App.openModule('rentals-offer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('rentals-offer')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">🔑</div>
+                        <div class="box-title">Renters</div>
+                        <div class="box-sub">List your space, gear or items for rent.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                </div>
             </div>
         </div>
+
+        <!-- Transportation -->
+        <div class="pillar-section">
+            <div class="pillar-header">
+                <span class="pillar-badge transport">🚛 Transportation</span>
+                <div class="pillar-divider"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                <div class="action-box box-transport" role="button" tabindex="0" onclick="App.openModule('drivers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('drivers')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">🚛</div>
+                        <div class="box-title">Drivers</div>
+                        <div class="box-sub">Browse hauls, delivery gigs & freight runs.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                </div>
+                <div class="action-box box-transport-post" role="button" tabindex="0" onclick="App.openModule('load-board')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('load-board')}">
+                    <div class="action-box-inner">
+                        <div class="box-icon">📦</div>
+                        <div class="box-title">Post a Load</div>
+                        <div class="box-sub">Hire a driver for freight, hauling or delivery.</div>
+                    </div>
+                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- TRENDING -->
@@ -1111,6 +1384,200 @@
             <button type="submit" class="w-full text-sm font-bold py-4 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;">Post Listing</button>
             <p class="text-xs text-center" style="color:#9A9490;">Platform fee: 10% on completed transactions.</p>
         </form>
+    </div>
+</div>
+
+<!-- ============ MODULE: DASHBOARD ============ -->
+<div class="module-view" id="mod-dashboard">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">My Dashboard</h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-6">
+
+        <!-- Profile Card -->
+        <div class="dashboard-profile-card">
+            <div class="flex items-start gap-4 mb-3">
+                <div class="profile-avatar" id="dash-avatar">?</div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-display font-semibold text-lg leading-tight mb-1 truncate" id="dash-display-name" style="color:#1A1917;">Loading…</div>
+                    <div class="text-sm mb-2 truncate" id="dash-company-name" style="color:#6B6560;display:none;"></div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <div class="listing-rating" id="dash-rating"></div>
+                        <span class="profile-age-badge" id="dash-age">Member</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Mail Inbox -->
+        <button class="inbox-btn" onclick="App.toggleChat()">
+            <div class="flex items-center gap-3">
+                <div style="width:38px;height:38px;border-radius:11px;background:rgba(200,125,58,0.08);display:grid;place-items:center;color:#C87D3A;">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                </div>
+                <div>
+                    <div class="text-sm font-semibold" style="color:#1A1917;">All Mail</div>
+                    <div class="text-xs" style="color:#9A9490;">Messages &amp; notifications</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="inbox-badge" id="dash-unread-count" style="display:none;">0</span>
+                <svg width="13" height="13" fill="none" stroke="#9A9490" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+        </button>
+
+        <!-- Provider Management Hub -->
+        <div class="mb-5">
+            <div class="section-title">Provider Hub</div>
+
+            <div class="accordion-item" id="acc-shop">
+                <div class="accordion-header" onclick="App.toggleAccordion('acc-shop')">
+                    <div class="accordion-title">
+                        <div style="width:34px;height:34px;border-radius:10px;background:rgba(34,160,107,0.08);display:grid;place-items:center;font-size:15px;">🏪</div>
+                        Your Shop
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="notif-badge" id="shop-badge" style="display:none;">0</span>
+                        <svg class="accordion-arrow" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <div id="acc-shop-listings" class="space-y-2 text-sm" style="color:#6B6560;"></div>
+                        <button class="add-btn" onclick="App.openModule('market-shops')">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                            Add Item
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item" id="acc-services">
+                <div class="accordion-header" onclick="App.toggleAccordion('acc-services')">
+                    <div class="accordion-title">
+                        <div style="width:34px;height:34px;border-radius:10px;background:rgba(200,125,58,0.08);display:grid;place-items:center;font-size:15px;">🔧</div>
+                        Your Services
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="notif-badge" id="services-badge" style="display:none;">0</span>
+                        <svg class="accordion-arrow" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <div id="acc-services-listings" class="space-y-2 text-sm" style="color:#6B6560;"></div>
+                        <button class="add-btn" onclick="App.openModule('service-providers')">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                            Add Service
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item" id="acc-rentals">
+                <div class="accordion-header" onclick="App.toggleAccordion('acc-rentals')">
+                    <div class="accordion-title">
+                        <div style="width:34px;height:34px;border-radius:10px;background:rgba(100,116,215,0.08);display:grid;place-items:center;font-size:15px;">🏠</div>
+                        Your Rentals
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="notif-badge" id="rentals-badge" style="display:none;">0</span>
+                        <svg class="accordion-arrow" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content">
+                        <div id="acc-rentals-listings" class="space-y-2 text-sm" style="color:#6B6560;"></div>
+                        <button class="add-btn" onclick="App.openModule('rentals-offer')">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                            Add Rental
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buyer Hub -->
+        <div class="mb-6">
+            <div class="section-title">Your Purchases</div>
+            <div class="order-tabs">
+                <button class="order-tab active" onclick="App.switchOrderTab('requesting')">Requesting</button>
+                <button class="order-tab" onclick="App.switchOrderTab('in_progress')">In Progress</button>
+                <button class="order-tab" onclick="App.switchOrderTab('completed')">Completed</button>
+            </div>
+            <div id="orders-list">
+                <div class="empty-state"><p>No orders yet — explore the marketplace to get started.</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MODULE: MARKET SHOPPERS ============ -->
+<div class="module-view" id="mod-market-shoppers">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Local Market — <span class="module-city">Bakersfield</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <input type="text" class="search-bar mb-6" placeholder="Search items for sale..." oninput="Search.handleSearch(this.value, 'market-shoppers')">
+        <div id="search-results-market-shoppers" class="mb-4"></div>
+        <div class="space-y-4" id="listings-market"></div>
+    </div>
+</div>
+
+<!-- ============ MODULE: MARKET SHOPS (SELL) ============ -->
+<div class="module-view" id="mod-market-shops">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Sell on the Market</h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(34,160,107,0.06),rgba(34,160,107,0.02));border:1px solid rgba(34,160,107,0.10);">
+            <p class="font-display font-semibold text-lg mb-2" style="color:#22A06B;">List your items on Sourc'n</p>
+            <p class="text-sm mb-5" style="color:#6B6560;">Reach local buyers in <span class="module-city">Bakersfield</span>. 10% platform fee on completed sales.</p>
+            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#22A06B,#1A8A5B);color:#FFFFFF;" onclick="App.openModule('create')">Post an Item</button>
+        </div>
+        <div class="space-y-4" id="listings-my-market"></div>
+    </div>
+</div>
+
+<!-- ============ MODULE: RENTALS (SEEK) ============ -->
+<div class="module-view" id="mod-rentals-seek">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Rentals near <span class="module-city">Bakersfield</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <input type="text" class="search-bar mb-6" placeholder="Search rentals — equipment, spaces, vehicles…" oninput="Search.handleSearch(this.value, 'rentals-seek')">
+        <div id="search-results-rentals-seek" class="mb-4"></div>
+        <div class="space-y-4" id="listings-rentals"></div>
+    </div>
+</div>
+
+<!-- ============ MODULE: RENTALS (OFFER) ============ -->
+<div class="module-view" id="mod-rentals-offer">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">List a Rental</h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(100,116,215,0.06),rgba(100,116,215,0.02));border:1px solid rgba(100,116,215,0.10);">
+            <p class="font-display font-semibold text-lg mb-2" style="color:#4A5BC7;">Rent out your gear or space</p>
+            <p class="text-sm mb-5" style="color:#6B6560;">Earn from idle equipment, tools, vehicles, and spaces in <span class="module-city">Bakersfield</span>.</p>
+            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#5B6AD4,#7C3AED);color:#FFFFFF;" onclick="App.openModule('create')">Post a Rental</button>
+        </div>
+        <div class="space-y-4" id="listings-my-rentals"></div>
     </div>
 </div>
 
