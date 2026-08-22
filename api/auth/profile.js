@@ -34,7 +34,8 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    const { fullName, phone, city, avatarUrl } = req.body;
+    const { fullName, phone, city, avatarUrl, addRole } = req.body;
+    const VALID_ROLES = ['customer', 'service_provider', 'driver', 'load_board'];
 
     try {
       const updates = {};
@@ -42,6 +43,25 @@ module.exports = async function handler(req, res) {
       if (phone !== undefined) updates.phone = phone;
       if (city !== undefined) updates.city = city;
       if (avatarUrl !== undefined) updates.avatar_url = avatarUrl;
+
+      if (addRole !== undefined) {
+        if (!VALID_ROLES.includes(addRole)) {
+          return badRequest(res, `Role must be one of: ${VALID_ROLES.join(', ')}`);
+        }
+
+        const { data: existing, error: fetchError } = await supabase
+          .from('users')
+          .select('roles')
+          .eq('id', user.id)
+          .single();
+
+        if (fetchError) return serverError(res, fetchError.message);
+
+        const currentRoles = existing?.roles || [];
+        if (!currentRoles.includes(addRole)) {
+          updates.roles = [...currentRoles, addRole];
+        }
+      }
 
       const { data, error } = await supabase
         .from('users')

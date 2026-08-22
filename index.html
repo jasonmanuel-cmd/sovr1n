@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sourc'n — Local Markets & Commerce. Find services, drivers, load boards, and local deals in your city.">
-    <title>Sourc'n | Local Markets & Commerce</title>
-    <meta property="og:title" content="Sourc'n | Local Markets & Commerce">
+    <meta name="description" content="sovr1n — Local Markets & Commerce. Find services, drivers, load boards, and local deals in your city.">
+    <title>sovr1n | Local Markets & Commerce</title>
+    <meta property="og:title" content="sovr1n | Local Markets & Commerce">
     <meta property="og:description" content="Bakersfield's local marketplace. Services, drivers, load boards, and deals — all nearby.">
     <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
     tailwind.config = {
         theme: {
@@ -945,6 +947,99 @@
             .bottom-nav { display: none !important; }
         }
 
+        /* Homepage: compact role-picker layout */
+        body { background: #fff; }
+        .mesh-bg { display: none; }
+        .home-header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: flex-end;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 24px 28px 0;
+        }
+        .profile-link {
+            appearance: none;
+            border: 0;
+            background: transparent;
+            color: #111;
+            cursor: pointer;
+            font: 500 18px/1.2 Arial, sans-serif;
+        }
+        .role-home {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: -25px auto 0;
+            padding: 0 28px 28px;
+            text-align: center;
+        }
+        .wordmark {
+            color: #050505;
+            font: 400 clamp(58px, 8vw, 76px)/.9 Arial, sans-serif;
+            letter-spacing: -5px;
+        }
+        .wordmark-star { font-size: .42em; vertical-align: top; letter-spacing: 0; margin-left: 2px; }
+        .home-city-select {
+            width: min(288px, 100%);
+            height: 42px;
+            margin: 18px auto 20px;
+            padding: 0 12px;
+            border: 1px solid #c5b99a;
+            border-radius: 7px;
+            background: #fff;
+            color: #333;
+            font: 18px Arial, sans-serif;
+        }
+        .role-section { margin: 0 0 10px; }
+        .role-section h2 {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            color: #050505;
+            font: 700 37px/1 Arial, sans-serif;
+        }
+        .role-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 40px;
+            margin-top: -4px;
+            padding: 18px;
+            border: 1px solid #bdcbce;
+        }
+        .role-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 26px;
+            min-height: 80px;
+            border: 1px solid #c5b99a;
+            border-radius: 9px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,.18);
+            color: #050505;
+            min-width: 0;
+            cursor: pointer;
+            font: 400 clamp(25px, 3.4vw, 36px)/1.1 Arial, sans-serif;
+            transition: transform 150ms ease, box-shadow 150ms ease;
+        }
+        .role-card:first-child { border-color: #8aafb9; background: linear-gradient(110deg, #e6f6fb, #fff); }
+        .role-card:hover { transform: translateY(-2px); box-shadow: 0 4px 9px rgba(0,0,0,.2); }
+        .role-card:focus-visible { outline: 3px solid var(--clay); outline-offset: 3px; }
+        .role-icon { font-size: 38px; line-height: 1; }
+        .home-footer { border-top: 1px solid #e6e6e6; padding: 12px 20px; text-align: center; }
+        .home-footer a { margin: 0 12px; color: #151515; font: 14px Arial, sans-serif; text-decoration: none; }
+        .home-footer a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            .home-header { padding: 16px 20px 0; }
+            .profile-link { font-size: 16px; }
+            .role-home { margin-top: -18px; padding: 0 16px 24px; }
+            .role-section h2 { font-size: 30px; }
+            .role-row { grid-template-columns: 1fr; gap: 12px; margin-top: 3px; padding: 16px 12px; }
+            .role-card { min-height: 68px; font-size: 26px; gap: 18px; }
+            .role-icon { font-size: 31px; }
+        }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -960,41 +1055,45 @@
 
 <div class="mesh-bg"></div>
 
-<!-- ============ HEADER ============ -->
-<header class="fixed top-0 inset-x-0 z-50 glass" style="border-bottom:1px solid var(--border);" role="banner">
-    <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-        <a href="#" class="flex items-center gap-3" onclick="App.closeAllModules(); return false;" aria-label="Sourc'n home">
-            <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--clay),var(--clay-deep));display:grid;place-items:center;">
-                <svg width="16" height="16" fill="none" stroke="var(--warm-white)" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+<!-- ============ HOMEPAGE HEADER ============ -->
+<header class="home-header" role="banner">
+    <button class="profile-link" type="button" onclick="App.openProfileOrLogin()">Login / Profile</button>
+</header>
+
+<!-- ============ HAMBURGER DRAWER (City Selector + Sign In/Out) ============ -->
+<div class="modal-bg" id="hamburger-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" onclick="if(event.target===this)App.closeHamburgerDrawer()">
+    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+        <button class="modal-close" onclick="App.closeHamburgerDrawer()" aria-label="Close menu">&times;</button>
+        <h2 id="drawer-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Choose your city</h2>
+        <p class="text-sm mb-6" style="color:var(--dust);">Pick a city to get started.</p>
+        <input type="text" class="search-bar mb-6" placeholder="Search cities..." id="drawer-city-search" oninput="App.filterCitiesIn('drawer-city-search','drawer-city-list')">
+        <div id="drawer-city-list" style="max-height:280px; overflow-y:auto; margin-bottom:24px;"></div>
+
+        <div style="border-top:1px solid var(--border); padding-top:20px;">
+            <div id="drawer-auth-buttons" class="flex flex-col gap-2">
+                <button class="w-full text-sm font-semibold py-3 rounded-xl transition-all" style="background:var(--warm-white); color:var(--mesquite); border:1px solid var(--border);" onclick="App.closeHamburgerDrawer(); Auth.openModal('login-modal')" aria-label="Sign in">Sign In</button>
+                <button class="w-full text-sm font-semibold py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="App.closeHamburgerDrawer(); Auth.openModal('register-modal')" aria-label="Sign up">Sign Up</button>
             </div>
-            <span class="font-display font-semibold text-lg tracking-tight" style="color:var(--mesquite);">Sourc'n</span>
-        </a>
-        <div class="flex items-center gap-3">
-            <button class="city-pill" onclick="App.openCityModal()" id="city-pill-btn" aria-label="Select city" aria-expanded="false" aria-controls="city-modal">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                <span id="city-name-display">Bakersfield</span>
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <div id="auth-buttons" class="flex items-center gap-2">
-                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:var(--warm-white); color:var(--mesquite); border:1px solid var(--border);" onclick="Auth.openModal('login-modal')" aria-label="Sign in">Sign In</button>
-                <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="Auth.openModal('register-modal')" aria-label="Sign up">Sign Up</button>
-            </div>
-            <div id="user-menu" class="hidden items-center gap-2">
-                <span class="text-xs font-semibold" style="color:var(--clay);" id="user-name"></span>
-                <button class="text-xs font-semibold px-3 py-1.5 rounded-lg" style="background:var(--cream); color:var(--dust);" onclick="Auth.logout()" aria-label="Sign out">Sign Out</button>
+            <div id="drawer-user-menu" class="flex-col gap-2" style="display:none;">
+                <p class="text-sm font-semibold mb-1" style="color:var(--clay);" id="drawer-user-name"></p>
+                <button class="w-full text-sm font-semibold py-3 rounded-xl transition-all" style="background:var(--cream); color:var(--dust); border:1px solid var(--border);" onclick="Auth.logout()" aria-label="Sign out">Sign Out</button>
             </div>
         </div>
     </div>
-</header>
+</div>
 
-<!-- ============ CITY MODAL ============ -->
-<div class="modal-bg" id="city-modal" role="dialog" aria-modal="true" aria-labelledby="city-modal-title" onclick="if(event.target===this)App.closeCityModal()">
-    <div class="modal-panel p-6 pt-10">
-        <button class="modal-close" onclick="App.closeCityModal()">&times;</button>
-        <h2 id="city-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Select your city</h2>
-        <p class="text-sm mb-6" style="color:var(--dust);">Browse local listings near you.</p>
-        <input type="text" class="search-bar mb-6" placeholder="Search cities..." id="city-search" oninput="App.filterCities()">
-        <div id="city-list"></div>
+<!-- ============ ROLE SELECTION MODAL ============ -->
+<div class="modal-bg" id="role-modal" role="dialog" aria-modal="true" aria-labelledby="role-modal-title" onclick="if(event.target===this)App.closeRoleModal()">
+    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+        <button class="modal-close" onclick="App.closeRoleModal()" aria-label="Close">&times;</button>
+        <h2 id="role-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">What brings you here?</h2>
+        <p class="text-sm mb-6" style="color:var(--dust);">Choose how you'd like to use sovr1n in <span id="role-modal-city">your city</span>.</p>
+        <div class="flex flex-col gap-3">
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(91,138,92,0.06); border:1px solid rgba(91,138,92,0.15); color:var(--sage-deep);" onclick="App.selectRole('customer')">🛒&nbsp; Customer — Browse services &amp; deals</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(212,121,74,0.06); border:1px solid rgba(212,121,74,0.15); color:var(--clay-deep);" onclick="App.selectRole('service_provider')">🔧&nbsp; Service Provider — Offer your services</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(212,121,74,0.06); border:1px solid rgba(212,121,74,0.15); color:var(--clay-deep);" onclick="App.selectRole('driver')">🚛&nbsp; Driver — Find delivery gigs</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(91,138,92,0.06); border:1px solid rgba(91,138,92,0.15); color:var(--sage-deep);" onclick="App.selectRole('load_board')">📦&nbsp; Load Board — Post or find freight</button>
+        </div>
     </div>
 </div>
 
@@ -1003,7 +1102,7 @@
     <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
         <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
         <h2 class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Welcome back</h2>
-        <p class="text-sm mb-6" style="color:var(--dust);">Sign in to your Sourc'n account.</p>
+        <p class="text-sm mb-6" style="color:var(--dust);">Sign in to your sovr1n account.</p>
         <form id="login-form" class="space-y-4">
             <div>
                 <label for="login-email" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">EMAIL</label>
@@ -1023,7 +1122,7 @@
 <div class="modal-bg auth-modal" id="register-modal" onclick="if(event.target===this)Auth.closeAllModals()">
     <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
         <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
-        <h2 class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Join Sourc'n</h2>
+        <h2 class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Join sovr1n</h2>
         <p class="text-sm mb-6" style="color:var(--dust);">Create your local marketplace account.</p>
         <form id="register-form" class="space-y-4">
             <div>
@@ -1056,158 +1155,51 @@
     </div>
 </div>
 
-<!-- ============ MAIN ============ -->
-<main id="main-content" class="relative z-10 pt-28 pb-24 px-5 max-w-6xl mx-auto">
+<!-- ============ MAIN: ROLE PICKER ============ -->
+<main id="main-content" class="role-home">
+    <h1 class="wordmark" aria-label="Sovrin">Sovrin<span class="wordmark-star" aria-hidden="true">✶</span></h1>
+    <select id="city-select" class="home-city-select" aria-label="City or area">
+        <option value="" disabled>City / Area</option>
+        <option value="Bakersfield">Bakersfield</option>
+        <option value="Oildale">Oildale</option>
+        <option value="Shafter">Shafter</option>
+        <option value="Tehachapi">Tehachapi</option>
+        <option value="Delano">Delano</option>
+        <option value="Wasco">Wasco</option>
+        <option value="Ridgecrest">Ridgecrest</option>
+    </select>
 
-    <!-- HERO -->
-    <div class="mb-16 fade-up" style="max-width:640px;">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style="background:rgba(91,138,92,0.06); border:1px solid rgba(91,138,92,0.12);">
-            <span style="width:6px;height:6px;border-radius:50%;background:var(--sage);"></span>
-            <span class="text-xs font-semibold" style="color:var(--sage); letter-spacing:0.04em;">SOURC'N MARKETPLACE</span>
-        </div>
-        <h1 class="font-display font-semibold text-4xl sm:text-5xl md:text-6xl leading-[1.05] mb-5" style="color:var(--mesquite); letter-spacing:-0.03em; max-width:520px;">
-            Find what's
-            <span style="background:linear-gradient(135deg,var(--clay),var(--clay-deep));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">nearby.</span>
-        </h1>
-        <p class="text-lg leading-relaxed mb-8" style="color:var(--dust); max-width:480px;">
-            Services, drivers, deals, and local work — all in your city. No algorithms. Just neighbors.
-        </p>
-    </div>
-
-    <!-- SEARCH -->
-    <div class="mb-16 fade-up delay-2" style="max-width:520px;">
-        <div class="relative">
-            <svg class="absolute left-5 top-1/2 -translate-y-1/2" width="18" height="18" fill="none" stroke="var(--dust)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input type="text" class="search-bar" style="padding-left:48px;" placeholder="Search for anything local..." id="main-search" onkeydown="if(event.key==='Enter')Search.handleSearch(this.value, 'all')">
-        </div>
-    </div>
-
-    <!-- 6-BOX ACTION GRID -->
-    <div class="mb-16 fade-up delay-3">
-        <p class="panel-label mb-4" style="color:var(--sage);">For Buyers</p>
-        <div class="grid grid-cols-2 gap-4 mb-8 grid-flow-dense">
-            <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('services-buyer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('services-buyer')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🛒</div>
-                    <div class="box-title">Services</div>
-                    <div class="box-sub">Find local pros — plumbing, lawn, cleaning, and more.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-            </div>
-            <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('drivers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('drivers')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🚛</div>
-                    <div class="box-title">For Drivers</div>
-                    <div class="box-sub">Browse delivery runs and gigs in your area.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-            </div>
-        </div>
-
-        <p class="panel-label mb-4" style="color:var(--clay);">For Sellers</p>
-        <div class="grid grid-cols-2 gap-4 mb-8 grid-flow-dense">
-            <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('service-providers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('service-providers')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🔧</div>
-                    <div class="box-title">Service Providers</div>
-                    <div class="box-sub">Offer your services to local buyers.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-            </div>
-            <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('load-board')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('load-board')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">📦</div>
-                    <div class="box-title">Load Board</div>
-                    <div class="box-sub">Post or find freight and hauling work.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-            </div>
-        </div>
-
-        <p class="panel-label mb-4" style="color:var(--clay-deep);">Quick Actions</p>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 grid-flow-dense">
-            <div class="action-box box-standalone" role="button" tabindex="0" onclick="App.openModule('create')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('create')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">✏️</div>
-                    <div class="box-title">Create</div>
-                    <div class="box-sub">Post a listing, job, or service offer.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-            </div>
-            <div class="action-box box-standalone" role="button" tabindex="0" onclick="App.openModule('share')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('share')}">
-                <div class="action-box-inner">
-                    <div class="box-icon">🔗</div>
-                    <div class="box-title">Share</div>
-                    <div class="box-sub">Send Sourc'n to a friend or neighbor.</div>
-                </div>
-                <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TRENDING -->
-    <section class="mb-16 scroll-reveal delay-1">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="font-display font-semibold text-xl" style="color:var(--mesquite);">Trending in <span id="trending-city-name">Bakersfield</span></h2>
-            <span class="text-xs font-semibold px-3 py-1.5 rounded-full" style="background:var(--warm-white); color:var(--dust); border:1px solid var(--border);">Coming soon</span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="trending-grid">
-            <div class="trend-card">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(91,138,92,0.08); color:var(--sage);">Service</span>
-                    <span class="text-xs" style="color:var(--dust);">12 posts today</span>
-                </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:var(--mesquite);">Moving & Hauling</p>
-                <p class="text-xs" style="color:var(--dust);">4 active providers near you</p>
-            </div>
-            <div class="trend-card">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(212,121,74,0.08); color:var(--clay);">Load</span>
-                    <span class="text-xs" style="color:var(--dust);">8 posts today</span>
-                </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:var(--mesquite);">Furniture Delivery Runs</p>
-                <p class="text-xs" style="color:var(--dust);">3 drivers available now</p>
-            </div>
-            <div class="trend-card">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(212,121,74,0.08); color:var(--clay-deep);">Marketplace</span>
-                    <span class="text-xs" style="color:var(--dust);">5 posts today</span>
-                </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:var(--mesquite);">Used Appliances</p>
-                <p class="text-xs" style="color:var(--dust);">New listings just added</p>
-            </div>
+    <section class="role-section" aria-labelledby="market-title">
+        <h2 id="market-title">Market</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Shoppers <span class="role-icon">🛒</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('create')">Shop owners <span class="role-icon">🏪</span></button>
         </div>
     </section>
-
-    <!-- ZERO-RESULT HINT -->
-    <section class="scroll-reveal delay-2">
-        <div class="rounded-2xl p-5 text-center" style="background:var(--warm-white); border:1px solid var(--border);">
-            <p class="text-xs" style="color:var(--dust);">Can't find what you need? Searches with no results help us know what to add next.</p>
+    <section class="role-section" aria-labelledby="services-title">
+        <h2 id="services-title">Services</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Customers <span class="role-icon">👤</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('service-providers')">Providers <span class="role-icon">🤝</span></button>
         </div>
     </section>
-
+    <section class="role-section" aria-labelledby="rentals-title">
+        <h2 id="rentals-title">Rentals</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Rentees <span class="role-icon">🔑</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('create')">Renters <span class="role-icon">📄</span></button>
+        </div>
+    </section>
+    <section class="role-section" aria-labelledby="transport-title">
+        <h2 id="transport-title">Transportation</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('drivers')">Drivers <span class="role-icon">🛞</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('load-board')">Post a load or job <span class="role-icon">📄</span></button>
+        </div>
+    </section>
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
-
 </main>
-
-<!-- ============ FOOTER ============ -->
-<footer class="site-footer py-12 px-5">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
-        <div class="flex items-center gap-3">
-            <div style="width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,var(--clay),var(--clay-deep));display:grid;place-items:center;">
-                <svg width="12" height="12" fill="none" stroke="var(--warm-white)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-            </div>
-            <span class="font-display font-semibold text-sm" style="color:var(--dust);">Sourc'n</span>
-        </div>
-        <div class="flex items-center gap-8 text-xs font-medium" style="color:var(--dust);">
-            <a href="#" class="hover:text-warm transition-colors">About</a>
-            <a href="#" class="hover:text-warm transition-colors">Safety</a>
-            <a href="#" class="hover:text-warm transition-colors">Privacy</a>
-            <a href="#" class="hover:text-warm transition-colors">Terms</a>
-            <a href="#" class="hover:text-warm transition-colors">Contact</a>
-        </div>
-    </div>
-</footer>
+<footer class="home-footer"><a href="#">About Us</a><a href="#">Contact</a><a href="#">Terms of Service</a><a href="#">About</a></footer>
 
 <!-- ============ CHAT FAB ============ -->
 <button class="chat-fab" id="chat-fab" onclick="App.toggleChat()" aria-label="Open messages">
@@ -1276,7 +1268,7 @@
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
         <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(212,121,74,0.06),rgba(198,100,60,0.03)); border:1px solid rgba(212,121,74,0.10);">
-            <p class="font-display font-semibold text-lg mb-2" style="color:var(--clay);">List your service on Sourc'n</p>
+            <p class="font-display font-semibold text-lg mb-2" style="color:var(--clay);">List your service on sovr1n</p>
             <p class="text-sm mb-5" style="color:var(--dust);">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees — 10% per completed job.</p>
             <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="App.openModule('create')">Get Started</button>
         </div>
@@ -1369,14 +1361,14 @@
     <div class="module-header">
         <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
             <button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Share Sourc'n</span></h2>
+            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Share sovr1n</span></h2>
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
         <div class="rounded-2xl p-10 text-center" style="background:var(--warm-white); border:1px solid var(--border);">
             <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(212,121,74,0.08),rgba(198,100,60,0.08));display:grid;place-items:center;margin:0 auto 20px;font-size:28px;">🔗</div>
             <p class="font-display font-semibold text-xl mb-2" style="color:var(--mesquite);">Spread the word</p>
-            <p class="text-sm mb-8" style="color:var(--dust); max-width:320px; margin:0 auto;">Tell your friends and neighbors about Sourc'n — the more people join, the better the local marketplace gets.</p>
+            <p class="text-sm mb-8" style="color:var(--dust); max-width:320px; margin:0 auto;">Tell your friends and neighbors about sovr1n — the more people join, the better the local marketplace gets.</p>
             <div class="flex flex-col gap-3" style="max-width:280px; margin:0 auto;">
                 <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="shareCopy()">Copy Link</button>
                 <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:var(--warm-white); color:var(--mesquite); border:1px solid var(--border);" onclick="shareNative()">Share via...</button>
@@ -1427,75 +1419,15 @@
 
 <!-- ============ JAVASCRIPT ============ -->
 <script src="app/config.js"></script>
+<script src="app/cities-data.js"></script>
 <script src="app/utils.js"></script>
 <script src="app/auth.js"></script>
 <script src="app/listings.js"></script>
 <script src="app/search.js"></script>
 <script src="app.js"></script>
+<script src="app/home.js"></script>
 <script>
 (function(){
-    const CITIES = [
-        { name:'Bakersfield', region:'Kern County', nearby:['Oildale','Shafter','Arvin','Tehachapi'] },
-        { name:'Oildale', region:'Kern County', nearby:['Bakersfield','Wasco','Lost Hills'] },
-        { name:'Shafter', region:'Kern County', nearby:['Bakersfield','Wasco','McFarland'] },
-        { name:'Arvin', region:'Kern County', nearby:['Bakersfield','Lamont','Tehachapi'] },
-        { name:'Tehachapi', region:'Kern County', nearby:['Bakersfield','Arvin','California City'] },
-        { name:'Wasco', region:'Kern County', nearby:['Bakersfield','Shafter','Delano'] },
-        { name:'McFarland', region:'Kern County', nearby:['Bakersfield','Shafter','Delano'] },
-        { name:'Delano', region:'Kern County', nearby:['McFarland','Wasco','Bakersfield'] },
-        { name:'California City', region:'Kern County', nearby:['Tehachapi','Mojave','Bakersfield'] },
-        { name:'Mojave', region:'Kern County', nearby:['California City','Tehachapi','Ridgecrest'] },
-        { name:'Ridgecrest', region:'Kern County', nearby:['Mojave','California City','Trona'] },
-        { name:'Lamont', region:'Kern County', nearby:['Arvin','Bakersfield'] },
-        { name:'Lost Hills', region:'Kern County', nearby:['Wasco','Bakersfield','Kettleman City'] },
-        { name:'East Bakersfield', region:'Kern County', nearby:['Bakersfield','Arvin'] },
-        { name:'Oceanside', region:'San Diego County', nearby:['Vista','Carlsbad','San Marcos'] },
-        { name:'Vista', region:'San Diego County', nearby:['Oceanside','Carlsbad','Escondido'] },
-        { name:'Carlsbad', region:'San Diego County', nearby:['Oceanside','Vista','Encinitas'] },
-    ];
-
-    App.CITIES_DATA = CITIES;
-
-    const originalSetCity = App.setCity;
-    App.setCity = function(name) {
-        originalSetCity.call(App, name);
-        document.getElementById('trending-city-name').textContent = name;
-        document.querySelectorAll('.module-city').forEach(el => el.textContent = name);
-    };
-
-    App.openCityModal = function() {
-        document.getElementById('city-modal').classList.add('open');
-        document.getElementById('city-search').value = '';
-        document.getElementById('city-search').focus();
-        App.renderCityList(CITIES);
-    };
-
-    App.closeCityModal = function() {
-        document.getElementById('city-modal').classList.remove('open');
-    };
-
-    App.filterCities = function() {
-        const q = document.getElementById('city-search').value.toLowerCase().trim();
-        const filtered = CITIES.filter(c => c.name.toLowerCase().includes(q) || c.region.toLowerCase().includes(q));
-        App.renderCityList(filtered);
-    };
-
-    App.renderCityList = function(cities) {
-        const el = document.getElementById('city-list');
-        if (!cities.length) {
-            el.innerHTML = '<p class="text-sm text-center py-6" style="color:var(--dust);">No cities found</p>';
-            return;
-        }
-        el.innerHTML = cities.map(c =>
-            '<button class="w-full text-left px-5 py-4 rounded-2xl flex items-center justify-between transition-all mb-1.5" ' +
-            'style="background:' + (c.name === App.currentCity ? 'rgba(212,121,74,0.06)' : 'transparent') + '; border:1px solid ' + (c.name === App.currentCity ? 'rgba(212,121,74,0.15)' : 'rgba(0,0,0,0.04)') + '; border-radius:18px;" ' +
-            'onclick="App.setCity(\'' + c.name + '\')">' +
-            '<div><span class="font-display font-semibold text-sm" style="color:var(--mesquite);">' + c.name + '</span> <span class="text-xs ml-2" style="color:var(--dust);">' + c.region + '</span></div>' +
-            (c.name === App.currentCity ? '<span class="text-xs font-bold" style="color:var(--clay);">Current</span>' : '') +
-            '</button>'
-        ).join('');
-    };
-
     App.toggleChat = function() {
         const panel = document.getElementById('chat-panel');
         panel.classList.toggle('open');
@@ -1528,55 +1460,18 @@
         try { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); } catch(e) { alert('Copy: ' + window.location.href); }
     };
     window.shareNative = function() {
-        if (navigator.share) navigator.share({ title: "Sourc'n", text: "Check out Sourc'n — local markets & commerce.", url: window.location.href });
+        if (navigator.share) navigator.share({ title: "sovr1n", text: "Check out sovr1n — local markets & commerce.", url: window.location.href });
         else window.shareCopy();
     };
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             if (document.querySelector('.module-view.active')) App.closeAllModules();
-            if (document.getElementById('chat-panel').classList.contains('open')) App.toggleChat();
-            if (document.getElementById('city-modal').classList.contains('open')) App.closeCityModal();
+            if (document.getElementById('chat-panel')?.classList.contains('open')) App.toggleChat();
         }
     });
-
-    const scrollReveal = document.querySelectorAll('.scroll-reveal');
-    if (scrollReveal.length > 0 && 'IntersectionObserver' in window) {
-        const revealObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-        scrollReveal.forEach(function(el) { revealObserver.observe(el); });
-    }
 })();
 </script>
-
-<nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Main navigation">
-    <a href="#" class="active" onclick="App.closeAllModules(); return false;" aria-label="Home">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <span>Home</span>
-    </a>
-    <a href="#" onclick="App.openModule('listings'); return false;" aria-label="Browse">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        <span>Browse</span>
-    </a>
-    <a href="#" onclick="App.openModule('sell'); return false;" aria-label="Sell">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        <span>Sell</span>
-    </a>
-    <a href="#" onclick="App.openModule('jobs'); return false;" aria-label="Jobs">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-        <span>Jobs</span>
-    </a>
-    <a href="#" onclick="App.toggleChat(); return false;" aria-label="Messages">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        <span>Messages</span>
-    </a>
-</nav>
 
 <div class="listing-detail-overlay" id="detail-overlay" onclick="App.closeDetail()"></div>
 <div class="listing-detail-panel" id="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">

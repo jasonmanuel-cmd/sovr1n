@@ -117,6 +117,7 @@ const Auth = {
       this.updateUI();
       this.closeAllModals();
       Utils.showToast('Welcome back!', 'success');
+      this.onAuthSuccess();
     } catch (err) {
       this.showFieldError(emailInput, err.message);
     } finally {
@@ -186,6 +187,7 @@ const Auth = {
     this.updateUI();
     Utils.showToast('Signed out', 'info');
     if (btn) this.setButtonLoading(btn, false);
+    this.onLogout();
   },
 
   async loadProfile() {
@@ -214,18 +216,23 @@ const Auth = {
   },
 
   openModal(id) {
-    document.getElementById(id)?.classList.add('active');
+    document.getElementById(id)?.classList.add('open');
     document.body.style.overflow = 'hidden';
   },
 
   closeAllModals() {
-    document.querySelectorAll('.auth-modal').forEach(m => m.classList.remove('active'));
+    document.querySelectorAll('.auth-modal').forEach(m => m.classList.remove('open'));
     document.body.style.overflow = '';
   },
 
   isLoggedIn() {
     return !!this.currentUser;
   },
+
+  // Overridable hooks (no-ops by default). app/home.js attaches real
+  // behavior for the city -> auth gateway -> role routing flow.
+  onAuthSuccess() {},
+  onLogout() {},
 };
 
 window.Auth = Auth;

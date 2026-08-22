@@ -25,7 +25,10 @@ const App = {
 
   loadCity() {
     const saved = localStorage.getItem('sourcn_city');
-    if (saved && CONFIG.CITIES.includes(saved)) {
+    const validCities = (typeof window !== 'undefined' && window.CRAIGSLIST_CITIES)
+      ? window.CRAIGSLIST_CITIES.map(c => c.name)
+      : CONFIG.CITIES;
+    if (saved && validCities.includes(saved)) {
       this.currentCity = saved;
     }
     this.updateCityDisplay();
@@ -46,6 +49,14 @@ const App = {
     });
     const select = document.getElementById('city-select');
     if (select) select.value = this.currentCity;
+  },
+
+  openProfileOrLogin() {
+    if (Auth.isLoggedIn()) {
+      App.openRoleModal?.();
+      return;
+    }
+    Auth.openModal('login-modal');
   },
 
   bindCitySelector() {
