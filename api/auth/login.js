@@ -1,6 +1,9 @@
 const { createClient } = require('@supabase/supabase-js');
+const { applySecurityHeaders, rateLimit } = require('../../lib/security');
 
 module.exports = async function handler(req, res) {
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, { limit: 20 })) return;
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -57,6 +60,6 @@ module.exports = async function handler(req, res) {
     });
   } catch (err) {
     console.error('[Login] Server error:', err.message);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 };

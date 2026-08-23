@@ -48,7 +48,15 @@ const App = {
       el.textContent = this.currentCity;
     });
     const select = document.getElementById('city-select');
-    if (select) select.value = this.currentCity;
+    if (select) {
+      // The saved city can be outside the small initial option set. Keep the
+      // selector honest rather than presenting an empty field.
+      if (![...select.options].some(option => option.value === this.currentCity)) {
+        const option = new Option(this.currentCity, this.currentCity);
+        select.add(option, 1);
+      }
+      select.value = this.currentCity;
+    }
   },
 
   openProfileOrLogin() {
@@ -158,6 +166,10 @@ const App = {
           this.initCreateForm();
           break;
         }
+        case 'post-load': {
+          this.initLoadForm();
+          break;
+        }
       }
     } catch (err) {
       const containerId = skeletonMap[moduleId];
@@ -262,7 +274,7 @@ const App = {
     }
 
     container.innerHTML = loads.map(load => `
-      <div class="listing-card" data-id="${load.id}">
+      <div class="listing-card" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
         <div class="listing-info">
           <h4 class="listing-title">${Utils.escapeHtml(load.title)}</h4>
           <p class="listing-desc">${Utils.escapeHtml(load.description || '')}</p>
@@ -311,7 +323,7 @@ const App = {
     }
 
     container.innerHTML = loads.map(load => `
-      <div class="load-row" data-id="${load.id}">
+      <div class="load-row" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
         <div class="load-info">
           <h4 class="load-title">${Utils.escapeHtml(load.title)}</h4>
           <div class="load-route">
@@ -323,11 +335,79 @@ const App = {
         <div class="load-details">
           <span class="cargo-tier cargo-${load.cargo_tier}">${CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || ''} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
           <span class="load-weight">${load.weight_kg ? load.weight_kg + ' kg' : ''}</span>
+          <span class="load-status">${Utils.escapeHtml(load.status || 'open')}</span>
         </div>
         <div class="load-price">${Utils.formatPrice(load.offered_price)}</div>
         <div class="load-time">${Utils.timeAgo(load.created_at)}</div>
       </div>
     `).join('');
+  },
+
+  async openLoadDetail(loadId) {
+    try {
+      const data = await Utils.api('GET', `/loads/${encodeURIComponent(loadId)}`);
+      const load = data.load;
+      this._listingsCache[load.id] = load;
+      const panel = document.getElementById('listing-detail-panel');
+      const overlay = document.getElementById('listing-detail-overlay');
+      if (!panel || !overlay) return;
+      const isOwner = Auth.currentUser?.id === load.poster_id;
+      const poster = load.users?.full_name || 'Load poster';
+      panel.innerHTML = `
+        <button class="modal-close detail-close" onclick="App.closeDetailView()" aria-label="Close details">&times;</button>
+        <div class="detail-header"><div class="detail-photo-placeholder" aria-hidden="true">${CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || '📦'}</div><div class="detail-header-info"><h3 class="detail-title">${Utils.escapeHtml(load.title)}</h3><div class="detail-price">${Utils.formatPrice(load.offered_price)}</div><div class="detail-meta"><span>${Utils.escapeHtml(poster)}</span><span>${Utils.timeAgo(load.created_at)}</span></div></div></div>
+        <div class="detail-section"><h4 class="detail-section-title">Route</h4><p class="detail-desc"><strong>Pickup:</strong> ${Utils.escapeHtml(load.pickup_address)}<br><strong>Drop-off:</strong> ${Utils.escapeHtml(load.dropoff_address)}</p></div>
+        <div class="detail-section"><h4 class="detail-section-title">Load details</h4><p class="detail-desc">${Utils.escapeHtml(load.description || 'No description provided.')}<br><strong>Cargo:</strong> ${Utils.escapeHtml(CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier)}${load.weight_kg ? ` · ${Utils.escapeHtml(String(load.weight_kg))} kg` : ''}${load.dimensions ? ` · ${Utils.escapeHtml(load.dimensions)}` : ''}<br><strong>Status:</strong> ${Utils.escapeHtml(load.status)}</p></div>
+        ${isOwner && load.status === 'open' ? `<div class="flex gap-3"><button class="detail-msg-btn" onclick="App.editLoad('${load.id}')">Edit load</button><button class="detail-msg-btn" style="background:#da3633" onclick="App.cancelLoad('${load.id}')">Cancel load</button></div>` : ''}
+      `;
+      overlay.classList.add('active'); panel.classList.add('active'); document.body.classList.add('scroll-lock');
+    } catch (err) { Utils.showToast(err.message, 'error'); }
+  },
+
+  async cancelLoad(loadId) {
+    if (!window.confirm('Cancel this load? It will no longer appear as open.')) return;
+    try {
+      await Utils.api('DELETE', `/loads/${encodeURIComponent(loadId)}`);
+      this.closeDetailView();
+      Utils.showToast('Load cancelled', 'success');
+      this.loadModuleData('load-board');
+    } catch (err) { Utils.showToast(err.message, 'error'); }
+  },
+
+  editLoad(loadId) {
+    const load = this._listingsCache[loadId];
+    if (!load) return;
+    this.closeDetailView();
+    this.openModule('post-load');
+    setTimeout(() => {
+      const form = document.getElementById('post-load-form');
+      if (!form) return;
+      form.dataset.loadId = load.id;
+      Object.entries({ title: load.title, description: load.description, pickupAddress: load.pickup_address, dropoffAddress: load.dropoff_address, cargoTier: load.cargo_tier, weightKg: load.weight_kg, dimensions: load.dimensions, offeredPrice: load.offered_price }).forEach(([name, value]) => {
+        const field = form.elements[name]; if (field && value != null) field.value = value;
+      });
+      document.getElementById('post-load-submit').textContent = 'Save changes';
+    }, 0);
+  },
+
+  initLoadForm() {
+    const form = document.getElementById('post-load-form');
+    if (!form) return;
+    form.onsubmit = async (event) => {
+      event.preventDefault();
+      if (!Auth.isLoggedIn()) { Utils.showToast('Please sign in to post a load', 'error'); return; }
+      const submit = document.getElementById('post-load-submit');
+      submit.disabled = true;
+      const data = Object.fromEntries(new FormData(form));
+      data.city = this.currentCity;
+      try {
+        const endpoint = form.dataset.loadId ? `/loads/${encodeURIComponent(form.dataset.loadId)}` : '/loads';
+        await Utils.api(form.dataset.loadId ? 'PUT' : 'POST', endpoint, data);
+        Utils.showToast(form.dataset.loadId ? 'Load updated' : 'Load posted', 'success');
+        delete form.dataset.loadId; form.reset(); this.openModule('load-board');
+      } catch (err) { Utils.showToast(err.message, 'error'); }
+      finally { submit.disabled = false; }
+    };
   },
 
   initCreateForm() {

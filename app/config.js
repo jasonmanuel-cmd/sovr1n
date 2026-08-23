@@ -4,10 +4,9 @@ const CONFIG = {
   API_BASE: '/api',
   DEFAULT_CITY: 'Bakersfield',
   CITIES: [
-    'Bakersfield', 'Oildale', 'East Bakersfield', 'Kern County',
-    'Delano', 'Wasco', 'Shafter', 'Taft', 'Maricopa',
-    'Tehachapi', 'California City', 'Mojave', 'Ridgecrest',
-    'San Diego', 'Chula Vista', 'Escondido', 'Oceanside'
+    'Bakersfield', 'Oildale', 'Lamont', 'Arvin', 'Shafter',
+    'Wasco', 'Delano', 'McFarland', 'Taft', 'Maricopa',
+    'Tehachapi', 'Frazier Park', 'California City', 'Mojave', 'Ridgecrest'
   ],
   CARGO_TIERS: {
     small: { label: 'Small', desc: 'Fits in a sedan trunk', icon: '📦' },

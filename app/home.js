@@ -35,7 +35,7 @@
     App._leafletMap = L.map('city-map', {
       zoomControl: true,
       scrollWheelZoom: true,
-    }).setView([39.8283, -98.5795], 4); // continental US center
+    }).setView([35.3733, -119.0187], 9); // Bakersfield-area center
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -69,7 +69,7 @@
       const safeName = c.name.replace(/'/g, "\\'");
       return `
         <button type="button" class="w-full text-left px-5 py-4 rounded-2xl flex items-center justify-between transition-all mb-1.5"
-          style="background:${isCurrent ? 'rgba(212,121,74,0.06)' : 'var(--warm-white)'}; border:1px solid ${isCurrent ? 'rgba(212,121,74,0.2)' : 'var(--border)'};"
+          style="background:${isCurrent ? 'rgba(88,166,255,0.12)' : 'var(--warm-white)'}; border:1px solid ${isCurrent ? 'rgba(88,166,255,0.42)' : 'var(--border)'};"
           onclick="App.selectCity('${safeName}')">
           <span>
             <span class="font-display font-semibold text-sm" style="color:var(--mesquite);">${Utils.escapeHtml(c.name)}</span>

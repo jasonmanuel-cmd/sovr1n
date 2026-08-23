@@ -15,12 +15,15 @@ const Utils = {
     };
     if (body) opts.body = JSON.stringify(body);
 
-    const res = await fetch(`${CONFIG.API_BASE}${path}`, opts);
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'API request failed');
+    let res;
+    try {
+      res = await fetch(`${CONFIG.API_BASE}${path}`, opts);
+    } catch (_) {
+      throw new Error('Unable to reach the server. Please try again.');
     }
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Request failed. Please try again.');
     return data;
   },
 
@@ -65,7 +68,7 @@ const Utils = {
     toast.textContent = message;
     toast.style.cssText = `
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: ${type === 'error' ? '#C4786B' : type === 'success' ? '#7B9E87' : '#D4A574'};
+      background: ${type === 'error' ? '#F85149' : type === 'success' ? '#58A6FF' : '#58A6FF'};
       color: #fff; padding: 12px 24px; border-radius: 8px; z-index: 10000;
       font-size: 14px; font-weight: 500; animation: fadeInUp 0.3s ease;
     `;

@@ -1,51 +1,40 @@
 const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { badRequest, conflict, serverError } = require('../../lib/errors');
+const { applySecurityHeaders, rateLimit, sanitizeText } = require('../../lib/security');
 
 module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, { limit: 10 })) return;
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { email, password, fullName, phone, city } = req.body;
+  const email = sanitizeText(req.body?.email, 254).toLowerCase();
+  const password = req.body?.password;
+  const fullName = sanitizeText(req.body?.fullName, 120);
+  const phone = sanitizeText(req.body?.phone, 40);
+  const city = sanitizeText(req.body?.city, 100) || 'Bakersfield';
 
-  if (!email || !password || !fullName) {
-    return badRequest(res, 'Email, password, and full name are required');
+  if (!email || !password || !fullName) return badRequest(res, 'Email, password, and full name are required');
+  if (!/^\S+@\S+\.\S+$/.test(email) || typeof password !== 'string' || password.length < 6) {
+    return badRequest(res, 'Enter a valid email and a password of at least 6 characters');
   }
 
   try {
-    const { data: existingUser } = await supabaseAdmin
-      .from('users')
-      .select('id')
-      .eq('id', email)
-      .single();
-
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
-      user_metadata: {
-        full_name: fullName,
-        phone: phone || '',
-        city: city || 'Bakersfield',
-      },
+      user_metadata: { full_name: fullName, phone, city },
     });
-
     if (error) {
-      if (error.message.includes('already registered')) {
-        return conflict(res, 'Email already registered');
-      }
-      return serverError(res, error.message);
+      if (/already (registered|exists)|duplicate/i.test(error.message)) return conflict(res, 'Email already registered');
+      console.error('[Register] Auth error:', error);
+      return serverError(res);
     }
-
     return res.status(201).json({
-      user: {
-        id: data.user.id,
-        email: data.user.email,
-        fullName: fullName,
-        city: city || 'Bakersfield',
-      },
+      user: { id: data.user.id, email: data.user.email, fullName, city },
     });
-  } catch (err) {
-    return serverError(res, err.message);
+  } catch (error) {
+    console.error('[Register] Server error:', error);
+    return serverError(res);
   }
 };
