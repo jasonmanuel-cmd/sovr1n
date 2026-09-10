@@ -69,7 +69,7 @@
       const safeName = c.name.replace(/'/g, "\\'");
       return `
         <button type="button" class="w-full text-left px-5 py-4 rounded-2xl flex items-center justify-between transition-all mb-1.5"
-          style="background:${isCurrent ? 'rgba(88,166,255,0.12)' : 'var(--warm-white)'}; border:1px solid ${isCurrent ? 'rgba(88,166,255,0.42)' : 'var(--border)'};"
+          style="background:${isCurrent ? 'rgba(124,92,255,0.16)' : 'var(--warm-white)'}; border:1px solid ${isCurrent ? 'rgba(124,92,255,0.55)' : 'var(--border)'}; box-shadow:${isCurrent ? '0 0 24px rgba(124,92,255,0.18)' : 'none'};"
           onclick="App.selectCity('${safeName}')">
           <span>
             <span class="font-display font-semibold text-sm" style="color:var(--mesquite);">${Utils.escapeHtml(c.name)}</span>

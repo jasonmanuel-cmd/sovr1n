@@ -68,8 +68,8 @@ const Utils = {
     toast.textContent = message;
     toast.style.cssText = `
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: ${type === 'error' ? '#F85149' : type === 'success' ? '#58A6FF' : '#58A6FF'};
-      color: #fff; padding: 12px 24px; border-radius: 8px; z-index: 10000;
+      background: ${type === 'error' ? 'linear-gradient(135deg,#7C5CFF,#FF8FA3)' : type === 'success' ? 'linear-gradient(135deg,#7C5CFF,#22D3EE)' : 'linear-gradient(135deg,#7C5CFF,#22D3EE)'};
+      color: #fff; padding: 12px 24px; border-radius: 999px; z-index: 10000;
       font-size: 14px; font-weight: 500; animation: fadeInUp 0.3s ease;
     `;
     document.body.appendChild(toast);

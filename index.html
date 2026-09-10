@@ -9,7 +9,7 @@
     <meta property="og:description" content="Bakersfield's local marketplace. Services, drivers, load boards, and deals — all nearby.">
     <meta property="og:type" content="website">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,34 +20,31 @@
         theme: {
             extend: {
                 colors: {
-                    sand:      '#0D1117',
-                    cream:     '#161B22',
-                    'warm-white': '#161B22',
-                    clay:      '#58A6FF',
-                    'clay-deep': '#79C0FF',
-                    sage:      '#58A6FF',
-                    'sage-deep': '#79C0FF',
-                    mesquite:  '#E6EDF3',
-                    dust:      '#8B949E',
-                    'border':  '#30363D',
+                    sand:      '#05060F',
+                    cream:     '#0C0F1E',
+                    'warm-white': '#10132A',
+                    clay:      '#7C5CFF',
+                    'clay-deep': '#22D3EE',
+                    sage:      '#22D3EE',
+                    'sage-deep': '#7C5CFF',
+                    mesquite:  '#E9ECFF',
+                    dust:      '#9BA3CC',
+                    'border':  '#232A52',
                 },
                 fontFamily: {
-
-                },
-                fontFamily: {
-                    display: ['Inter', 'sans-serif'],
+                    display: ['Space Grotesk', 'Inter', 'sans-serif'],
                     body: ['Inter', 'sans-serif'],
                     mono: ['JetBrains Mono', 'monospace'],
                 },
                 borderRadius: {
-                    '2xl': '12px',
-                    '3xl': '16px',
-                    '4xl': '24px',
+                    '2xl': '16px',
+                    '3xl': '20px',
+                    '4xl': '28px',
                 },
                 boxShadow: {
-                    'card':   '0 1px 3px rgba(43,36,28,0.08)',
-                    'elevated': '0 4px 12px rgba(43,36,28,0.08)',
-                    'modal':  '0 8px 32px rgba(43,36,28,0.08)',
+                    'card':   '0 1px 2px rgba(6,8,18,0.5), 0 0 0 1px rgba(124,92,255,0.06)',
+                    'elevated': '0 12px 32px rgba(6,8,18,0.6), 0 0 0 1px rgba(124,92,255,0.10), 0 0 40px rgba(34,211,238,0.06)',
+                    'modal':  '0 24px 64px rgba(6,8,18,0.7), 0 0 0 1px rgba(124,92,255,0.14)',
                 },
             }
         }
@@ -57,17 +54,28 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --sand: #0D1117;
-            --cream: #161B22;
-            --warm-white: #161B22;
-            --clay: #58A6FF;
-            --clay-deep: #79C0FF;
-            --sage: #58A6FF;
-            --sage-deep: #79C0FF;
-            --mesquite: #E6EDF3;
-            --dust: #8B949E;
-            --border: #30363D;
-            --shadow: rgba(1,4,9,0.45);
+            --sand: #05060F;
+            --cream: #0C0F1E;
+            --warm-white: #10132A;
+            --clay: #7C5CFF;
+            --clay-deep: #22D3EE;
+            --sage: #22D3EE;
+            --sage-deep: #7C5CFF;
+            --mesquite: #E9ECFF;
+            --dust: #9BA3CC;
+            --border: rgba(139,148,255,0.16);
+            --border-solid: #232A52;
+            --violet: #7C5CFF;
+            --indigo: #5A5CFF;
+            --cyan: #22D3EE;
+            --glow-violet: rgba(124,92,255,0.18);
+            --glow-cyan: rgba(34,211,238,0.16);
+            --bg-deep: #05060F;
+            --shadow: rgba(4,6,16,0.6);
+            --rad-sm: 12px;
+            --rad-md: 16px;
+            --rad-lg: 20px;
+            --rad-xl: 28px;
             --z-base: 0;
             --z-sticky: 10;
             --z-overlay: 20;
@@ -78,7 +86,7 @@
         body {
             background: var(--sand);
             color: var(--mesquite);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             overflow-x: clip;
         }
 
@@ -93,8 +101,8 @@
                 radial-gradient(ellipse 400px 300px at 50% 90%, rgba(43,36,28,0.03) 0%, transparent 70%);
         }
 
-        .font-display { font-family: 'DM Serif Display', serif; }
-        .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
+        .font-body { font-family: 'Inter', sans-serif; }
 
         .glass {
             background: rgba(255,253,249,0.78);
@@ -1144,6 +1152,304 @@
         .input-error { border-color: #FF7B72 !important; }
         .toast { background: #21262D; color: var(--mesquite); border: 1px solid var(--border); }
         .leaflet-container { background: var(--cream); font-family: 'Inter', sans-serif; }
+
+        /* ============================================================
+           AURORA 2026 THEME — violet/cyan on deep space.
+           Refines the same layout: colors, surfaces, type, glow only.
+           ============================================================ */
+        :root { color-scheme: dark; }
+
+        /* Background: layered aurora glows + subtle grain */
+        .mesh-bg {
+            background:
+                radial-gradient(900px 600px at 12% -8%, rgba(124,92,255,0.16), transparent 62%),
+                radial-gradient(760px 520px at 94% 18%, rgba(34,211,238,0.12), transparent 60%),
+                radial-gradient(700px 560px at 82% 92%, rgba(90,92,255,0.12), transparent 58%),
+                radial-gradient(520px 420px at 18% 86%, rgba(34,211,238,0.07), transparent 55%);
+        }
+        body {
+            background:
+                radial-gradient(1200px 800px at 50% -12%, rgba(124,92,255,0.08), transparent 60%),
+                var(--bg-deep);
+        }
+
+        ::selection { background: rgba(124,92,255,0.35); color: #FFFFFF; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(124,92,255,0.7), rgba(34,211,238,0.55));
+            border-radius: 999px;
+            border: 2px solid var(--bg-deep);
+        }
+        :focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+        button, select, a { cursor: pointer; }
+
+        /* Primary action gradient + glow */
+        .btn-primary,
+        .chat-fab, .chat-send, .retry-btn,
+        .toast-success, .toast-error, .toast-info {
+            background:
+                linear-gradient(135deg, var(--violet) 0%, var(--indigo) 45%, var(--cyan) 130%) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            box-shadow: 0 8px 24px rgba(124,92,255,0.35), 0 0 0 1px rgba(124,92,255,0.25) inset, 0 0 32px rgba(34,211,238,0.14);
+        }
+        .btn-primary:hover, .chat-fab:hover, .retry-btn:hover {
+            box-shadow: 0 10px 32px rgba(124,92,255,0.48), 0 0 0 1px rgba(124,92,255,0.35) inset, 0 0 44px rgba(34,211,238,0.2);
+        }
+
+        /* Typography */
+        .font-display,
+        .wordmark,
+        .role-section h2,
+        .role-card,
+        .action-box .box-title,
+        .listing-title,
+        .listing-price,
+        .load-title,
+        .load-price,
+        .listing-detail-panel .price-big {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .wordmark {
+            font-weight: 700;
+            background: linear-gradient(120deg, #FFFFFF 0%, #C4BAFF 38%, var(--violet) 70%, var(--cyan) 120%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 28px rgba(124,92,255,0.4));
+            letter-spacing: -5px;
+        }
+        .wordmark-star {
+            background: linear-gradient(180deg, var(--cyan), var(--violet));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .role-section h2 {
+            color: var(--mesquite);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+        }
+
+        /* Surfaces */
+        .glass {
+            background: linear-gradient(160deg, rgba(23,28,52,0.85), rgba(13,16,32,0.9));
+            backdrop-filter: blur(22px) saturate(140%);
+            -webkit-backdrop-filter: blur(22px) saturate(140%);
+            border: 1px solid rgba(148,156,255,0.16);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+        .home-header, .module-header, .site-footer, .home-footer, .bottom-nav {
+            background: rgba(8,10,24,0.78);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+        }
+        .module-header { border-bottom: 1px solid rgba(148,156,255,0.14); }
+        .home-footer, .site-footer { border-top: 1px solid rgba(148,156,255,0.14); }
+        .role-row {
+            background: rgba(16,19,42,0.6);
+            border: 1px solid rgba(148,156,255,0.14);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+        .chat-panel, .modal-panel, .listing-detail-panel {
+            background: linear-gradient(180deg, rgba(23,28,52,0.96), rgba(12,15,30,0.98)) !important;
+            border: 1px solid rgba(148,156,255,0.16);
+            box-shadow: 0 24px 64px rgba(3,5,14,0.7), 0 0 0 1px rgba(124,92,255,0.08) inset;
+        }
+        .modal-bg, .listing-detail-overlay { background: rgba(3,5,14,0.72); backdrop-filter: blur(8px); }
+
+        /* Radius refinement (was 4px) */
+        button, input, select, textarea, .city-pill, .search-bar, .chat-input,
+        .action-box, .action-box-inner, .listing-card, .load-row, .trend-card,
+        .role-card, .home-city-select, .chat-panel, .modal-panel, .listing-detail-panel {
+            border-radius: var(--rad-md) !important;
+        }
+        .modal-panel { border-radius: var(--rad-xl) var(--rad-xl) var(--rad-md) var(--rad-md) !important; }
+        .chat-fab { border-radius: 999px !important; }
+        .chat-send { border-radius: var(--rad-sm) !important; }
+
+        /* Inputs */
+        .search-bar, .home-city-select, .chat-input {
+            background: rgba(9,11,25,0.9) !important;
+            border: 1px solid rgba(148,156,255,0.18) !important;
+            color: var(--mesquite) !important;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.35);
+        }
+        .search-bar::placeholder, .chat-input::placeholder { color: #6B7299; }
+        .search-bar:focus, .home-city-select:focus, .chat-input:focus {
+            border-color: rgba(124,92,255,0.65) !important;
+            box-shadow: 0 0 0 4px rgba(124,92,255,0.18), 0 0 24px rgba(34,211,238,0.12) !important;
+            outline: none;
+        }
+
+        /* Cards */
+        .listing-card, .load-row, .trend-card, .action-box-inner {
+            background: linear-gradient(165deg, rgba(23,28,52,0.92), rgba(13,16,32,0.96)) !important;
+            border: 1px solid rgba(148,156,255,0.14) !important;
+            box-shadow: 0 1px 2px rgba(4,6,16,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+        }
+        .listing-card:hover, .load-row:hover, .trend-card:hover {
+            border-color: rgba(124,92,255,0.5) !important;
+            box-shadow: 0 12px 36px rgba(3,5,14,0.6), 0 0 0 1px rgba(124,92,255,0.12), 0 0 44px rgba(34,211,238,0.1);
+            transform: translateY(-2px);
+        }
+        .listing-card { border-radius: var(--rad-lg) !important; }
+        .listing-photo { border-radius: var(--rad-lg) var(--rad-lg) 0 0 !important; }
+
+        /* Action boxes + role cards: aurora gradient tiles */
+        .action-box .box-icon, .role-icon {
+            background: linear-gradient(135deg, rgba(124,92,255,0.22), rgba(34,211,238,0.14));
+            border: 1px solid rgba(124,92,255,0.3);
+            box-shadow: 0 0 22px rgba(124,92,255,0.2);
+            color: var(--mesquite);
+        }
+        .action-box .box-title { color: var(--mesquite); }
+        .box-panelA, .box-panelB, .box-standalone,
+        .role-card:first-child, .role-card:nth-child(2) {
+            background:
+                linear-gradient(150deg, rgba(124,92,255,0.16), rgba(13,16,32,0.5) 46%, rgba(34,211,238,0.08)) !important;
+            border-color: rgba(124,92,255,0.32) !important;
+        }
+        .role-card {
+            color: var(--mesquite);
+            box-shadow: 0 4px 20px rgba(3,5,14,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+        .role-card:hover {
+            border-color: rgba(34,211,238,0.55) !important;
+            box-shadow: 0 10px 32px rgba(3,5,14,0.55), 0 0 36px rgba(124,92,255,0.2);
+            transform: translateY(-2px);
+        }
+        .box-arrow {
+            background: linear-gradient(135deg, var(--violet), var(--cyan));
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(124,92,255,0.4);
+        }
+
+        /* Chips & badges */
+        .badge-verified, .listing-category, .cargo-small, .cargo-medium, .cargo-large {
+            background: rgba(124,92,255,0.16) !important;
+            color: var(--mesquite) !important;
+            border: 1px solid rgba(124,92,255,0.35);
+            font-weight: 600 !important;
+            letter-spacing: 0.02em;
+        }
+        .listing-category, .cargo-small, .cargo-medium, .cargo-large { border-radius: 999px !important; }
+        .badge-rating, .stars .star, .star.filled, .load-arrow, .load-status,
+        .listing-price, .load-price, .breadcrumb a:hover, .profile-link:hover {
+            color: var(--cyan);
+        }
+        .load-status { color: var(--cyan) !important; }
+        .listing-price, .load-price, .listing-detail-panel .price-big { color: var(--mesquite) !important; }
+        .listing-price { background: linear-gradient(120deg, #FFFFFF, var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+        .star.filled { color: #FFD166 !important; }
+        .stars .star { color: #39406B !important; }
+
+        /* Category + details accents stay readable */
+        .listing-title, .load-title, .action-box .box-title { color: var(--mesquite); }
+        .listing-desc, .box-sub, .load-route, .load-weight, .load-time,
+        .listing-time, .listing-seller, .rating-count { color: var(--dust) !important; }
+
+        /* Modals, drawers, overlays */
+        .modal-close, .module-back, .listing-detail-close {
+            background: rgba(148,156,255,0.08) !important;
+            border: 1px solid rgba(148,156,255,0.18) !important;
+            color: var(--mesquite) !important;
+        }
+        .modal-close:hover, .module-back:hover, .listing-detail-close:hover {
+            background: rgba(124,92,255,0.18) !important;
+            box-shadow: 0 0 18px rgba(124,92,255,0.3);
+        }
+        #role-modal button:not(.modal-close) {
+            background: rgba(16,19,42,0.9) !important;
+            border: 1px solid rgba(124,92,255,0.3) !important;
+            color: var(--mesquite) !important;
+            border-radius: var(--rad-md) !important;
+        }
+        #role-modal button:not(.modal-close):hover {
+            background: linear-gradient(135deg, rgba(124,92,255,0.2), rgba(34,211,238,0.12)) !important;
+            border-color: rgba(34,211,238,0.5) !important;
+            box-shadow: 0 0 26px rgba(124,92,255,0.22);
+            transform: translateY(-1px);
+        }
+
+        /* Chat */
+        .chat-header { border-bottom: 1px solid rgba(148,156,255,0.14); }
+        .chat-msg.received { background: rgba(148,156,255,0.1); border: 1px solid rgba(148,156,255,0.12); }
+        .chat-msg.sent {
+            background: linear-gradient(135deg, var(--violet), var(--indigo)) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 6px 18px rgba(124,92,255,0.35);
+        }
+
+        /* Toasts */
+        .toast {
+            background: rgba(16,19,42,0.92) !important;
+            color: var(--mesquite) !important;
+            border: 1px solid rgba(148,156,255,0.2);
+            box-shadow: 0 10px 30px rgba(3,5,14,0.6), 0 0 0 1px rgba(124,92,255,0.1);
+            backdrop-filter: blur(16px);
+            border-left: 3px solid var(--violet);
+        }
+
+        /* Skeleton shimmer in aurora tones */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(35,42,82,0.8) 25%, rgba(23,28,52,0.9) 50%, rgba(35,42,82,0.8) 75%);
+            background-size: 200% 100%;
+        }
+
+        /* Error/validation */
+        .error-banner {
+            background: rgba(124,92,255,0.1) !important;
+            border: 1px solid rgba(124,92,255,0.3) !important;
+            border-radius: var(--rad-md) !important;
+        }
+        .error-banner .error-title { color: var(--mesquite); }
+        .error-banner .error-desc { color: var(--dust); }
+        .field-error { color: #FF8FA3 !important; }
+        .input-error { border-color: #FF8FA3 !important; }
+
+        /* Home furniture */
+        .home-city-select {
+            background: linear-gradient(160deg, rgba(23,28,52,0.9), rgba(13,16,32,0.9)) !important;
+            border: 1px solid rgba(148,156,255,0.2) !important;
+            border-radius: var(--rad-sm) !important;
+            box-shadow: 0 4px 18px rgba(3,5,14,0.4), 0 0 0 1px rgba(124,92,255,0.06) inset;
+        }
+        .home-footer { background: rgba(8,10,24,0.85); }
+        .home-footer a, .home-footer, .profile-link { color: var(--mesquite); }
+        .home-footer a:hover, .profile-link:hover { color: var(--cyan); }
+
+        /* Bottom nav */
+        .bottom-nav { border-top: 1px solid rgba(148,156,255,0.14); }
+        .bottom-nav a { color: var(--dust); }
+        .bottom-nav a.active, .bottom-nav a:hover { color: var(--cyan); }
+
+        /* Leaflet restyle */
+        .leaflet-container {
+            background: var(--cream);
+            border: 1px solid rgba(148,156,255,0.14);
+            border-radius: var(--rad-md);
+        }
+
+        /* Aurora polish */
+        .action-box:hover .action-box-inner {
+            border-color: rgba(124,92,255,0.5) !important;
+            box-shadow: 0 14px 40px rgba(3,5,14,0.6), 0 0 0 1px rgba(124,92,255,0.14), 0 0 48px rgba(34,211,238,0.12) !important;
+        }
+        .role-icon {
+            display: inline-grid;
+            place-items: center;
+            width: 52px; height: 52px;
+            border-radius: 16px !important;
+            font-size: 24px !important;
+            flex: none;
+        }
+        .box-arrow::after { display: none; }
+        .panel-label { letter-spacing: 0.14em; color: #7C82A8; }
     </style>
 </head>
 <body>
@@ -1186,10 +1492,10 @@
         <h2 id="role-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">What brings you here?</h2>
         <p class="text-sm mb-6" style="color:var(--dust);">Choose how you'd like to use sovr1n in <span id="role-modal-city">your city</span>.</p>
         <div class="flex flex-col gap-3">
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(91,138,92,0.06); border:1px solid rgba(91,138,92,0.15); color:var(--sage-deep);" onclick="App.selectRole('customer')">🛒&nbsp; Customer — Browse services &amp; deals</button>
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(212,121,74,0.06); border:1px solid rgba(212,121,74,0.15); color:var(--clay-deep);" onclick="App.selectRole('service_provider')">🔧&nbsp; Service Provider — Offer your services</button>
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(212,121,74,0.06); border:1px solid rgba(212,121,74,0.15); color:var(--clay-deep);" onclick="App.selectRole('driver')">🚛&nbsp; Driver — Find delivery gigs</button>
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(91,138,92,0.06); border:1px solid rgba(91,138,92,0.15); color:var(--sage-deep);" onclick="App.selectRole('load_board')">📦&nbsp; Load Board — Post or find freight</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(124,92,255,0.10); border:1px solid rgba(124,92,255,0.32); color:var(--mesquite);" onclick="App.selectRole('customer')">🛒&nbsp; Customer — Browse services &amp; deals</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.32); color:var(--mesquite);" onclick="App.selectRole('service_provider')">🔧&nbsp; Service Provider — Offer your services</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.32); color:var(--mesquite);" onclick="App.selectRole('driver')">🚛&nbsp; Driver — Find delivery gigs</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(124,92,255,0.10); border:1px solid rgba(124,92,255,0.32); color:var(--mesquite);" onclick="App.selectRole('load_board')">📦&nbsp; Load Board — Post or find freight</button>
         </div>
     </div>
 </div>
