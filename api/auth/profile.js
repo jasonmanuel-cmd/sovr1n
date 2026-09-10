@@ -64,12 +64,18 @@ module.exports = async function handler(req, res) {
         }
       }
 
-      const { data, error } = await supabaseAdmin
-        .from('users')
-        .update(updates)
-        .eq('id', user.id)
-        .select()
-        .single();
+      const { data, error } = Object.keys(updates).length > 0
+        ? await supabaseAdmin
+            .from('users')
+            .update(updates)
+            .eq('id', user.id)
+            .select()
+            .single()
+        : await supabaseAdmin
+            .from('users')
+            .select('*')
+            .eq('id', user.id)
+            .single();
 
       if (error || !data) return serverError(res, error?.message);
 
