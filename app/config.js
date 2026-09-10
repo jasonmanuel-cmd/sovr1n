@@ -1,6 +1,6 @@
 const CONFIG = {
-  SUPABASE_URL: 'https://dmovtwgxdoxyxrmbgvgg.supabase.co',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtb3Z0d2d4ZG94eXhybWJndmdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NDUyMjUsImV4cCI6MjEwMDUyMTIyNX0.skdP9uYe1gkTYCbS0_eofjhCC8lOUXG2JZXCT83uP9A',
+  SUPABASE_URL: 'https://rfggwgbbmugrcpmjjvex.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmZ2d3Z2JibXVncmNwbWpqdmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5OTY4MTAsImV4cCI6MjEwNDU3MjgxMH0.-mwAt7lsmIbXp07HFB1dKX-ClwKyNncX4FmOLtsMFhA',
   API_BASE: '/api',
   DEFAULT_CITY: 'Bakersfield',
   CITIES: [
