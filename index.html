@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="sovr1n — Local Markets & Commerce. Find services, drivers, load boards, and local deals in your city.">
+    <title>sovr1n | Local Markets & Commerce</title>
+    <meta property="og:title" content="sovr1n | Local Markets & Commerce">
+    <meta property="og:description" content="Bakersfield's local marketplace. Services, drivers, load boards, and deals — all nearby.">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    sand:      '#0D1117',
+                    cream:     '#161B22',
+                    'warm-white': '#161B22',
+                    clay:      '#58A6FF',
+                    'clay-deep': '#79C0FF',
+                    sage:      '#58A6FF',
+                    'sage-deep': '#79C0FF',
+                    mesquite:  '#E6EDF3',
+                    dust:      '#8B949E',
+                    'border':  '#30363D',
+                },
+                fontFamily: {
+
+                },
+                fontFamily: {
+                    display: ['Inter', 'sans-serif'],
+                    body: ['Inter', 'sans-serif'],
+                    mono: ['JetBrains Mono', 'monospace'],
+                },
+                borderRadius: {
+                    '2xl': '12px',
+                    '3xl': '16px',
+                    '4xl': '24px',
+                },
+                boxShadow: {
+                    'card':   '0 1px 3px rgba(43,36,28,0.08)',
+                    'elevated': '0 4px 12px rgba(43,36,28,0.08)',
+                    'modal':  '0 8px 32px rgba(43,36,28,0.08)',
+                },
+            }
+        }
+    }
+    </script>
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --sand: #0D1117;
+            --cream: #161B22;
+            --warm-white: #161B22;
+            --clay: #58A6FF;
+            --clay-deep: #79C0FF;
+            --sage: #58A6FF;
+            --sage-deep: #79C0FF;
+            --mesquite: #E6EDF3;
+            --dust: #8B949E;
+            --border: #30363D;
+            --shadow: rgba(1,4,9,0.45);
+            --z-base: 0;
+            --z-sticky: 10;
+            --z-overlay: 20;
+            --z-modal: 30;
+            --z-toast: 40;
+        }
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            background: var(--sand);
+            color: var(--mesquite);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: clip;
+        }
+
+        .mesh-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 600px 400px at 15% 20%, rgba(91,138,92,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 500px at 85% 70%, rgba(212,121,74,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 300px at 50% 90%, rgba(43,36,28,0.03) 0%, transparent 70%);
+        }
+
+        .font-display { font-family: 'DM Serif Display', serif; }
+        .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .glass {
+            background: rgba(255,253,249,0.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+
+        .city-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--warm-white);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition-property: transform, background-color, border-color;
+            transition-duration: 150ms;
+            transition-timing-function: ease-out;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--mesquite);
+        }
+        .city-pill:hover {
+            background: rgba(212,121,74,0.06);
+            border-color: rgba(212,121,74,0.2);
+            transform: translateY(-1px);
+        }
+        .city-pill:active { transform: scale(0.97); }
+
+        .modal-bg {
+            position: fixed; inset: 0;
+            background: rgba(43,36,28,0.35);
+            z-index: var(--z-modal);
+            opacity: 0; pointer-events: none;
+            transition: opacity 300ms ease-out;
+            backdrop-filter: blur(4px);
+        }
+        .modal-bg.open { opacity: 1; pointer-events: auto; }
+        .modal-panel {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--warm-white);
+            border-radius: 28px 28px 0 0;
+            z-index: calc(var(--z-modal) + 1);
+            transform: translateY(100%);
+            transition: transform 300ms cubic-bezier(0.32,0.72,0,1);
+            max-height: 85dvh;
+            overflow-y: auto;
+            border-top: 1px solid var(--border);
+        }
+        .modal-bg.open .modal-panel { transform: translateY(0); }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(43,36,28,0.04);
+            border: 1px solid var(--border);
+            color: var(--mesquite); font-size: 20px; cursor: pointer;
+            display: grid; place-items: center;
+            transition-property: background-color, transform;
+            transition-duration: 150ms;
+            transition-timing-function: ease-out;
+        }
+        .modal-close:hover { background: rgba(43,36,28,0.08); }
+        .modal-close:active { transform: scale(0.92); }
+
+        .search-bar {
+            background: var(--warm-white);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--mesquite);
+            font-size: 15px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            width: 100%;
+            outline: none;
+            transition-property: border-color, box-shadow;
+            transition-duration: 150ms;
+            transition-timing-function: ease-out;
+        }
+        .search-bar:focus {
+            border-color: var(--clay);
+            box-shadow: 0 0 0 3px rgba(212,121,74,0.15);
+        }
+        .search-bar::placeholder { color: var(--dust); }
+
+        .action-box {
+            position: relative;
+            border-radius: 24px;
+            padding: 3px;
+            cursor: pointer;
+            transition-property: transform;
+            transition-duration: 400ms;
+            transition-timing-function: cubic-bezier(0.32,0.72,0,1);
+            display: flex;
+            flex-direction: column;
+            min-height: 160px;
+            overflow: hidden;
+        }
+        .action-box-inner {
+            position: relative;
+            border-radius: 21px;
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            height: 100%;
+            background: var(--warm-white);
+            box-shadow: 0 1px 3px var(--shadow);
+            border: 1px solid var(--border);
+            transition-property: transform, box-shadow;
+            transition-duration: 400ms;
+            transition-timing-function: cubic-bezier(0.32,0.72,0,1);
+        }
+        .action-box:hover { transform: translateY(-4px); }
+        .action-box:active { transform: translateY(-2px) scale(0.98); }
+
+        .action-box:hover .action-box-inner {
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .action-box .box-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: grid; place-items: center;
+            font-size: 22px;
+            transition: transform 400ms cubic-bezier(0.32,0.72,0,1);
+        }
+        .action-box:hover .box-icon { transform: scale(1.1) rotate(-3deg); }
+        .action-box .box-title {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            font-size: 22px;
+            line-height: 1.15;
+            text-wrap: balance;
+        }
+        .action-box .box-sub {
+            font-size: 13px;
+            color: var(--dust);
+            line-height: 1.5;
+        }
+
+        .box-arrow {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            transform: translateX(8px);
+            transition-property: opacity, transform;
+            transition-duration: 300ms;
+            transition-timing-function: cubic-bezier(0.32,0.72,0,1);
+        }
+        .action-box:hover .box-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .box-panelA {
+            background: linear-gradient(135deg, rgba(91,138,92,0.08) 0%, rgba(91,138,92,0.02) 100%);
+        }
+        .box-panelA .box-icon { background: rgba(91,138,92,0.10); color: var(--sage); }
+        .box-panelA .box-title { color: var(--sage-deep); }
+        .box-panelA .box-arrow { background: rgba(91,138,92,0.10); color: var(--sage); }
+
+        .box-panelB {
+            background: linear-gradient(135deg, rgba(212,121,74,0.08) 0%, rgba(212,121,74,0.02) 100%);
+        }
+        .box-panelB .box-icon { background: rgba(212,121,74,0.10); color: var(--clay); }
+        .box-panelB .box-title { color: var(--clay-deep); }
+        .box-panelB .box-arrow { background: rgba(212,121,74,0.10); color: var(--clay); }
+
+        .box-standalone {
+            background: linear-gradient(135deg, rgba(212,121,74,0.06) 0%, rgba(212,121,74,0.02) 100%);
+        }
+        .box-standalone .box-icon { background: rgba(212,121,74,0.08); color: var(--clay); }
+        .box-standalone .box-title { color: var(--clay-deep); }
+        .box-standalone .box-arrow { background: rgba(212,121,74,0.08); color: var(--clay); }
+
+        .panel-label {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--dust);
+        }
+
+        .module-view {
+            position: fixed; inset: 0;
+            background: var(--sand);
+            z-index: calc(var(--z-modal) - 10);
+            transform: translateX(100%);
+            transition: transform 400ms cubic-bezier(0.32,0.72,0,1);
+            overflow-y: auto;
+        }
+        .module-view.active { transform: translateX(0); }
+        .module-header {
+            position: sticky; top: 0; z-index: var(--z-sticky);
+            background: rgba(244,239,230,0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .module-back {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: rgba(43,36,28,0.04);
+            border: 1px solid var(--border);
+            color: var(--mesquite);
+            font-size: 18px;
+            cursor: pointer;
+            display: grid; place-items: center;
+            transition-property: background-color, transform;
+            transition-duration: 150ms;
+            transition-timing-function: ease-out;
+        }
+        .module-back:hover { background: rgba(43,36,28,0.08); }
+        .module-back:active { transform: scale(0.92); }
+
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--sage-deep);
+            background: rgba(91,138,92,0.08);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+        .badge-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--clay);
+        }
+
+        .listing-card {
+            background: var(--warm-white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition-property: transform, border-color, box-shadow;
+            transition-duration: 200ms;
+            transition-timing-function: ease-out;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+        .listing-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--clay);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .listing-img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            background: var(--cream);
+            outline: 1px solid rgba(43,36,28,0.1);
+            outline-offset: -1px;
+        }
+
+        .load-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: var(--warm-white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition-property: border-color, box-shadow;
+            transition-duration: 200ms;
+            transition-timing-function: ease-out;
+            box-shadow: 0 1px 3px var(--shadow);
+            cursor: pointer;
+        }
+        .load-status { color: var(--clay); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .load-row:hover {
+            border-color: var(--clay);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .trend-card {
+            background: var(--warm-white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition-property: border-color, box-shadow;
+            transition-duration: 200ms;
+            transition-timing-function: ease-out;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+        .trend-card:hover {
+            border-color: var(--clay);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .chat-fab {
+            position: fixed;
+            bottom: 28px; right: 28px;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: var(--clay);
+            color: var(--warm-white);
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: var(--z-fixed);
+            box-shadow: 0 4px 16px rgba(212,121,74,0.3);
+            display: grid; place-items: center;
+            transition-property: transform, box-shadow;
+            transition-duration: 200ms;
+            transition-timing-function: ease-out;
+        }
+        .chat-fab:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(212,121,74,0.4); }
+        .chat-fab:active { transform: scale(0.94); }
+        .chat-panel {
+            position: fixed;
+            bottom: 0; right: 0;
+            width: min(420px, 100vw);
+            height: min(540px, 82vh);
+            background: var(--warm-white);
+            border-radius: 16px 16px 0 0;
+            z-index: var(--z-modal);
+            transform: translateY(100%);
+            transition: transform 400ms cubic-bezier(0.32,0.72,0,1);
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-bottom: none;
+            box-shadow: 0 -4px 16px var(--shadow);
+        }
+        .chat-panel.open { transform: translateY(0); }
+        .chat-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .chat-messages {
+            flex: 1; overflow-y: auto;
+            padding: 18px 22px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .chat-msg {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .chat-msg.sent {
+            background: var(--clay);
+            color: var(--warm-white);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            font-weight: 500;
+        }
+        .chat-msg.received {
+            background: var(--cream);
+            color: var(--mesquite);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input-row {
+            display: flex; gap: 10px;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+        }
+        .chat-input {
+            flex: 1;
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--mesquite);
+            font-size: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            outline: none;
+            transition: border-color 150ms ease-out;
+        }
+        .chat-input:focus { border-color: var(--clay); }
+        .chat-send {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: var(--clay);
+            color: var(--warm-white);
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: grid; place-items: center;
+            transition: transform 150ms ease-out;
+        }
+        .chat-send:hover { transform: scale(1.05); }
+        .chat-send:active { transform: scale(0.92); }
+
+        .create-cat-btn { transition: transform 150ms ease-out; }
+        .create-cat-btn:hover { transform: translateY(-1px); }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--dust);
+            font-size: 14px;
+        }
+        .listing-info { padding: 18px; }
+        .listing-title {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--mesquite);
+            margin-bottom: 6px;
+        }
+        .listing-desc {
+            font-size: 13px;
+            color: var(--dust);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .listing-price {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            font-size: 18px;
+            color: var(--clay);
+            margin-bottom: 10px;
+        }
+        .listing-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--dust);
+        }
+        .listing-time { color: var(--dust); }
+        .listing-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--clay);
+            margin-bottom: 8px;
+        }
+        .stars { display: inline-flex; gap: 1px; }
+        .star { color: var(--border); font-size: 14px; }
+        .star.filled { color: var(--clay); }
+        .rating-count { color: var(--dust); font-size: 12px; margin-left: 4px; }
+        .listing-photo {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 12px 12px 0 0;
+            background: var(--cream);
+        }
+        .listing-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .listing-photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            font-size: 32px;
+            background: var(--cream);
+        }
+        .listing-seller {
+            color: var(--dust);
+            font-weight: 600;
+        }
+        .listing-category {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 8px;
+            background: rgba(91,138,92,0.08);
+            color: var(--sage-deep);
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .cargo-tier {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .cargo-small { background: rgba(91,138,92,0.08); color: var(--sage-deep); }
+        .cargo-medium { background: rgba(212,121,74,0.08); color: var(--clay); }
+        .cargo-large { background: rgba(212,121,74,0.12); color: var(--clay-deep); }
+
+        .load-info { flex: 1; min-width: 0; }
+        .load-title {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            font-size: 15px;
+            color: var(--mesquite);
+            margin-bottom: 4px;
+        }
+        .load-route {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--dust);
+        }
+        .load-arrow { color: var(--clay); font-weight: 700; }
+        .load-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .load-weight { font-size: 11px; color: var(--dust); }
+        .load-price {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--clay);
+            white-space: nowrap;
+        }
+        .load-time {
+            font-size: 11px;
+            color: var(--dust);
+            white-space: nowrap;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: var(--z-toast);
+            opacity: 0;
+            animation: toastIn 250ms ease forwards, toastOut 300ms ease 2.5s forwards;
+            pointer-events: none;
+        }
+        .toast-success { background: var(--sage); color: var(--warm-white); }
+        .toast-error { background: var(--clay-deep); color: var(--warm-white); }
+        .toast-info { background: var(--clay); color: var(--warm-white); }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .site-footer {
+            background: var(--warm-white);
+            border-top: 1px solid var(--border);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .fade-up { animation: fadeUp 0.5s cubic-bezier(0.32,0.72,0,1) forwards; opacity: 0; }
+        .fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; }
+        .scale-in { animation: scaleIn 0.5s cubic-bezier(0.32,0.72,0,1) forwards; opacity: 0; }
+
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.1s; }
+        .delay-3 { animation-delay: 0.15s; }
+        .delay-4 { animation-delay: 0.2s; }
+        .delay-5 { animation-delay: 0.25s; }
+        .delay-6 { animation-delay: 0.3s; }
+        .delay-7 { animation-delay: 0.35s; }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s cubic-bezier(0.32,0.72,0,1), transform 0.8s cubic-bezier(0.32,0.72,0,1);
+        }
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scroll-reveal.delay-1 { transition-delay: 0.05s; }
+        .scroll-reveal.delay-2 { transition-delay: 0.1s; }
+        .scroll-reveal.delay-3 { transition-delay: 0.15s; }
+        .scroll-reveal.delay-4 { transition-delay: 0.2s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fade-up, .fade-in, .slide-right, .scale-in, .scroll-reveal {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+            .scroll-reveal.revealed {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .action-box:hover,
+            .listing-card:hover,
+            .city-pill:hover,
+            .chat-fab:hover,
+            .modal-panel,
+            .chat-panel,
+            .module-view {
+                transition-duration: 0.01ms !important;
+            }
+            .action-box, .trend-card, .hero-gsap-reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+            }
+        }
+
+        .box-arrow::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--border) 25%, var(--cream) 50%, var(--border) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-card { height: 280px; }
+        .skeleton-line { height: 14px; margin-bottom: 10px; width: 80%; }
+        .skeleton-line.short { width: 50%; }
+        .skeleton-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 8px 0; }
+        .skeleton-badge { height: 24px; width: 60px; border-radius: 20px; margin-bottom: 12px; }
+
+        .listing-detail-overlay {
+            position: fixed; inset: 0; z-index: var(--z-modal);
+            background: rgba(43,36,28,0.5);
+            backdrop-filter: blur(4px);
+            opacity: 0; pointer-events: none;
+            transition: opacity 250ms ease-out;
+        }
+        .listing-detail-overlay.active { opacity: 1; pointer-events: auto; }
+        .listing-detail-panel {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: calc(var(--z-modal) + 1);
+            background: var(--warm-white);
+            border-radius: calc(var(--rad-lg) * 2) calc(var(--rad-lg) * 2) 0 0;
+            max-height: 85dvh; overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 400ms cubic-bezier(0.32,0.72,0,1);
+            padding: 24px 20px 32px;
+        }
+        .listing-detail-panel.active { transform: translateY(0); }
+        .listing-detail-panel .handle {
+            width: 40px; height: 4px; border-radius: 2px;
+            background: var(--border); margin: 0 auto 20px;
+        }
+        .listing-detail-panel .photo {
+            width: 100%; aspect-ratio: 4/3; object-fit: cover;
+            border-radius: 12px; margin-bottom: 20px;
+            background: var(--cream);
+        }
+        .listing-detail-panel .price-big {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400; font-size: 28px; line-height: 1.1;
+        }
+        .listing-detail-panel .meta-row {
+            display: flex; align-items: center; gap: 12px;
+            flex-wrap: wrap; margin: 12px 0 16px;
+        }
+        .listing-detail-panel .desc {
+            color: var(--dust); line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .listing-detail-close {
+            position: absolute; top: 16px; right: 16px;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: none; background: var(--cream); color: var(--mesquite);
+            font-size: 20px; cursor: pointer;
+            display: grid; place-items: center;
+            transition-property: background-color, transform;
+            transition-duration: 150ms;
+            transition-timing-function: ease-out;
+        }
+        .listing-detail-close:hover { background: var(--border); }
+        .listing-detail-close:active { transform: scale(0.92); }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: var(--z-fixed);
+            background: rgba(255,253,249,0.94);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-around;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px);
+            transform: translateY(100%);
+            transition: transform 300ms ease-out;
+        }
+        .bottom-nav.active { transform: translateY(0); }
+        .bottom-nav a {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 2px; text-decoration: none;
+            padding: 6px 12px; min-width: 44px; min-height: 44px;
+            justify-content: center;
+            color: var(--dust); font-size: 10px; font-weight: 500;
+            transition: color 150ms ease-out;
+        }
+        .bottom-nav a:hover,
+        .bottom-nav a.active { color: var(--clay); }
+        .bottom-nav a svg { width: 22px; height: 22px; }
+
+        .error-banner {
+            background: rgba(212,121,74,0.08);
+            border: 1px solid rgba(212,121,74,0.2);
+            border-radius: 12px; padding: 20px; text-align: center;
+            margin: 16px 0;
+        }
+        .error-banner .error-icon { font-size: 32px; margin-bottom: 8px; }
+        .error-banner .error-title { font-weight: 600; color: var(--mesquite); margin-bottom: 4px; }
+        .error-banner .error-desc { font-size: 13px; color: var(--dust); }
+        .error-banner .retry-btn {
+            margin-top: 12px; padding: 8px 20px;
+            border-radius: 12px; border: none;
+            background: var(--clay);
+            color: var(--warm-white); font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: transform 150ms ease-out;
+        }
+        .error-banner .retry-btn:hover { transform: scale(1.05); }
+        .error-banner .retry-btn:active { transform: scale(0.97); }
+
+        .field-error {
+            font-size: 12px; color: var(--clay-deep);
+            margin-top: 4px; display: none;
+        }
+        .field-error.visible { display: block; }
+        .input-error { border-color: rgba(212,121,74,0.4) !important; }
+
+        .btn-loading { position: relative; pointer-events: none; }
+        .btn-loading .btn-text { opacity: 0; }
+        .btn-loading::after {
+            content: '';
+            position: absolute; inset: 0; margin: auto;
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #FFFFFF;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast-container {
+            position: fixed; bottom: 100px; left: 50%; z-index: var(--z-toast);
+            transform: translateX(-50%);
+            display: flex; flex-direction: column; gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(43,36,28,0.9);
+            color: var(--warm-white); font-size: 14px; font-weight: 500;
+            padding: 12px 24px; border-radius: 12px;
+            backdrop-filter: blur(8px);
+            animation: toastIn 250ms ease-out, toastOut 300ms ease-in 3.7s forwards;
+            white-space: nowrap;
+            pointer-events: auto;
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+        .skip-link {
+            position: fixed; top: -100%; left: 16px; z-index: var(--z-modal);
+            background: var(--mesquite); color: var(--warm-white);
+            padding: 12px 24px; border-radius: 12px;
+            font-weight: 600; font-size: 14px; text-decoration: none;
+            transition: top 150ms ease-out;
+        }
+        .skip-link:focus { top: 16px; }
+
+        .focus-trap-backdrop { position: fixed; inset: 0; z-index: calc(var(--z-modal) - 1); }
+
+        body.scroll-lock { overflow: hidden; }
+
+        .rating-selector {
+            display: flex; gap: 4px; flex-direction: row-reverse; justify-content: flex-end;
+        }
+        .rating-selector button {
+            background: none; border: none; cursor: pointer;
+            font-size: 24px; color: var(--border); transition: color 150ms ease-out;
+            padding: 4px; min-width: 44px; min-height: 44px;
+        }
+        .rating-selector button:hover,
+        .rating-selector button:hover ~ button,
+        .rating-selector button.active,
+        .rating-selector button.active ~ button { color: var(--clay); }
+
+        .section-header {
+            display: flex; align-items: baseline; justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .breadcrumb {
+            font-size: 12px; color: var(--dust);
+            display: flex; align-items: center; gap: 6px;
+            margin-bottom: 4px;
+        }
+        .breadcrumb a { color: var(--dust); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--clay); }
+
+        @media (max-width: 640px) {
+            .chat-fab {
+                bottom: 80px;
+                right: 16px;
+                width: 56px;
+                height: 56px;
+            }
+            main { padding-bottom: 100px !important; }
+            .bottom-nav { transform: translateY(0); }
+            .toast-container { bottom: 100px; }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .module-grid { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
+            .listings-grid { grid-template-columns: 1fr 1fr !important; }
+            main { padding: 32px 40px !important; max-width: 100% !important; }
+            .hero-section { padding: 48px 0 40px !important; }
+            .action-box-grid { grid-template-columns: 1fr 1fr !important; }
+            .bottom-nav { transform: translateY(0); }
+            .chat-fab { bottom: 80px; }
+        }
+
+        @media (min-width: 1025px) {
+            .module { border-radius: 20px !important; }
+            main { padding: 40px 48px !important; }
+            .hero-section { padding: 56px 0 48px !important; }
+            .action-box-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+            .listings-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+            .module-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+            .bottom-nav { display: none !important; }
+        }
+
+        /* Homepage: compact role-picker layout, using the site palette */
+        body { background: var(--sand); }
+        .mesh-bg { display: block; }
+        .home-header,
+        .role-home,
+        .home-footer { position: relative; z-index: 1; }
+        .home-header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: flex-end;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 24px 28px 0;
+        }
+        .profile-link {
+            appearance: none;
+            border: 0;
+            background: transparent;
+            color: var(--mesquite);
+            cursor: pointer;
+            font: 600 16px/1.2 'Plus Jakarta Sans', sans-serif;
+        }
+        .profile-link:hover { color: var(--clay); }
+        .role-home {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: -25px auto 0;
+            padding: 0 28px 28px;
+            text-align: center;
+        }
+        .wordmark {
+            color: var(--mesquite);
+            font: 400 clamp(58px, 8vw, 76px)/.9 'DM Serif Display', serif;
+            letter-spacing: -4px;
+        }
+        .wordmark-star { font-size: .42em; vertical-align: top; letter-spacing: 0; margin-left: 2px; }
+        .home-city-select {
+            width: min(288px, 100%);
+            height: 42px;
+            margin: 18px auto 20px;
+            padding: 0 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--warm-white);
+            color: var(--mesquite);
+            font: 500 16px 'Plus Jakarta Sans', sans-serif;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+        .home-city-select:focus { outline: 3px solid rgba(212,121,74,.2); border-color: var(--clay); }
+        .role-section { margin: 0 0 10px; }
+        .role-section h2 {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            color: var(--mesquite);
+            font: 400 37px/1 'DM Serif Display', serif;
+        }
+        .role-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 40px;
+            margin-top: -4px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            background: rgba(255,253,249,.35);
+        }
+        .role-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 26px;
+            min-height: 80px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--warm-white);
+            box-shadow: 0 2px 6px var(--shadow);
+            color: var(--mesquite);
+            min-width: 0;
+            cursor: pointer;
+            font: 400 clamp(25px, 3.4vw, 36px)/1.1 'DM Serif Display', serif;
+            transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+        }
+        .role-card:first-child { border-color: rgba(91,138,92,.3); background: linear-gradient(110deg, rgba(91,138,92,.12), var(--warm-white)); }
+        .role-card:nth-child(2) { background: linear-gradient(110deg, rgba(212,121,74,.08), var(--warm-white)); }
+        .role-card:hover { transform: translateY(-2px); border-color: var(--clay); box-shadow: 0 5px 12px var(--shadow); }
+        .role-card:focus-visible { outline: 3px solid var(--clay); outline-offset: 3px; }
+        .role-icon { font-size: 38px; line-height: 1; }
+        .home-footer { border-top: 1px solid var(--border); padding: 12px 20px; text-align: center; background: rgba(255,253,249,.7); }
+        .home-footer a { margin: 0 12px; color: var(--mesquite); font: 14px 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
+        .home-footer a:hover { color: var(--clay); text-decoration: underline; }
+        @media (max-width: 820px) {
+            .home-header { padding: 16px 20px 0; }
+            .profile-link { font-size: 16px; }
+            .role-home { margin-top: -18px; padding: 0 16px 24px; }
+            .role-section h2 { font-size: 30px; }
+            .role-row { grid-template-columns: 1fr; gap: 12px; margin-top: 3px; padding: 16px 12px; }
+            .role-card { min-height: 68px; font-size: 26px; gap: 18px; }
+            .role-icon { font-size: 31px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* GitHub-inspired dark interface skin */
+        body, .module-view { background: var(--sand); color: var(--mesquite); font-family: 'Inter', sans-serif; }
+        .font-display, .font-body, .wordmark, .role-section h2, .role-card,
+        .action-box .box-title, .listing-title, .listing-price,
+        .load-title, .load-price, .listing-detail-panel .price-big {
+            font-family: 'Inter', sans-serif;
+        }
+        .mesh-bg {
+            background:
+                radial-gradient(ellipse 700px 420px at 12% 10%, rgba(88,166,255,.11), transparent 68%),
+                radial-gradient(ellipse 620px 480px at 88% 82%, rgba(31,111,235,.08), transparent 70%);
+        }
+        .glass { background: rgba(22,27,34,.84); }
+        .module-header { background: rgba(13,17,23,.92); }
+        .home-footer, .site-footer, .bottom-nav { background: rgba(22,27,34,.94); }
+        .role-row { background: rgba(22,27,34,.72); }
+        .role-card:first-child, .role-card:nth-child(2), .box-panelA, .box-panelB, .box-standalone {
+            background: linear-gradient(135deg, rgba(88,166,255,.12), var(--warm-white));
+            border-color: rgba(88,166,255,.38);
+        }
+        .box-panelA .box-icon, .box-panelB .box-icon, .box-standalone .box-icon,
+        .box-panelA .box-arrow, .box-panelB .box-arrow, .box-standalone .box-arrow {
+            background: rgba(88,166,255,.14); color: var(--clay);
+        }
+        .box-panelA .box-title, .box-panelB .box-title, .box-standalone .box-title { color: var(--mesquite); }
+        .home-footer, .home-footer a, .profile-link { color: var(--mesquite); }
+        .home-footer { background: rgba(22,27,34,.9); }
+        .home-city-select, .search-bar, .chat-input { color-scheme: dark; }
+        button, input, select, textarea, .city-pill, .search-bar, .chat-input,
+        .action-box, .action-box-inner, .listing-card, .load-row, .trend-card,
+        .role-card, .home-city-select, .chat-panel, .modal-panel, .listing-detail-panel {
+            border-radius: 4px;
+        }
+        .chat-fab, .chat-send, .retry-btn, .toast-success, .toast-error, .toast-info {
+            background: var(--clay) !important; color: #0D1117 !important;
+            box-shadow: 0 0 18px rgba(88,166,255,.28);
+        }
+        .search-bar:focus, .home-city-select:focus, .chat-input:focus {
+            border-color: var(--clay); box-shadow: 0 0 0 3px rgba(88,166,255,.22), 0 0 16px rgba(88,166,255,.14);
+        }
+        .action-box:hover .action-box-inner, .listing-card:hover, .load-row:hover, .trend-card:hover, .role-card:hover {
+            border-color: var(--clay); box-shadow: 0 0 18px rgba(88,166,255,.18);
+        }
+        ::selection { background: rgba(88,166,255,.35); color: var(--mesquite); }
+        ::-webkit-scrollbar-thumb { background: #30363D; }
+
+        /* Consistent dark surfaces for every overlay, form, and utility state. */
+        .modal-bg,
+        .listing-detail-overlay { background: rgba(1, 4, 9, .72); }
+        .modal-panel,
+        .listing-detail-panel,
+        .chat-panel { background: var(--warm-white); border-color: var(--border); }
+        .modal-close,
+        .module-back,
+        .listing-detail-close { background: var(--cream); color: var(--mesquite); border-color: var(--border); }
+        .modal-close:hover,
+        .module-back:hover,
+        .listing-detail-close:hover { background: #21262D; }
+        .search-bar,
+        .chat-input,
+        .home-city-select { background: var(--cream); color: var(--mesquite); border-color: var(--border); }
+        .search-bar::placeholder,
+        .chat-input::placeholder { color: var(--dust); }
+        #role-modal button:not(.modal-close) {
+            background: rgba(88, 166, 255, .10) !important;
+            border-color: rgba(88, 166, 255, .35) !important;
+            color: var(--mesquite) !important;
+        }
+        #role-modal button:not(.modal-close):hover {
+            background: rgba(88, 166, 255, .18) !important;
+            box-shadow: 0 0 16px rgba(88, 166, 255, .16);
+        }
+        .badge-verified,
+        .listing-category,
+        .cargo-small,
+        .cargo-medium,
+        .cargo-large { background: rgba(88, 166, 255, .12); color: var(--clay); }
+        .error-banner { background: rgba(88, 166, 255, .08); border-color: rgba(88, 166, 255, .25); }
+        .field-error { color: #FF7B72; }
+        .input-error { border-color: #FF7B72 !important; }
+        .toast { background: #21262D; color: var(--mesquite); border: 1px solid var(--border); }
+        .leaflet-container { background: var(--cream); font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<div class="mesh-bg"></div>
+
+<!-- ============ HOMEPAGE HEADER ============ -->
+<header class="home-header" role="banner">
+    <button class="profile-link" type="button" onclick="App.openProfileOrLogin()">Login / Profile</button>
+</header>
+
+<!-- ============ HAMBURGER DRAWER (City Selector + Sign In/Out) ============ -->
+<div class="modal-bg" id="hamburger-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" onclick="if(event.target===this)App.closeHamburgerDrawer()">
+    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+        <button class="modal-close" onclick="App.closeHamburgerDrawer()" aria-label="Close menu">&times;</button>
+        <h2 id="drawer-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Choose your city</h2>
+        <p class="text-sm mb-6" style="color:var(--dust);">Pick a city to get started.</p>
+        <input type="text" class="search-bar mb-6" placeholder="Search cities..." id="drawer-city-search" oninput="App.filterCitiesIn('drawer-city-search','drawer-city-list')">
+        <div id="drawer-city-list" style="max-height:280px; overflow-y:auto; margin-bottom:24px;"></div>
+
+        <div style="border-top:1px solid var(--border); padding-top:20px;">
+            <div id="drawer-auth-buttons" class="flex flex-col gap-2">
+                <button class="w-full text-sm font-semibold py-3 rounded-xl transition-all" style="background:var(--warm-white); color:var(--mesquite); border:1px solid var(--border);" onclick="App.closeHamburgerDrawer(); Auth.openModal('login-modal')" aria-label="Sign in">Sign In</button>
+                <button class="w-full text-sm font-semibold py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="App.closeHamburgerDrawer(); Auth.openModal('register-modal')" aria-label="Sign up">Sign Up</button>
+            </div>
+            <div id="drawer-user-menu" class="flex-col gap-2" style="display:none;">
+                <p class="text-sm font-semibold mb-1" style="color:var(--clay);" id="drawer-user-name"></p>
+                <button class="w-full text-sm font-semibold py-3 rounded-xl transition-all" style="background:var(--cream); color:var(--dust); border:1px solid var(--border);" onclick="Auth.logout()" aria-label="Sign out">Sign Out</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ ROLE SELECTION MODAL ============ -->
+<div class="modal-bg" id="role-modal" role="dialog" aria-modal="true" aria-labelledby="role-modal-title" onclick="if(event.target===this)App.closeRoleModal()">
+    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+        <button class="modal-close" onclick="App.closeRoleModal()" aria-label="Close">&times;</button>
+        <h2 id="role-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">What brings you here?</h2>
+        <p class="text-sm mb-6" style="color:var(--dust);">Choose how you'd like to use sovr1n in <span id="role-modal-city">your city</span>.</p>
+        <div class="flex flex-col gap-3">
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(91,138,92,0.06); border:1px solid rgba(91,138,92,0.15); color:var(--sage-deep);" onclick="App.selectRole('customer')">🛒&nbsp; Customer — Browse services &amp; deals</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(212,121,74,0.06); border:1px solid rgba(212,121,74,0.15); color:var(--clay-deep);" onclick="App.selectRole('service_provider')">🔧&nbsp; Service Provider — Offer your services</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(212,121,74,0.06); border:1px solid rgba(212,121,74,0.15); color:var(--clay-deep);" onclick="App.selectRole('driver')">🚛&nbsp; Driver — Find delivery gigs</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(91,138,92,0.06); border:1px solid rgba(91,138,92,0.15); color:var(--sage-deep);" onclick="App.selectRole('load_board')">📦&nbsp; Load Board — Post or find freight</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div class="modal-bg auth-modal" id="login-modal" onclick="if(event.target===this)Auth.closeAllModals()">
+    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+        <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
+        <h2 class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Welcome back</h2>
+        <p class="text-sm mb-6" style="color:var(--dust);">Sign in to your sovr1n account.</p>
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label for="login-email" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">EMAIL</label>
+                <input type="email" class="search-bar" placeholder="you@email.com" id="login-email" required>
+            </div>
+            <div>
+                <label for="login-password" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">PASSWORD</label>
+                <input type="password" class="search-bar" placeholder="Your password" id="login-password" required>
+            </div>
+            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);">Sign In</button>
+            <p class="text-xs text-center" style="color:var(--dust);">Don't have an account? <a href="#" class="auth-switch" data-target="register-modal" style="color:var(--clay);">Sign up</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- ============ REGISTER MODAL ============ -->
+<div class="modal-bg auth-modal" id="register-modal" onclick="if(event.target===this)Auth.closeAllModals()">
+    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+        <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
+        <h2 class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Join sovr1n</h2>
+        <p class="text-sm mb-6" style="color:var(--dust);">Create your local marketplace account.</p>
+        <form id="register-form" class="space-y-4">
+            <div>
+                <label for="register-name" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">FULL NAME</label>
+                <input type="text" class="search-bar" placeholder="Your name" id="register-name" required>
+            </div>
+            <div>
+                <label for="register-email" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">EMAIL</label>
+                <input type="email" class="search-bar" placeholder="you@email.com" id="register-email" required>
+            </div>
+            <div>
+                <label for="register-password" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">PASSWORD</label>
+                <input type="password" class="search-bar" placeholder="Create a password" id="register-password" required>
+            </div>
+            <div>
+                <label for="register-city" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">CITY</label>
+                <select class="search-bar" id="register-city">
+                    <option value="Bakersfield">Bakersfield</option>
+                    <option value="Oildale">Oildale</option>
+                    <option value="Lamont">Lamont</option>
+                    <option value="Arvin">Arvin</option>
+                    <option value="Shafter">Shafter</option>
+                    <option value="Wasco">Wasco</option>
+                    <option value="Delano">Delano</option>
+                    <option value="McFarland">McFarland</option>
+                    <option value="Taft">Taft</option>
+                    <option value="Maricopa">Maricopa</option>
+                    <option value="Tehachapi">Tehachapi</option>
+                    <option value="Frazier Park">Frazier Park</option>
+                    <option value="California City">California City</option>
+                    <option value="Mojave">Mojave</option>
+                    <option value="Ridgecrest">Ridgecrest</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);">Create Account</button>
+            <p class="text-xs text-center" style="color:var(--dust);">Already have an account? <a href="#" class="auth-switch" data-target="login-modal" style="color:var(--clay);">Sign in</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- ============ MAIN: ROLE PICKER ============ -->
+<main id="main-content" class="role-home">
+    <h1 class="wordmark" aria-label="Sovrin">Sovrin<span class="wordmark-star" aria-hidden="true">✶</span></h1>
+    <select id="city-select" class="home-city-select" aria-label="City or area">
+        <option value="" disabled>City / Area</option>
+        <option value="Bakersfield">Bakersfield</option>
+        <option value="Oildale">Oildale</option>
+        <option value="Lamont">Lamont</option>
+        <option value="Arvin">Arvin</option>
+        <option value="Shafter">Shafter</option>
+        <option value="Wasco">Wasco</option>
+        <option value="Delano">Delano</option>
+        <option value="McFarland">McFarland</option>
+        <option value="Taft">Taft</option>
+        <option value="Maricopa">Maricopa</option>
+        <option value="Tehachapi">Tehachapi</option>
+        <option value="Frazier Park">Frazier Park</option>
+        <option value="California City">California City</option>
+        <option value="Mojave">Mojave</option>
+        <option value="Ridgecrest">Ridgecrest</option>
+    </select>
+
+    <section class="role-section" aria-labelledby="market-title">
+        <h2 id="market-title">Market</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Shoppers <span class="role-icon">🛒</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('create')">Shop owners <span class="role-icon">🏪</span></button>
+        </div>
+    </section>
+    <section class="role-section" aria-labelledby="services-title">
+        <h2 id="services-title">Services</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Customers <span class="role-icon">👤</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('service-providers')">Providers <span class="role-icon">🤝</span></button>
+        </div>
+    </section>
+    <section class="role-section" aria-labelledby="rentals-title">
+        <h2 id="rentals-title">Rentals</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Rentees <span class="role-icon">🔑</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('create')">Renters <span class="role-icon">📄</span></button>
+        </div>
+    </section>
+    <section class="role-section" aria-labelledby="transport-title">
+        <h2 id="transport-title">Transportation</h2>
+        <div class="role-row">
+            <button class="role-card" type="button" onclick="App.openModule('drivers')">Drivers <span class="role-icon">🛞</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('load-board')">Post a load or job <span class="role-icon">📄</span></button>
+        </div>
+    </section>
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
+</main>
+<footer class="home-footer"><a href="#">About Us</a><a href="#">Contact</a><a href="#">Terms of Service</a><a href="#">About</a></footer>
+
+<!-- ============ CHAT FAB ============ -->
+<button class="chat-fab" id="chat-fab" onclick="App.toggleChat()" aria-label="Open messages">
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+</button>
+
+<!-- ============ CHAT PANEL ============ -->
+<div class="chat-panel" id="chat-panel">
+    <div class="chat-header">
+        <div>
+            <div class="font-display font-semibold text-base" style="color:var(--mesquite);">Messages</div>
+            <div class="text-xs" style="color:var(--dust);">Local conversations</div>
+        </div>
+        <button class="module-back" onclick="App.toggleChat()" aria-label="Close messages">&times;</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg received">Hey! Is the couch still available?</div>
+        <div class="chat-msg sent">Yes — can you pick up this weekend?</div>
+        <div class="chat-msg received">Saturday works. What time?</div>
+    </div>
+    <div class="chat-input-row">
+        <input type="text" class="chat-input" placeholder="Type a message..." id="chat-input" onkeydown="if(event.key==='Enter')App.sendChatMsg()">
+        <button class="chat-send" onclick="App.sendChatMsg()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
+        </button>
+    </div>
+</div>
+
+<!-- ============ MODULE: SERVICES (BUYER) ============ -->
+<div class="module-view" id="mod-services-buyer">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Services near <span class="module-city">Bakersfield</span></span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <input type="text" class="search-bar mb-6" placeholder="Search services..." data-module="services-buyer" oninput="Search.handleSearch(this.value, 'services-buyer')">
+        <div id="search-results-services-buyer" class="mb-4"></div>
+        <div class="space-y-4" id="listings-services"></div>
+    </div>
+</div>
+
+<!-- ============ MODULE: DRIVERS ============ -->
+<div class="module-view" id="mod-drivers">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Driver Gigs near <span class="module-city">Bakersfield</span></span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <input type="text" class="search-bar mb-6" placeholder="Search gigs..." data-module="drivers" oninput="Search.handleSearch(this.value, 'drivers')">
+        <div id="search-results-drivers" class="mb-4"></div>
+        <div class="space-y-3" id="listings-drivers"></div>
+    </div>
+</div>
+
+<!-- ============ MODULE: SERVICE PROVIDERS ============ -->
+<div class="module-view" id="mod-service-providers">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Service Providers</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(212,121,74,0.06),rgba(198,100,60,0.03)); border:1px solid rgba(212,121,74,0.10);">
+            <p class="font-display font-semibold text-lg mb-2" style="color:var(--clay);">List your service on sovr1n</p>
+            <p class="text-sm mb-5" style="color:var(--dust);">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees — 10% per completed job.</p>
+            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="App.openModule('create')">Get Started</button>
+        </div>
+        <input type="text" class="search-bar mb-6" placeholder="Browse providers..." data-module="service-providers" oninput="Search.handleSearch(this.value, 'service-providers')">
+        <div id="search-results-service-providers" class="mb-4"></div>
+        <div class="space-y-4" id="listings-providers"></div>
+    </div>
+</div>
+
+<!-- ============ MODULE: LOAD BOARD ============ -->
+<div class="module-view" id="mod-load-board">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Load Board</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="flex gap-3 mb-6">
+            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(212,121,74,0.08); color:var(--clay); border:1px solid rgba(212,121,74,0.12);">Browse Loads</button>
+            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:var(--warm-white); color:var(--dust); border:1px solid var(--border);" onclick="App.openModule('post-load')">Post a Load</button>
+        </div>
+        <input type="text" class="search-bar mb-6" placeholder="Search loads..." data-module="load-board" oninput="Search.handleSearch(this.value, 'load-board')">
+        <div id="search-results-load-board" class="mb-4"></div>
+        <div class="space-y-3" id="listings-load-board"></div>
+    </div>
+</div>
+
+<!-- ============ MODULE: POST LOAD ============ -->
+<div class="module-view" id="mod-post-load">
+    <div class="module-header"><div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4"><button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button><h2 class="font-display font-semibold text-base" style="color:var(--mesquite);">Post a Load</h2></div></div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <form id="post-load-form" class="space-y-5">
+            <div><label for="load-title" class="text-xs font-bold mb-2 block" style="color:var(--dust);">LOAD TITLE</label><input id="load-title" name="title" class="search-bar" maxlength="160" placeholder="e.g. Move sofa to Oildale" required></div>
+            <div><label for="load-description" class="text-xs font-bold mb-2 block" style="color:var(--dust);">DESCRIPTION</label><textarea id="load-description" name="description" class="search-bar" rows="4" maxlength="5000" placeholder="What needs to be moved, timing, and handling instructions."></textarea></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label for="load-pickup" class="text-xs font-bold mb-2 block" style="color:var(--dust);">PICKUP LOCATION</label><input id="load-pickup" name="pickupAddress" class="search-bar" maxlength="300" required></div><div><label for="load-dropoff" class="text-xs font-bold mb-2 block" style="color:var(--dust);">DROP-OFF LOCATION</label><input id="load-dropoff" name="dropoffAddress" class="search-bar" maxlength="300" required></div></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label for="load-cargo" class="text-xs font-bold mb-2 block" style="color:var(--dust);">CARGO SIZE</label><select id="load-cargo" name="cargoTier" class="search-bar" required><option value="small">Small — sedan trunk</option><option value="medium">Medium — SUV/crossover</option><option value="large">Large — pickup/van</option><option value="heavy">Heavy/XL — truck/flatbed</option></select></div><div><label for="load-weight" class="text-xs font-bold mb-2 block" style="color:var(--dust);">WEIGHT (KG, OPTIONAL)</label><input id="load-weight" name="weightKg" type="number" min="0" step="0.1" class="search-bar"></div></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label for="load-dimensions" class="text-xs font-bold mb-2 block" style="color:var(--dust);">DIMENSIONS (OPTIONAL)</label><input id="load-dimensions" name="dimensions" maxlength="200" class="search-bar" placeholder="e.g. 2m × 1m × 0.5m"></div><div><label for="load-price" class="text-xs font-bold mb-2 block" style="color:var(--dust);">OFFERED PRICE</label><input id="load-price" name="offeredPrice" type="number" min="0.01" step="0.01" class="search-bar" required placeholder="0.00"></div></div>
+            <button id="post-load-submit" type="submit" class="w-full text-sm font-bold py-4 rounded-xl" style="background:var(--clay); color:var(--sand);">Post load</button>
+        </form>
+    </div>
+</div>
+
+<!-- ============ MODULE: CREATE ============ -->
+<div class="module-view" id="mod-create">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Create a Listing</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <form id="create-listing-form" class="space-y-5">
+            <div>
+                <label class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">TYPE</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(91,138,92,0.04); border-color:rgba(91,138,92,0.12); color:var(--sage);">
+                        <input type="radio" name="type" value="market" class="hidden" checked> Item for Sale
+                    </label>
+                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(212,121,74,0.04); border-color:rgba(212,121,74,0.12); color:var(--clay);">
+                        <input type="radio" name="type" value="service" class="hidden"> Service Offer
+                    </label>
+                </div>
+            </div>
+            <div>
+                <label for="create-title" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">TITLE</label>
+                <input type="text" class="search-bar" placeholder="e.g. Moving help needed Saturday" name="title" id="create-title" required>
+            </div>
+            <div>
+                <label for="create-desc" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">DESCRIPTION</label>
+                <textarea class="search-bar" rows="4" placeholder="Details, location, timing..." name="description" id="create-desc" style="resize:vertical;"></textarea>
+            </div>
+            <div>
+                <label for="create-price" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">PRICE</label>
+                <input type="number" class="search-bar" placeholder="$0.00" name="price" id="create-price" step="0.01" min="0">
+            </div>
+            <div>
+                <label for="create-tags" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">TAGS (comma separated)</label>
+                <input type="text" class="search-bar" placeholder="e.g. furniture, moving, urgent" name="tags" id="create-tags">
+            </div>
+            <div>
+                <label for="create-category" class="text-xs font-bold mb-2 block" style="color:var(--dust); letter-spacing:0.04em;">CATEGORY</label>
+                <select class="search-bar" name="category" id="create-category">
+                    <option value="">Select category...</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Appliances">Appliances</option>
+                    <option value="Vehicles">Vehicles</option>
+                    <option value="Produce">Produce</option>
+                    <option value="Livestock">Livestock</option>
+                    <option value="Tools">Tools</option>
+                    <option value="Building Materials">Building Materials</option>
+                    <option value="Household">Household</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full text-sm font-bold py-4 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);">Post Listing</button>
+            <p class="text-xs text-center" style="color:var(--dust);">Platform fee: 10% on completed transactions.</p>
+        </form>
+    </div>
+</div>
+
+<!-- ============ MODULE: SHARE ============ -->
+<div class="module-view" id="mod-share">
+    <div class="module-header">
+        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
+            <button class="module-back" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display font-semibold text-base" style="color:var(--mesquite);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Share sovr1n</span></h2>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-5 py-8">
+        <div class="rounded-2xl p-10 text-center" style="background:var(--warm-white); border:1px solid var(--border);">
+            <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(212,121,74,0.08),rgba(198,100,60,0.08));display:grid;place-items:center;margin:0 auto 20px;font-size:28px;">🔗</div>
+            <p class="font-display font-semibold text-xl mb-2" style="color:var(--mesquite);">Spread the word</p>
+            <p class="text-sm mb-8" style="color:var(--dust); max-width:320px; margin:0 auto;">Tell your friends and neighbors about sovr1n — the more people join, the better the local marketplace gets.</p>
+            <div class="flex flex-col gap-3" style="max-width:280px; margin:0 auto;">
+                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="shareCopy()">Copy Link</button>
+                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:var(--warm-white); color:var(--mesquite); border:1px solid var(--border);" onclick="shareNative()">Share via...</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ GSAP CDN ============ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- ============ GSAP SCROLLTRIGGER ANIMATIONS ============ -->
+<script>
+(function(){
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    var heroH1 = document.querySelector('h1.font-display');
+    if (heroH1) {
+        gsap.fromTo(heroH1,
+            { opacity: 0.1 },
+            { opacity: 1, ease: 'none', scrollTrigger: { trigger: heroH1, start: 'top 90%', end: 'top 30%', scrub: 0.5 } }
+        );
+    }
+
+    var actionBoxes = document.querySelectorAll('.action-box');
+    if (actionBoxes.length > 0) {
+        gsap.fromTo(actionBoxes,
+            { y: 40, opacity: 0, filter: 'blur(4px)' },
+            { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, stagger: 0.1, ease: 'power3.out',
+              scrollTrigger: { trigger: actionBoxes[0].closest('.grid'), start: 'top 85%', toggleActions: 'play none none none' } }
+        );
+    }
+
+    var trendCards = document.querySelectorAll('.trend-card');
+    if (trendCards.length > 0) {
+        gsap.fromTo(trendCards,
+            { scale: 0.95, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.7, stagger: 0.12, ease: 'power2.out',
+              scrollTrigger: { trigger: trendCards[0].closest('.grid'), start: 'top 85%', toggleActions: 'play none none none' } }
+        );
+    }
+})();
+</script>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script src="app/config.js"></script>
+<script src="app/cities-data.js"></script>
+<script src="app/utils.js"></script>
+<script src="app/auth.js"></script>
+<script src="app/listings.js"></script>
+<script src="app/search.js"></script>
+<script src="app.js"></script>
+<script src="app/home.js"></script>
+<script>
+(function(){
+    App.toggleChat = function() {
+        const panel = document.getElementById('chat-panel');
+        panel.classList.toggle('open');
+        if (panel.classList.contains('open')) {
+            document.getElementById('chat-input').focus();
+        }
+    };
+
+    App.sendChatMsg = function() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+        const msgs = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = 'chat-msg sent';
+        div.textContent = text;
+        msgs.appendChild(div);
+        input.value = '';
+        msgs.scrollTop = msgs.scrollHeight;
+        setTimeout(function() {
+            const r = document.createElement('div');
+            r.className = 'chat-msg received';
+            r.textContent = 'Got it — someone will respond soon.';
+            msgs.appendChild(r);
+            msgs.scrollTop = msgs.scrollHeight;
+        }, 1200);
+    };
+
+    window.shareCopy = function() {
+        try { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); } catch(e) { alert('Copy: ' + window.location.href); }
+    };
+    window.shareNative = function() {
+        if (navigator.share) navigator.share({ title: "sovr1n", text: "Check out sovr1n — local markets & commerce.", url: window.location.href });
+        else window.shareCopy();
+    };
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (document.querySelector('.module-view.active')) App.closeAllModules();
+            if (document.getElementById('chat-panel')?.classList.contains('open')) App.toggleChat();
+        }
+    });
+})();
+</script>
+
+<div class="listing-detail-overlay" id="detail-overlay" onclick="App.closeDetail()"></div>
+<div class="listing-detail-panel" id="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <div class="handle"></div>
+    <button class="listing-detail-close" onclick="App.closeDetail()" aria-label="Close">&times;</button>
+    <img class="photo" id="detail-photo" src="" alt="">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;" id="detail-badges"></div>
+    <div class="price-big" id="detail-price"></div>
+    <div class="meta-row" id="detail-meta"></div>
+    <div class="desc" id="detail-desc"></div>
+    <button class="text-xs font-semibold px-4 py-2 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep));color:var(--warm-white);border:none;cursor:pointer;font-size:14px;padding:12px 24px;border-radius:14px;" onclick="App.toggleChat(); App.closeDetail();">Message seller &rarr;</button>
+</div>
+
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+</body>
+</html>

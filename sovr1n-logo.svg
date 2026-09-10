@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <defs>
+    <style>
+      .word { font-family: 'Satoshi', 'Inter', Arial, Helvetica, sans-serif; font-weight:900; font-size:120px; }
+      .one { font-family: 'Satoshi', 'Inter', Arial, Helvetica, sans-serif; font-weight:900; font-size:120px; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="transparent" />
+  <text x="10" y="140" class="word" fill="#000">Sovr</text>
+  <text x="420" y="140" class="one" fill="#000">1n</text>
+  <!-- star on the 1 -->
+  <polygon points="520,30 532,60 564,66 538,88 544,120 520,102 496,120 502,88 476,66 508,60" fill="#000" />
+</svg>
