@@ -89,6 +89,11 @@ const Utils = {
     return html;
   },
 
+  initials(name) {
+    if (!name) return '?';
+    return name.split(/\s+/).map(w => w[0] || '').slice(0, 2).join('').toUpperCase();
+  },
+
   renderListingCard(listing) {
     const user = listing.users;
     const photo = listing.photos?.[0] || '';
@@ -99,14 +104,15 @@ const Utils = {
     return `
       <div class="listing-card" data-id="${listing.id}" tabindex="0" role="button" onclick="App.openDetailView('${listing.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openDetailView('${listing.id}')}" aria-label="View details for ${this.escapeHtml(listing.title)}">
         <div class="listing-photo">
-          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder" aria-hidden="true">📦</div>`}
+          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder" aria-hidden="true">${svgIcon('box', 34)}</div>`}
+          ${listing.type ? `<span class="listing-type-chip type-${this.escapeHtml(listing.type)}">${listing.type === 'service' ? svgIcon('spark', 11) : svgIcon('bag', 11)}${listing.type === 'service' ? 'Service' : 'Item'}</span>` : ''}
         </div>
         <div class="listing-info">
           <h4 class="listing-title">${this.escapeHtml(listing.title)}</h4>
           <p class="listing-desc">${this.escapeHtml(this.truncate(listing.description, 60))}</p>
           ${priceHtml}
           <div class="listing-meta">
-            ${user ? `<span class="listing-seller">${this.escapeHtml(user.full_name)}</span>` : ''}
+            ${user ? `<span class="listing-seller"><span class="seller-avatar">${this.escapeHtml(this.initials(user.full_name || user.fullName))}</span>${this.escapeHtml(user.full_name || user.fullName)}</span>` : ''}
             <span class="listing-time">${this.timeAgo(listing.created_at)}</span>
           </div>
         </div>

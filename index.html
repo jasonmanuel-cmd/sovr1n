@@ -1450,6 +1450,322 @@
         }
         .box-arrow::after { display: none; }
         .panel-label { letter-spacing: 0.14em; color: #7C82A8; }
+
+        /* ============ GRAPHICS 2026 UPGRADE ============ */
+        /* Header brand */
+        .home-header {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 20px 24px 4px; max-width: 640px; margin: 0 auto; width: 100%;
+        }
+        .brand-mark { display: flex; align-items: center; gap: 10px; }
+        .brand-mark-symbol {
+            color: var(--cyan);
+            filter: drop-shadow(0 0 8px rgba(34,211,238,0.8));
+        }
+        .brand-word {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 700; font-size: 22px; letter-spacing: -0.03em;
+            background: linear-gradient(120deg, #FFFFFF 10%, var(--cyan) 90%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .profile-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(16,19,42,0.9);
+            border: 1px solid rgba(148,156,255,0.28);
+            color: var(--mesquite);
+            border-radius: 999px; padding: 10px 18px;
+            font: 600 14px 'Inter', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(3,5,14,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+        }
+        .profile-link:hover {
+            border-color: rgba(34,211,238,0.6);
+            box-shadow: 0 0 20px rgba(124,92,255,0.35);
+            color: var(--cyan);
+            transform: translateY(-1px);
+        }
+        .profile-link svg { flex: none; }
+
+        /* Hero tagline + headings */
+        .hero-tagline {
+            margin: 6px auto 18px; max-width: 460px;
+            color: var(--dust); font-size: 15px; line-height: 1.55;
+        }
+        .role-section h2 {
+            position: relative;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .role-section h2::before {
+            content: '';
+            width: 10px; height: 10px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--violet), var(--cyan));
+            box-shadow: 0 0 12px rgba(124,92,255,0.8);
+            flex: none;
+        }
+        .role-card-name {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 600; font-size: clamp(20px, 2.8vw, 30px);
+            letter-spacing: -0.02em;
+        }
+        .role-icon svg { width: 26px; height: 26px; }
+
+        /* Role choice modal options */
+        .role-option {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(16,19,42,0.9) !important;
+            border: 1px solid rgba(124,92,255,0.3) !important;
+            color: var(--mesquite) !important;
+            border-radius: var(--rad-md) !important;
+        }
+        .role-option:hover {
+            background: linear-gradient(135deg, rgba(124,92,255,0.2), rgba(34,211,238,0.12)) !important;
+            border-color: rgba(34,211,238,0.5) !important;
+            box-shadow: 0 0 26px rgba(124,92,255,0.22);
+            transform: translateY(-1px);
+        }
+        .role-option-icon {
+            display: inline-grid; place-items: center;
+            width: 38px; height: 38px; border-radius: 12px; flex: none;
+            background: linear-gradient(135deg, rgba(124,92,255,0.22), rgba(34,211,238,0.12));
+            border: 1px solid rgba(124,92,255,0.3);
+            color: var(--cyan);
+        }
+
+        /* Search boxes with icon */
+        .search-box {
+            position: relative; margin-bottom: 24px;
+        }
+        .search-box .search-bar { padding-left: 44px; margin-bottom: 0; }
+        .search-box-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: #6B7299; pointer-events: none;
+        }
+        .search-box:focus-within .search-box-icon { color: var(--cyan); }
+
+        /* Share modal */
+        .share-icon-chip {
+            width: 64px; height: 64px; border-radius: 20px;
+            background: linear-gradient(135deg, rgba(124,92,255,0.2), rgba(34,211,238,0.1));
+            border: 1px solid rgba(124,92,255,0.3);
+            color: var(--cyan);
+            display: grid; place-items: center; margin: 0 auto 20px;
+            box-shadow: 0 0 24px rgba(124,92,255,0.25);
+        }
+
+        /* Listing card graphics */
+        .listing-card { position: relative; }
+        .listing-photo { position: relative; }
+        .listing-photo-placeholder {
+            width: 100%; aspect-ratio: 4/3;
+            display: grid; place-items: center;
+            background:
+                radial-gradient(ellipse 120px 80px at 20% 20%, rgba(124,92,255,0.28), transparent 60%),
+                radial-gradient(ellipse 140px 90px at 80% 80%, rgba(34,211,238,0.18), transparent 60%),
+                linear-gradient(150deg, #10132A, #0C0F1E);
+            color: rgba(148,156,255,0.85);
+        }
+        .listing-photo-placeholder svg { filter: drop-shadow(0 4px 14px rgba(124,92,255,0.4)); }
+        .listing-type-chip {
+            position: absolute; top: 10px; left: 10px;
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 11px; border-radius: 999px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+            background: rgba(10,13,28,0.82); color: #fff; backdrop-filter: blur(6px);
+            border: 1px solid rgba(148,156,255,0.35);
+        }
+        .type-service { background: rgba(34,211,238,0.16) !important; color: var(--cyan) !important; }
+        .seller-avatar {
+            display: inline-grid; place-items: center;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--violet), var(--cyan));
+            color: #fff; font-size: 10px; font-weight: 800; flex: none;
+        }
+        .listing-seller { display: inline-flex; align-items: center; gap: 7px; }
+        .cargo-tier { display: inline-flex; align-items: center; gap: 6px; }
+        .cargo-tier svg, .load-weight svg, .listing-time svg, .load-time svg { flex: none; }
+        .load-time, .listing-time { display: inline-flex; align-items: center; gap: 5px; }
+        .load-weight { display: inline-flex; align-items: center; gap: 5px; }
+
+        /* Load board rows */
+        .load-row { position: relative; overflow: hidden; }
+        .load-route-icon {
+            width: 44px; height: 44px; border-radius: 14px; flex: none;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, rgba(124,92,255,0.2), rgba(34,211,238,0.1));
+            border: 1px solid rgba(124,92,255,0.3);
+            color: var(--cyan);
+        }
+        .load-route { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .route-point { display: inline-flex; align-items: center; gap: 6px; }
+        .route-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+        .route-start .route-dot { background: var(--violet); box-shadow: 0 0 8px var(--violet); }
+        .route-end .route-dot { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+
+        /* Flat/splash art for driver gig cards */
+        .listing-card.load-card { display: flex; align-items: center; gap: 16px; padding: 14px; }
+        .listing-card.load-card .listing-photo {
+            width: 64px; height: 64px; border-radius: 16px; flex: none;
+            overflow: hidden; flex: none;
+            display: grid; place-items: center;
+            background:
+                radial-gradient(ellipse 60px 40px at 25% 20%, rgba(124,92,255,0.3), transparent 60%),
+                radial-gradient(ellipse 60px 40px at 80% 80%, rgba(34,211,238,0.18), transparent 60%),
+                linear-gradient(150deg, #10132A, #0C0F1E);
+            color: rgba(148,156,255,0.9);
+            border: 1px solid rgba(124,92,255,0.25);
+        }
+        .listing-card.load-card .listing-info { padding: 0; }
+
+        /* Detail sheet */
+        .detail-hero { display: flex; gap: 18px; align-items: stretch; }
+        .detail-photo-placeholder {
+            width: 88px; height: 88px; border-radius: 20px; flex: none;
+            display: grid; place-items: center;
+            background:
+                radial-gradient(ellipse 70px 50px at 25% 20%, rgba(124,92,255,0.32), transparent 62%),
+                radial-gradient(ellipse 70px 50px at 80% 80%, rgba(34,211,238,0.2), transparent 62%),
+                linear-gradient(150deg, #10132A, #0C0F1E);
+            color: var(--cyan);
+            border: 1px solid rgba(124,92,255,0.3);
+            box-shadow: 0 8px 28px rgba(3,5,14,0.5), 0 0 26px rgba(124,92,255,0.22);
+        }
+        .detail-photo { width: 100%; max-height: 240px; object-fit: cover; border-radius: 20px; }
+        .detail-header-info { display: flex; flex-direction: column; justify-content: center; gap: 6px; min-width: 0; }
+        .detail-kind {
+            display: inline-flex; align-items: center; gap: 7px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--dust);
+        }
+        .kind-dot { width: 7px; height: 7px; border-radius: 50%; }
+        .kind-market { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+        .detail-title {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 21px; font-weight: 700; letter-spacing: -0.02em;
+            color: var(--mesquite); line-height: 1.25; margin: 0;
+        }
+        .detail-price-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .detail-price {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 24px; font-weight: 700;
+            background: linear-gradient(120deg, #FFFFFF, var(--cyan));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .detail-hero-load .detail-price { font-size: 28px; }
+        .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+        .d-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 13px; border-radius: 999px;
+            background: rgba(16,19,42,0.85);
+            border: 1px solid rgba(148,156,255,0.18);
+            color: var(--dust); font-size: 12.5px; font-weight: 600;
+        }
+        .d-chip svg { flex: none; }
+        .status-pill {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 4px 12px; border-radius: 999px;
+            font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+            background: linear-gradient(135deg, rgba(34,211,238,0.18), rgba(124,92,255,0.14));
+            color: var(--cyan); border: 1px solid rgba(34,211,238,0.4);
+            width: fit-content;
+        }
+        .status-cancelled {
+            background: rgba(255,143,163,0.12) !important;
+            color: #FF8FA3 !important; border-color: rgba(255,143,163,0.4) !important;
+        }
+        .detail-route {
+            border-radius: 20px; padding: 18px;
+            background: linear-gradient(160deg, rgba(23,28,52,0.7), rgba(13,16,32,0.7));
+            border: 1px solid rgba(148,156,255,0.16);
+            margin-bottom: 20px;
+        }
+        .route-stop { display: flex; align-items: center; gap: 12px; }
+        .route-stop-icon {
+            width: 40px; height: 40px; border-radius: 13px; flex: none;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, rgba(124,92,255,0.2), rgba(34,211,238,0.1));
+            border: 1px solid rgba(124,92,255,0.3);
+            color: var(--cyan);
+        }
+        .route-stop-body { display: flex; flex-direction: column; min-width: 0; }
+        .route-label { font-size: 10.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #7C82A8; }
+        .route-addr { font-size: 14.5px; font-weight: 600; color: var(--mesquite); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .route-coupler {
+            display: flex; align-items: center; gap: 8px; margin: 8px 0 8px 19px;
+            color: rgba(124,92,255,0.8); font-size: 12px; font-weight: 700;
+        }
+        .route-coupler::before {
+            content: ''; width: 1px; height: 18px;
+            background: linear-gradient(180deg, rgba(124,92,255,0.5), rgba(34,211,238,0.4));
+        }
+        .detail-section { margin-bottom: 20px; }
+        .detail-section-title {
+            display: flex; align-items: center; gap: 8px;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 13px; font-weight: 700; letter-spacing: 0.04em;
+            color: var(--mesquite); margin: 0 0 10px; text-transform: uppercase;
+        }
+        .detail-section-title svg { color: var(--cyan); }
+        .detail-desc { font-size: 14.5px; line-height: 1.65; color: var(--dust); margin: 0 0 14px; }
+        .detail-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .detail-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 13px; border-radius: 999px;
+            background: rgba(124,92,255,0.14);
+            border: 1px solid rgba(124,92,255,0.3);
+            color: var(--mesquite); font-size: 12.5px; font-weight: 600;
+        }
+        .detail-tag svg { color: var(--cyan); }
+        .detail-msg-btn {
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 9px;
+            padding: 14px 20px; border: none; border-radius: 16px; cursor: pointer;
+            font: 700 14.5px 'Inter', sans-serif; color: #fff;
+            background: linear-gradient(135deg, var(--violet), var(--indigo));
+            box-shadow: 0 8px 24px rgba(124,92,255,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+            transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+        }
+        .detail-msg-btn:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 0 30px rgba(124,92,255,0.5); }
+        .detail-msg-cancel {
+            background: linear-gradient(135deg, #3A1030, #7C2D5A) !important;
+        }
+        .detail-owner-actions .detail-msg-btn { flex: 1; }
+        .detail-hero-listing .detail-price-row { flex-wrap: wrap; }
+        .detail-close { position: absolute; top: 14px; right: 14px; z-index: 2; }
+
+        /* Empty states get ghost art */
+        .empty-state {
+            position: relative; padding: 44px 18px 24px;
+            display: grid; place-items: center;
+        }
+        .empty-state p { text-align: center; color: var(--dust); font-size: 14px; margin: 0; }
+        .empty-state::before {
+            content: '';
+            width: 64px; height: 64px; margin-bottom: 18px;
+            border-radius: 20px;
+            background:
+                radial-gradient(ellipse 40px 28px at 25% 20%, rgba(124,92,255,0.35), transparent 65%),
+                radial-gradient(ellipse 40px 28px at 80% 80%, rgba(34,211,238,0.25), transparent 65%),
+                linear-gradient(150deg, #10132A, #0C0F1E);
+            border: 1px solid rgba(124,92,255,0.25);
+            box-shadow: 0 0 22px rgba(124,92,255,0.18);
+        }
+        .empty-state::after {
+            content: '';
+            position: absolute; top: 63px;
+            width: 26px; height: 26px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322D3EE' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 8l-9-5-9 5v8l9 5 9-5V8z'/%3E%3Cpath d='M3 8l9 5 9-5'/%3E%3Cpath d='M12 13v8'/%3E%3C/svg%3E") center / contain no-repeat;
+            filter: drop-shadow(0 2px 8px rgba(34,211,238,0.5));
+        }
+
+        /* Provider rows get a brand tile */
+        #listings-providers .listing-card .listing-photo {
+            width: 56px; height: 56px; border-radius: 16px; flex: none;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, rgba(124,92,255,0.22), rgba(34,211,238,0.12));
+            border: 1px solid rgba(124,92,255,0.3);
+        }
+        #listings-providers .listing-card .listing-photo svg { color: var(--cyan); }
+        .load-thumb svg { filter: drop-shadow(0 3px 10px rgba(124,92,255,0.4)); }
     </style>
 </head>
 <body>
@@ -1460,7 +1776,8 @@
 
 <!-- ============ HOMEPAGE HEADER ============ -->
 <header class="home-header" role="banner">
-    <button class="profile-link" type="button" onclick="App.openProfileOrLogin()">Login / Profile</button>
+    <div class="brand-mark"><svg class="brand-mark-symbol" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg><span class="brand-word">sovr1n</span></div>
+    <button class="profile-link" type="button" onclick="App.openProfileOrLogin()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Sign in</span></button>
 </header>
 
 <!-- ============ HAMBURGER DRAWER (City Selector + Sign In/Out) ============ -->
@@ -1469,7 +1786,7 @@
         <button class="modal-close" onclick="App.closeHamburgerDrawer()" aria-label="Close menu">&times;</button>
         <h2 id="drawer-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">Choose your city</h2>
         <p class="text-sm mb-6" style="color:var(--dust);">Pick a city to get started.</p>
-        <input type="text" class="search-bar mb-6" placeholder="Search cities..." id="drawer-city-search" oninput="App.filterCitiesIn('drawer-city-search','drawer-city-list')">
+        <div class="search-box"><svg class="search-box-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" class="search-bar" placeholder="Search cities..." id="drawer-city-search" oninput="App.filterCitiesIn('drawer-city-search','drawer-city-list')"></div>
         <div id="drawer-city-list" style="max-height:280px; overflow-y:auto; margin-bottom:24px;"></div>
 
         <div style="border-top:1px solid var(--border); padding-top:20px;">
@@ -1492,10 +1809,10 @@
         <h2 id="role-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:var(--mesquite);">What brings you here?</h2>
         <p class="text-sm mb-6" style="color:var(--dust);">Choose how you'd like to use sovr1n in <span id="role-modal-city">your city</span>.</p>
         <div class="flex flex-col gap-3">
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(124,92,255,0.10); border:1px solid rgba(124,92,255,0.32); color:var(--mesquite);" onclick="App.selectRole('customer')">🛒&nbsp; Customer — Browse services &amp; deals</button>
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.32); color:var(--mesquite);" onclick="App.selectRole('service_provider')">🔧&nbsp; Service Provider — Offer your services</button>
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.32); color:var(--mesquite);" onclick="App.selectRole('driver')">🚛&nbsp; Driver — Find delivery gigs</button>
-            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all" style="background:rgba(124,92,255,0.10); border:1px solid rgba(124,92,255,0.32); color:var(--mesquite);" onclick="App.selectRole('load_board')">📦&nbsp; Load Board — Post or find freight</button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all role-option" onclick="App.selectRole('customer')"><span class="role-option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Customer — Browse services &amp; deals</span></button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all role-option" onclick="App.selectRole('service_provider')"><span class="role-option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Service Provider — Offer your services</span></button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all role-option" onclick="App.selectRole('driver')"><span class="role-option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><span>Driver — Find delivery gigs</span></button>
+            <button type="button" class="text-sm font-bold py-4 rounded-xl text-left px-5 transition-all role-option" onclick="App.selectRole('load_board')"><span class="role-option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg></span><span>Load Board — Post or find freight</span></button>
         </div>
     </div>
 </div>
@@ -1569,6 +1886,7 @@
 <!-- ============ MAIN: ROLE PICKER ============ -->
 <main id="main-content" class="role-home">
     <h1 class="wordmark" aria-label="Sovrin">Sovrin<span class="wordmark-star" aria-hidden="true">✶</span></h1>
+    <p class="hero-tagline">Your local marketplace — shop, hire, rent &amp; haul, right in your city.</p>
     <select id="city-select" class="home-city-select" aria-label="City or area">
         <option value="" disabled>City / Area</option>
         <option value="Bakersfield">Bakersfield</option>
@@ -1591,29 +1909,29 @@
     <section class="role-section" aria-labelledby="market-title">
         <h2 id="market-title">Market</h2>
         <div class="role-row">
-            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Shoppers <span class="role-icon">🛒</span></button>
-            <button class="role-card" type="button" onclick="App.openModule('create')">Shop owners <span class="role-icon">🏪</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')"><span class="role-card-name">Shoppers</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1.5 12.5a2 2 0 0 1-2 2.5H6.5a2 2 0 0 1-2-2.5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg></span></button>
+            <button class="role-card" type="button" onclick="App.openModule('create')"><span class="role-card-name">Shop owners</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M9 21v-6h6v6"/></svg></span></button>
         </div>
     </section>
     <section class="role-section" aria-labelledby="services-title">
         <h2 id="services-title">Services</h2>
         <div class="role-row">
-            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Customers <span class="role-icon">👤</span></button>
-            <button class="role-card" type="button" onclick="App.openModule('service-providers')">Providers <span class="role-icon">🤝</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')"><span class="role-card-name">Customers</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span></button>
+            <button class="role-card" type="button" onclick="App.openModule('service-providers')"><span class="role-card-name">Providers</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></button>
         </div>
     </section>
     <section class="role-section" aria-labelledby="rentals-title">
         <h2 id="rentals-title">Rentals</h2>
         <div class="role-row">
-            <button class="role-card" type="button" onclick="App.openModule('services-buyer')">Rentees <span class="role-icon">🔑</span></button>
-            <button class="role-card" type="button" onclick="App.openModule('create')">Renters <span class="role-icon">📄</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('services-buyer')"><span class="role-card-name">Rentees</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 7.5L3.5 19.5"/><circle cx="17.5" cy="6.5" r="3.5"/><path d="M21 2l-2 2m-10.5 8a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78z"/></svg></span></button>
+            <button class="role-card" type="button" onclick="App.openModule('create')"><span class="role-card-name">Renters</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></span></button>
         </div>
     </section>
     <section class="role-section" aria-labelledby="transport-title">
         <h2 id="transport-title">Transportation</h2>
         <div class="role-row">
-            <button class="role-card" type="button" onclick="App.openModule('drivers')">Drivers <span class="role-icon">🛞</span></button>
-            <button class="role-card" type="button" onclick="App.openModule('load-board')">Post a load or job <span class="role-icon">📄</span></button>
+            <button class="role-card" type="button" onclick="App.openModule('drivers')"><span class="role-card-name">Drivers</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span></button>
+            <button class="role-card" type="button" onclick="App.openModule('load-board')"><span class="role-card-name">Post a load or job</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11v6M9 14h6"/></svg></span></button>
         </div>
     </section>
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
@@ -1656,7 +1974,7 @@
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
-        <input type="text" class="search-bar mb-6" placeholder="Search services..." data-module="services-buyer" oninput="Search.handleSearch(this.value, 'services-buyer')">
+        <div class="search-box"><svg class="search-box-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" class="search-bar" placeholder="Search services..." data-module="services-buyer" oninput="Search.handleSearch(this.value, 'services-buyer')"></div>
         <div id="search-results-services-buyer" class="mb-4"></div>
         <div class="space-y-4" id="listings-services"></div>
     </div>
@@ -1671,7 +1989,7 @@
         </div>
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
-        <input type="text" class="search-bar mb-6" placeholder="Search gigs..." data-module="drivers" oninput="Search.handleSearch(this.value, 'drivers')">
+        <div class="search-box"><svg class="search-box-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" class="search-bar" placeholder="Search gigs..." data-module="drivers" oninput="Search.handleSearch(this.value, 'drivers')"></div>
         <div id="search-results-drivers" class="mb-4"></div>
         <div class="space-y-3" id="listings-drivers"></div>
     </div>
@@ -1691,7 +2009,7 @@
             <p class="text-sm mb-5" style="color:var(--dust);">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees — 10% per completed job.</p>
             <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,var(--clay),var(--clay-deep)); color:var(--warm-white);" onclick="App.openModule('create')">Get Started</button>
         </div>
-        <input type="text" class="search-bar mb-6" placeholder="Browse providers..." data-module="service-providers" oninput="Search.handleSearch(this.value, 'service-providers')">
+        <div class="search-box"><svg class="search-box-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" class="search-bar" placeholder="Browse providers..." data-module="service-providers" oninput="Search.handleSearch(this.value, 'service-providers')"></div>
         <div id="search-results-service-providers" class="mb-4"></div>
         <div class="space-y-4" id="listings-providers"></div>
     </div>
@@ -1710,7 +2028,7 @@
             <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(212,121,74,0.08); color:var(--clay); border:1px solid rgba(212,121,74,0.12);">Browse Loads</button>
             <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:var(--warm-white); color:var(--dust); border:1px solid var(--border);" onclick="App.openModule('post-load')">Post a Load</button>
         </div>
-        <input type="text" class="search-bar mb-6" placeholder="Search loads..." data-module="load-board" oninput="Search.handleSearch(this.value, 'load-board')">
+        <div class="search-box"><svg class="search-box-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" class="search-bar" placeholder="Search loads..." data-module="load-board" oninput="Search.handleSearch(this.value, 'load-board')"></div>
         <div id="search-results-load-board" class="mb-4"></div>
         <div class="space-y-3" id="listings-load-board"></div>
     </div>
@@ -1800,7 +2118,7 @@
     </div>
     <div class="max-w-2xl mx-auto px-5 py-8">
         <div class="rounded-2xl p-10 text-center" style="background:var(--warm-white); border:1px solid var(--border);">
-            <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(212,121,74,0.08),rgba(198,100,60,0.08));display:grid;place-items:center;margin:0 auto 20px;font-size:28px;">🔗</div>
+            <div class="share-icon-chip"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
             <p class="font-display font-semibold text-xl mb-2" style="color:var(--mesquite);">Spread the word</p>
             <p class="text-sm mb-8" style="color:var(--dust); max-width:320px; margin:0 auto;">Tell your friends and neighbors about sovr1n — the more people join, the better the local marketplace gets.</p>
             <div class="flex flex-col gap-3" style="max-width:280px; margin:0 auto;">
@@ -1852,6 +2170,7 @@
 </script>
 
 <!-- ============ JAVASCRIPT ============ -->
+<script src="app/icons.js"></script>
 <script src="app/config.js"></script>
 <script src="app/cities-data.js"></script>
 <script src="app/utils.js"></script>

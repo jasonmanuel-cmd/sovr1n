@@ -188,8 +188,8 @@ const App = {
       Utils.showToast('Listing not found', 'error');
       return;
     }
-    const overlay = document.getElementById('listing-detail-overlay');
-    const panel = document.getElementById('listing-detail-panel');
+    const overlay = document.getElementById('detail-overlay');
+    const panel = document.getElementById('detail-panel');
     if (!overlay || !panel) return;
 
     const photo = listing.photos?.[0] || '';
@@ -200,29 +200,34 @@ const App = {
 
     panel.innerHTML = `
       <button class="modal-close detail-close" onclick="App.closeDetailView()" aria-label="Close details">&times;</button>
-      <div class="detail-header">
-        ${photo ? `<img src="${photo}" alt="${Utils.escapeHtml(listing.title)}" class="detail-photo">` : `<div class="detail-photo-placeholder" aria-hidden="true">📦</div>`}
+      <div class="detail-hero detail-hero-listing">
+        ${photo ? `<img src="${photo}" alt="${Utils.escapeHtml(listing.title)}" class="detail-photo">` : `<div class="detail-photo-placeholder" aria-hidden="true">${svgIcon('box', 40)}</div>`}
         <div class="detail-header-info">
+          <div class="detail-kind"><span class="kind-dot kind-market"></span>${listing.type === 'service' ? 'Service offer' : 'Market listing'}</div>
           <h3 class="detail-title" id="detail-title">${Utils.escapeHtml(listing.title)}</h3>
-          ${priceHtml ? `<div class="detail-price">${priceHtml}</div>` : ''}
-          <div class="detail-meta">
-            ${user ? `<span class="detail-seller">${Utils.escapeHtml(user.full_name || user.fullName || '')}</span>` : ''}
-            <span class="detail-time">${Utils.timeAgo(listing.created_at)}</span>
+          <div class="detail-price-row">
+            ${priceHtml ? `<div class="detail-price">${priceHtml}</div>` : ''}
+            ${listing.category ? `<span class="detail-tag">${Utils.escapeHtml(listing.category)}</span>` : ''}
           </div>
         </div>
       </div>
+      <div class="detail-meta">
+        ${user ? `<span class="d-chip d-chip-user">${svgIcon('user', 13)}${Utils.escapeHtml(user.full_name || user.fullName || 'Unknown')}</span>` : ''}
+        <span class="d-chip">${svgIcon('clock', 13)}${Utils.timeAgo(listing.created_at)}</span>
+        ${listing.city ? `<span class="d-chip">${svgIcon('mapPin', 13)}${Utils.escapeHtml(listing.city)}</span>` : ''}
+      </div>
       <div class="detail-section">
-        <h4 class="detail-section-title">Description</h4>
+        <h4 class="detail-section-title">${svgIcon('file', 15)} Description</h4>
         <p class="detail-desc">${Utils.escapeHtml(listing.description || 'No description provided.')}</p>
       </div>
       ${listing.tags?.length ? `
       <div class="detail-section">
-        <h4 class="detail-section-title">Tags</h4>
+        <h4 class="detail-section-title">${svgIcon('tag', 14)} Tags</h4>
         <div class="detail-tags">
           ${listing.tags.map(t => `<span class="detail-tag">${Utils.escapeHtml(t)}</span>`).join('')}
         </div>
       </div>` : ''}
-      <button class="detail-msg-btn" onclick="App.closeDetailView()">Contact Seller</button>
+      <button class="detail-msg-btn" onclick="App.closeDetailView()">${svgIcon('messaging', 16)} Contact Seller</button>
     `;
 
     overlay.classList.add('active');
@@ -236,11 +241,15 @@ const App = {
   },
 
   closeDetailView() {
-    const overlay = document.getElementById('listing-detail-overlay');
-    const panel = document.getElementById('listing-detail-panel');
+    const overlay = document.getElementById('detail-overlay');
+    const panel = document.getElementById('detail-panel');
     if (overlay) overlay.classList.remove('active');
     if (panel) panel.classList.remove('active');
     document.body.classList.remove('scroll-lock');
+  },
+
+  closeDetail() {
+    this.closeDetailView();
   },
 
   async loadListingsForCurrentCity() {
@@ -274,13 +283,14 @@ const App = {
     }
 
     container.innerHTML = loads.map(load => `
-      <div class="listing-card" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
+      <div class="listing-card load-card" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
+        <div class="listing-photo load-thumb">${svgIcon('truck', 26)}</div>
         <div class="listing-info">
           <h4 class="listing-title">${Utils.escapeHtml(load.title)}</h4>
-          <p class="listing-desc">${Utils.escapeHtml(load.description || '')}</p>
-          <div class="listing-price">${Utils.formatPrice(load.offered_price)}</div>
+          <p class="listing-desc">${Utils.escapeHtml(Utils.truncate(load.description || '', 60))}</p>
+          <div class="listing-price load-price-txt">${Utils.formatPrice(load.offered_price)}</div>
           <div class="listing-meta">
-            <span class="cargo-tier cargo-${load.cargo_tier}">${CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || ''} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
+            <span class="cargo-tier cargo-${load.cargo_tier}">${svgIcon(CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || 'box', 13)} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
             <span class="listing-time">${Utils.timeAgo(load.created_at)}</span>
           </div>
         </div>
@@ -324,21 +334,21 @@ const App = {
 
     container.innerHTML = loads.map(load => `
       <div class="load-row" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
+        <div class="load-route-icon">${svgIcon('route', 22)}</div>
         <div class="load-info">
           <h4 class="load-title">${Utils.escapeHtml(load.title)}</h4>
           <div class="load-route">
-            <span>${Utils.escapeHtml(load.pickup_address || 'Pickup')}</span>
-            <span class="load-arrow">→</span>
-            <span>${Utils.escapeHtml(load.dropoff_address || 'Dropoff')}</span>
+            <span class="route-point route-start"><span class="route-dot"></span>${Utils.escapeHtml(load.pickup_address || 'Pickup')}</span>
+            <span class="load-arrow">${svgIcon('arrowRight', 15)}</span>
+            <span class="route-point route-end"><span class="route-dot"></span>${Utils.escapeHtml(load.dropoff_address || 'Dropoff')}</span>
           </div>
         </div>
         <div class="load-details">
-          <span class="cargo-tier cargo-${load.cargo_tier}">${CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || ''} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
-          <span class="load-weight">${load.weight_kg ? load.weight_kg + ' kg' : ''}</span>
-          <span class="load-status">${Utils.escapeHtml(load.status || 'open')}</span>
+          <span class="cargo-tier cargo-${load.cargo_tier}">${svgIcon(CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || 'box', 13)} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
+          ${load.weight_kg ? `<span class="load-weight">${svgIcon('weight', 13)}${load.weight_kg} kg</span>` : ''}
         </div>
         <div class="load-price">${Utils.formatPrice(load.offered_price)}</div>
-        <div class="load-time">${Utils.timeAgo(load.created_at)}</div>
+        <div class="load-time">${svgIcon('clock', 12)}${Utils.timeAgo(load.created_at)}</div>
       </div>
     `).join('');
   },
@@ -348,17 +358,50 @@ const App = {
       const data = await Utils.api('GET', `/loads/${encodeURIComponent(loadId)}`);
       const load = data.load;
       this._listingsCache[load.id] = load;
-      const panel = document.getElementById('listing-detail-panel');
-      const overlay = document.getElementById('listing-detail-overlay');
+      const panel = document.getElementById('detail-panel');
+      const overlay = document.getElementById('detail-overlay');
       if (!panel || !overlay) return;
       const isOwner = Auth.currentUser?.id === load.poster_id;
       const poster = load.users?.full_name || 'Load poster';
+      const tier = CONFIG.CARGO_TIERS[load.cargo_tier] || { label: load.cargo_tier, icon: 'box' };
+      const status = load.status === 'cancelled' ? 'cancelled' : (load.status === 'in_transit' ? 'in transit' : 'open');
       panel.innerHTML = `
         <button class="modal-close detail-close" onclick="App.closeDetailView()" aria-label="Close details">&times;</button>
-        <div class="detail-header"><div class="detail-photo-placeholder" aria-hidden="true">${CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || '📦'}</div><div class="detail-header-info"><h3 class="detail-title">${Utils.escapeHtml(load.title)}</h3><div class="detail-price">${Utils.formatPrice(load.offered_price)}</div><div class="detail-meta"><span>${Utils.escapeHtml(poster)}</span><span>${Utils.timeAgo(load.created_at)}</span></div></div></div>
-        <div class="detail-section"><h4 class="detail-section-title">Route</h4><p class="detail-desc"><strong>Pickup:</strong> ${Utils.escapeHtml(load.pickup_address)}<br><strong>Drop-off:</strong> ${Utils.escapeHtml(load.dropoff_address)}</p></div>
-        <div class="detail-section"><h4 class="detail-section-title">Load details</h4><p class="detail-desc">${Utils.escapeHtml(load.description || 'No description provided.')}<br><strong>Cargo:</strong> ${Utils.escapeHtml(CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier)}${load.weight_kg ? ` · ${Utils.escapeHtml(String(load.weight_kg))} kg` : ''}${load.dimensions ? ` · ${Utils.escapeHtml(load.dimensions)}` : ''}<br><strong>Status:</strong> ${Utils.escapeHtml(load.status)}</p></div>
-        ${isOwner && load.status === 'open' ? `<div class="flex gap-3"><button class="detail-msg-btn" onclick="App.editLoad('${load.id}')">Edit load</button><button class="detail-msg-btn" style="background:#da3633" onclick="App.cancelLoad('${load.id}')">Cancel load</button></div>` : ''}
+        <div class="detail-hero detail-hero-load">
+          <div class="detail-photo-placeholder detail-load-art" aria-hidden="true">${svgIcon('truck', 42)}</div>
+          <div class="detail-header-info">
+            <span class="status-pill status-${Utils.escapeHtml(load.status === 'cancelled' ? 'cancelled' : 'open')}">${status}</span>
+            <h3 class="detail-title" id="detail-title">${Utils.escapeHtml(load.title)}</h3>
+            <div class="detail-price">${Utils.formatPrice(load.offered_price)}</div>
+          </div>
+        </div>
+        <div class="detail-meta">
+          <span class="d-chip d-chip-user">${svgIcon('user', 13)}${Utils.escapeHtml(poster)}</span>
+          <span class="d-chip">${svgIcon('clock', 13)}${Utils.timeAgo(load.created_at)}</span>
+          <span class="d-chip">${svgIcon('mapPin', 13)}${Utils.escapeHtml(load.city || 'Local')}</span>
+        </div>
+        <div class="detail-route">
+          <div class="route-stop route-stop-pickup">
+            <span class="route-stop-icon">${svgIcon('mapPin', 20)}</span>
+            <div class="route-stop-body"><span class="route-label">Pickup</span><span class="route-addr">${Utils.escapeHtml(load.pickup_address)}</span></div>
+          </div>
+          <div class="route-coupler">${svgIcon('arrowRight', 18)}</div>
+          <div class="route-stop route-stop-drop">
+            <span class="route-stop-icon">${svgIcon('mapPin', 20)}</span>
+            <div class="route-stop-body"><span class="route-label">Drop-off</span><span class="route-addr">${Utils.escapeHtml(load.dropoff_address)}</span></div>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h4 class="detail-section-title">${svgIcon('file', 15)} Load details</h4>
+          <p class="detail-desc">${Utils.escapeHtml(load.description || 'No description provided.')}</p>
+          <div class="detail-tags">
+            <span class="detail-tag detail-tag-accent">${svgIcon(tier.icon, 14)} ${Utils.escapeHtml(tier.label)}</span>
+            ${load.weight_kg ? `<span class="detail-tag">${svgIcon('weight', 13)} ${Utils.escapeHtml(String(load.weight_kg))} kg</span>` : ''}
+            ${load.dimensions ? `<span class="detail-tag">${Utils.escapeHtml(load.dimensions)}</span>` : ''}
+          </div>
+        </div>
+        ${isOwner && load.status === 'open' ? `<div class="flex gap-3 detail-owner-actions"><button class="detail-msg-btn" onclick="App.editLoad('${load.id}')">${svgIcon('file', 14)} Edit load</button><button class="detail-msg-btn detail-msg-cancel" onclick="App.cancelLoad('${load.id}')">${svgIcon('x', 14)} Cancel load</button></div>` : ''}
+        ${!isOwner ? `<button class="detail-msg-btn" onclick="App.closeDetailView()">${svgIcon('messaging', 16)} Contact driver</button>` : ''}
       `;
       overlay.classList.add('active'); panel.classList.add('active'); document.body.classList.add('scroll-lock');
     } catch (err) { Utils.showToast(err.message, 'error'); }
@@ -451,7 +494,7 @@ window.currentCity = CONFIG.DEFAULT_CITY;
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 
-  const detailOverlay = document.getElementById('listing-detail-overlay');
+  const detailOverlay = document.getElementById('detail-overlay');
   if (detailOverlay) {
     detailOverlay.addEventListener('click', (e) => {
       if (e.target === detailOverlay) App.closeDetailView();

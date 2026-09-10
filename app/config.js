@@ -9,10 +9,10 @@ const CONFIG = {
     'Tehachapi', 'Frazier Park', 'California City', 'Mojave', 'Ridgecrest'
   ],
   CARGO_TIERS: {
-    small: { label: 'Small', desc: 'Fits in a sedan trunk', icon: '📦' },
-    medium: { label: 'Medium', desc: 'Fits in an SUV/crossover', icon: '📫' },
-    large: { label: 'Large', desc: 'Needs a pickup or van', icon: '🚐' },
-    heavy: { label: 'Heavy/XL', desc: 'Needs a box truck or flatbed', icon: '🚛' },
+    small: { label: 'Small', desc: 'Fits in a sedan trunk', icon: 'box' },
+    medium: { label: 'Medium', desc: 'Fits in an SUV/crossover', icon: 'boxOpen' },
+    large: { label: 'Large', desc: 'Needs a pickup or van', icon: 'truck' },
+    heavy: { label: 'Heavy/XL', desc: 'Needs a box truck or flatbed', icon: 'container' },
   },
   CATEGORIES: [
     'Furniture', 'Electronics', 'Appliances', 'Vehicles', 'Produce',
