@@ -1430,10 +1430,30 @@
 
         /* Leaflet restyle */
         .leaflet-container {
-            background: var(--cream);
+            background: #0C0F1E;
             border: 1px solid rgba(148,156,255,0.14);
             border-radius: var(--rad-md);
         }
+        .leaflet-tile { filter: brightness(0.7) contrast(1.1) saturate(0.8); }
+        .leaflet-control-zoom a {
+            background: rgba(16,19,42,0.9) !important;
+            color: var(--mesquite) !important;
+            border-color: rgba(148,156,255,0.2) !important;
+        }
+        .leaflet-control-attribution {
+            background: rgba(10,13,28,0.8) !important;
+            color: var(--dust) !important;
+            font-size: 10px !important;
+        }
+        .leaflet-control-attribution a { color: var(--cyan) !important; }
+        .leaflet-popup-content-wrapper {
+            background: rgba(16,19,42,0.95) !important;
+            color: var(--mesquite) !important;
+            border-radius: 14px !important;
+            border: 1px solid rgba(148,156,255,0.2);
+            box-shadow: 0 8px 28px rgba(3,5,14,0.6);
+        }
+        .leaflet-popup-tip { background: rgba(16,19,42,0.95) !important; }
 
         /* Aurora polish */
         .action-box:hover .action-box-inner {
@@ -1468,6 +1488,20 @@
             background: linear-gradient(120deg, #FFFFFF 10%, var(--cyan) 90%);
             -webkit-background-clip: text; background-clip: text; color: transparent;
         }
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .hamburger-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 42px; height: 42px; border-radius: 12px; border: none; cursor: pointer;
+            background: rgba(16,19,42,0.9);
+            border: 1px solid rgba(148,156,255,0.28);
+            color: var(--mesquite);
+            box-shadow: 0 4px 16px rgba(3,5,14,0.4);
+            transition: border-color 150ms ease, box-shadow 150ms ease;
+        }
+        .hamburger-btn:hover {
+            border-color: rgba(34,211,238,0.6);
+            box-shadow: 0 0 20px rgba(124,92,255,0.35);
+        }
         .profile-link {
             display: inline-flex; align-items: center; gap: 8px;
             background: rgba(16,19,42,0.9);
@@ -1492,6 +1526,60 @@
             margin: 6px auto 18px; max-width: 460px;
             color: var(--dust); font-size: 15px; line-height: 1.55;
         }
+        .city-map-wrap {
+            position: relative; margin: 0 auto 24px; max-width: 580px;
+            border-radius: 20px; overflow: hidden;
+            border: 1px solid rgba(148,156,255,0.2);
+            box-shadow: 0 8px 32px rgba(3,5,14,0.5), 0 0 0 1px rgba(124,92,255,0.08) inset;
+        }
+        #city-map {
+            width: 100%; height: 200px;
+            background: #0C0F1E;
+            border-radius: 20px;
+        }
+        .city-map-label {
+            position: absolute; bottom: 12px; left: 14px; z-index: 400;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px; border-radius: 999px;
+            background: rgba(10,13,28,0.88); backdrop-filter: blur(8px);
+            border: 1px solid rgba(148,156,255,0.25);
+            color: var(--mesquite); font-size: 13px; font-weight: 600;
+        }
+        .city-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+        .home-city-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px; margin: 0 auto 28px; max-width: 580px;
+        }
+        .home-city-grid button {
+            padding: 10px 12px; border-radius: 12px; font-size: 12.5px; font-weight: 600;
+            background: rgba(16,19,42,0.85); border: 1px solid rgba(148,156,255,0.18);
+            color: var(--mesquite); cursor: pointer;
+            transition: border-color 150ms ease, box-shadow 150ms ease;
+        }
+        .home-city-grid button:hover {
+            border-color: rgba(34,211,238,0.5);
+            box-shadow: 0 0 16px rgba(124,92,255,0.2);
+        }
+        .home-city-grid button[style*="rgba(124,92,255"] {
+            border-color: rgba(124,92,255,0.55) !important;
+            box-shadow: 0 0 20px rgba(124,92,255,0.25) !important;
+        }
+        .trending-section { margin: 28px 0 10px; }
+        .trending-section h2 {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 18px; margin-bottom: 16px;
+        }
+        .trending-dot {
+            width: 10px; height: 10px; border-radius: 50%; flex: none;
+            background: linear-gradient(135deg, var(--violet), var(--cyan));
+            box-shadow: 0 0 12px rgba(124,92,255,0.8);
+        }
+        .trending-section .grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 520px) { .trending-section .grid { grid-template-columns: 1fr; } }
         .role-section h2 {
             position: relative;
             display: inline-flex; align-items: center; gap: 10px;
@@ -1777,7 +1865,12 @@
 <!-- ============ HOMEPAGE HEADER ============ -->
 <header class="home-header" role="banner">
     <div class="brand-mark"><svg class="brand-mark-symbol" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg><span class="brand-word">sovr1n</span></div>
-    <button class="profile-link" type="button" onclick="App.openProfileOrLogin()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Sign in</span></button>
+    <div class="header-actions">
+        <button class="hamburger-btn" id="hamburger-btn" type="button" onclick="App.openHamburgerDrawer()" aria-label="Open menu" aria-expanded="false">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+        <button class="profile-link" type="button" onclick="App.openProfileOrLogin()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Sign in</span></button>
+    </div>
 </header>
 
 <!-- ============ HAMBURGER DRAWER (City Selector + Sign In/Out) ============ -->
@@ -1906,6 +1999,13 @@
         <option value="Ridgecrest">Ridgecrest</option>
     </select>
 
+    <div class="city-map-wrap">
+        <div id="city-map"></div>
+        <div class="city-map-label"><span class="city-dot"></span><span id="current-city-label">Bakersfield</span>, CA</div>
+    </div>
+
+    <div id="home-city-list" class="home-city-grid"></div>
+
     <section class="role-section" aria-labelledby="market-title">
         <h2 id="market-title">Market</h2>
         <div class="role-row">
@@ -1934,9 +2034,15 @@
             <button class="role-card" type="button" onclick="App.openModule('load-board')"><span class="role-card-name">Post a load or job</span><span class="role-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11v6M9 14h6"/></svg></span></button>
         </div>
     </section>
+
+    <section class="trending-section" aria-labelledby="trending-title">
+        <h2 id="trending-title"><span class="trending-dot"></span>Trending near you</h2>
+        <div id="trending-grid" class="grid grid-cols-2 gap-4"></div>
+    </section>
+
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
 </main>
-<footer class="home-footer"><a href="#">About Us</a><a href="#">Contact</a><a href="#">Terms of Service</a><a href="#">About</a></footer>
+<footer class="home-footer"><a href="#">About Us</a><a href="#">Contact</a><a href="#">Terms of Service</a><a href="#" onclick="App.openModule('share');return false;">Share sovr1n</a></footer>
 
 <!-- ============ CHAT FAB ============ -->
 <button class="chat-fab" id="chat-fab" onclick="App.toggleChat()" aria-label="Open messages">

@@ -5,11 +5,13 @@ const App = {
 
   init() {
     this.loadCity();
-    this.bindCitySelector();
-    this.bindModuleNav();
     Auth.init();
     Search.init();
     this.loadListingsForCurrentCity();
+
+    document.getElementById('city-select')?.addEventListener('change', (e) => {
+      this.setCity(e.target.value);
+    });
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -65,34 +67,6 @@ const App = {
       return;
     }
     Auth.openModal('login-modal');
-  },
-
-  bindCitySelector() {
-    document.getElementById('open-city-modal')?.addEventListener('click', () => {
-      document.getElementById('city-modal')?.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-
-    document.getElementById('city-select')?.addEventListener('change', (e) => {
-      this.setCity(e.target.value);
-    });
-
-    document.querySelectorAll('.city-option').forEach(el => {
-      el.addEventListener('click', () => {
-        this.setCity(el.dataset.city);
-      });
-    });
-
-    document.querySelectorAll('[data-close-city]').forEach(el => {
-      el.addEventListener('click', () => this.closeCityModal());
-    });
-  },
-
-  closeCityModal() {
-    document.getElementById('city-modal')?.classList.remove('active');
-    document.body.style.overflow = '';
-    const cityPillBtn = document.getElementById('city-pill-btn');
-    if (cityPillBtn) cityPillBtn.setAttribute('aria-expanded', 'false');
   },
 
   bindModuleNav() {
@@ -498,14 +472,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (detailOverlay) {
     detailOverlay.addEventListener('click', (e) => {
       if (e.target === detailOverlay) App.closeDetailView();
-    });
-  }
-
-  const cityPillBtn = document.getElementById('city-pill-btn');
-  if (cityPillBtn) {
-    cityPillBtn.addEventListener('click', () => {
-      const expanded = cityPillBtn.getAttribute('aria-expanded') === 'true';
-      cityPillBtn.setAttribute('aria-expanded', !expanded);
     });
   }
 
