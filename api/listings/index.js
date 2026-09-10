@@ -1,4 +1,4 @@
-const { supabase } = require('../../lib/supabase');
+const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { requireAuth } = require('../../lib/auth');
 const { badRequest, serverError } = require('../../lib/errors');
 const { applySecurityHeaders, rateLimit } = require('../../lib/security');
@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
     const offset = (page - 1) * limit;
 
     try {
-      let query = supabase
+      let query = supabaseAdmin
         .from('listings')
         .select('*, users(full_name, avatar_url)', { count: 'exact' })
         .eq('is_active', true)
@@ -53,7 +53,7 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('listings')
         .insert({
           user_id: user.id,

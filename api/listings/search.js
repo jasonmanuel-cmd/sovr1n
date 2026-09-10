@@ -1,4 +1,4 @@
-const { supabase } = require('../../lib/supabase');
+const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { badRequest, serverError } = require('../../lib/errors');
 const { applySecurityHeaders, rateLimit } = require('../../lib/security');
 
@@ -18,7 +18,7 @@ module.exports = async function handler(req, res) {
   const searchTags = q.toLowerCase().split(/\s+/).filter(Boolean);
 
   try {
-    let query = supabase
+    let query = supabaseAdmin
       .from('listings')
       .select('*, users(full_name, avatar_url)', { count: 'exact' })
       .eq('is_active', true)
@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
     const resultsCount = count || 0;
 
     if (resultsCount === 0) {
-      await supabase.from('search_log').insert({
+      await supabaseAdmin.from('search_log').insert({
         query: q,
         city: city || 'Bakersfield',
         results_count: 0,
