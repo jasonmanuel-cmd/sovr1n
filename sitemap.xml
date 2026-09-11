@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://harbisonstandard.com/</loc>
+    <lastmod>2026-09-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://harbisonstandard.com/sovr1n-logo.svg</image:loc>
+      <image:title>sovr1n Logo</image:title>
+      <image:caption>sovr1n — Harbison Standard local marketplace</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://harbisonstandard.com/splash-logo.png</image:loc>
+      <image:title>sovr1n Splash</image:title>
+      <image:caption>sovr1n local marketplace for Bakersfield</image:caption>
+    </image:image>
+  </url>
+</urlset>

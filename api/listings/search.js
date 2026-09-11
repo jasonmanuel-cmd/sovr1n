@@ -10,7 +10,9 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { q, city, type, category, page = 1, limit = 20 } = req.query;
+  const { q, city, type, category } = req.query;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
 
   if (!q) return badRequest(res, 'Search query (q) is required');
 

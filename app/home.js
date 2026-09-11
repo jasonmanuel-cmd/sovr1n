@@ -1,12 +1,3 @@
-// ============================================================
-// HOME.JS — Hamburger drawer, interactive city map, and the
-// conditional routing flow: pick a city -> auth gateway ->
-// role selection -> land in the matching module.
-//
-// This file augments the App/Auth objects defined in app.js and
-// app/auth.js (loaded before this file), following the same
-// "extend after load" pattern already used elsewhere in this app.
-// ============================================================
 (function () {
   const ROLE_MODULE_MAP = {
     customer: 'services-buyer',
@@ -27,7 +18,6 @@
   App._leafletMap = null;
   App._cityMarker = null;
 
-  // ---------------- Map ----------------
   App.initHomeMap = function () {
     const el = document.getElementById('city-map');
     if (!el || typeof L === 'undefined' || App._leafletMap) return;
@@ -35,11 +25,11 @@
     App._leafletMap = L.map('city-map', {
       zoomControl: true,
       scrollWheelZoom: true,
-    }).setView([35.3733, -119.0187], 9); // Bakersfield-area center
+    }).setView([35.3733, -119.0187], 9);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors',
+      attribution: '&copy; OpenStreetMap',
     }).addTo(App._leafletMap);
 
     const current = (window.CRAIGSLIST_CITIES || []).find(c => c.name === App.currentCity);
@@ -51,34 +41,37 @@
     App._leafletMap.flyTo([cityObj.lat, cityObj.lng], 11, { duration: 1.1 });
     if (App._cityMarker) App._leafletMap.removeLayer(App._cityMarker);
     App._cityMarker = L.marker([cityObj.lat, cityObj.lng]).addTo(App._leafletMap);
-    App._cityMarker.bindPopup(`<strong>${cityObj.name}, ${cityObj.state}</strong>`).openPopup();
+    App._cityMarker.bindPopup(`<strong>${Utils.escapeHtml(cityObj.name)}, ${Utils.escapeHtml(cityObj.state)}</strong>`).openPopup();
   };
 
-  // ---------------- City list rendering (shared: drawer + homepage) ----------------
   App.renderCityList = function (cities, containerId) {
     const el = document.getElementById(containerId);
     if (!el) return;
 
     if (!cities || cities.length === 0) {
-      el.innerHTML = '<p class="text-sm text-center py-6" style="color:var(--dust);">No cities found</p>';
+      el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--dim);">No cities found</p>';
       return;
     }
 
     el.innerHTML = cities.map(c => {
       const isCurrent = c.name === App.currentCity;
-      const safeName = c.name.replace(/'/g, "\\'");
       return `
-        <button type="button" class="w-full text-left px-5 py-4 rounded-2xl flex items-center justify-between transition-all mb-1.5"
-          style="background:${isCurrent ? 'rgba(124,92,255,0.16)' : 'var(--warm-white)'}; border:1px solid ${isCurrent ? 'rgba(124,92,255,0.55)' : 'var(--border)'}; box-shadow:${isCurrent ? '0 0 24px rgba(124,92,255,0.18)' : 'none'};"
-          onclick="App.selectCity('${safeName}')">
-          <span>
-            <span class="font-display font-semibold text-sm" style="color:var(--mesquite);">${Utils.escapeHtml(c.name)}</span>
-            <span class="text-xs ml-2" style="color:var(--dust);">${Utils.escapeHtml(c.state)}</span>
+        <button type="button" class="city-option" data-name="${Utils.escapeHtml(c.name)}"
+          style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;border-radius:var(--rad-md);border:1px solid ${isCurrent ? 'rgba(232,164,56,0.5)' : 'var(--border)'};background:${isCurrent ? 'rgba(232,164,56,0.08)' : 'var(--surface-1)'};color:var(--cream);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--transition);margin-bottom:4px;">
+          <span style="display:flex;align-items:center;gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${isCurrent ? 'var(--warm)' : 'var(--dim)'}" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${Utils.escapeHtml(c.name)}
           </span>
-          ${isCurrent ? '<span class="text-xs font-bold" style="color:var(--clay);">Current</span>' : ''}
+          ${isCurrent ? '<span style="font-size:10px;font-weight:700;color:var(--warm);">Current</span>' : ''}
         </button>
       `;
     }).join('');
+
+    el.querySelectorAll('.city-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        App.selectCity(btn.dataset.name);
+      });
+    });
   };
 
   App.filterCitiesIn = function (inputId, containerId) {
@@ -91,7 +84,6 @@
     App.renderCityList(filtered, containerId);
   };
 
-  // ---------------- Hamburger drawer ----------------
   App.openHamburgerDrawer = function () {
     document.getElementById('hamburger-drawer')?.classList.add('open');
     document.getElementById('hamburger-btn')?.setAttribute('aria-expanded', 'true');
@@ -119,7 +111,6 @@
     }
   };
 
-  // ---------------- City selection -> auth gateway -> role routing ----------------
   App.selectCity = function (name) {
     const cityObj = (window.CRAIGSLIST_CITIES || []).find(c => c.name === name);
 
@@ -145,7 +136,6 @@
     App.openRoleModal();
   };
 
-  // ---------------- Role selection ----------------
   App.openRoleModal = function () {
     const cityLabel = document.getElementById('role-modal-city');
     if (cityLabel) cityLabel.textContent = App.currentCity;
@@ -172,7 +162,6 @@
     App.openModule(ROLE_MODULE_MAP[role]);
   };
 
-  // ---------------- Auth hooks (fired by app/auth.js) ----------------
   Auth.onAuthSuccess = function () {
     App.updateDrawerAuthUI();
     if (App.pendingCityForRouting) {
@@ -187,7 +176,6 @@
     App.closeRoleModal();
   };
 
-  // ---------------- Init ----------------
   document.addEventListener('DOMContentLoaded', () => {
     App.initHomeMap();
     App.renderCityList(window.CRAIGSLIST_CITIES || [], 'home-city-list');

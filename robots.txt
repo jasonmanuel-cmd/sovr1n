@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://harbisonstandard.com/sitemap.xml
+Sitemap: https://harbisonstandard.com/image-sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

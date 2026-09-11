@@ -8,7 +8,9 @@ module.exports = async function handler(req, res) {
   if (!rateLimit(req, res, { limit: req.method === 'POST' ? 15 : 120 })) return;
 
   if (req.method === 'GET') {
-    const { city, type, category, page = 1, limit = 20 } = req.query;
+    const { city, type, category } = req.query;
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     try {

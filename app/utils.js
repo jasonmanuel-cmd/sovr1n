@@ -66,12 +66,6 @@ const Utils = {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.textContent = message;
-    toast.style.cssText = `
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: ${type === 'error' ? 'linear-gradient(135deg,#7C5CFF,#FF8FA3)' : type === 'success' ? 'linear-gradient(135deg,#7C5CFF,#22D3EE)' : 'linear-gradient(135deg,#7C5CFF,#22D3EE)'};
-      color: #fff; padding: 12px 24px; border-radius: 999px; z-index: 10000;
-      font-size: 14px; font-weight: 500; animation: fadeInUp 0.3s ease;
-    `;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   },
@@ -102,18 +96,18 @@ const Utils = {
       : '';
 
     return `
-      <div class="listing-card" data-id="${listing.id}" tabindex="0" role="button" onclick="App.openDetailView('${listing.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openDetailView('${listing.id}')}" aria-label="View details for ${this.escapeHtml(listing.title)}">
+      <div class="card card-interactive listing-card" data-id="${listing.id}" tabindex="0" role="button" onclick="App.openDetailView('${listing.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openDetailView('${listing.id}')}" aria-label="View details for ${this.escapeHtml(listing.title)}">
         <div class="listing-photo">
-          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder" aria-hidden="true">${svgIcon('box', 34)}</div>`}
-          ${listing.type ? `<span class="listing-type-chip type-${this.escapeHtml(listing.type)}">${listing.type === 'service' ? svgIcon('spark', 11) : svgIcon('bag', 11)}${listing.type === 'service' ? 'Service' : 'Item'}</span>` : ''}
+          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder" aria-hidden="true">${svgIcon('box', 30)}</div>`}
+          ${listing.type ? `<span class="listing-type-chip">${listing.type === 'service' ? svgIcon('spark', 10) : svgIcon('bag', 10)} ${listing.type === 'service' ? 'Service' : 'Item'}</span>` : ''}
         </div>
         <div class="listing-info">
           <h4 class="listing-title">${this.escapeHtml(listing.title)}</h4>
-          <p class="listing-desc">${this.escapeHtml(this.truncate(listing.description, 60))}</p>
+          <p class="listing-desc">${this.escapeHtml(this.truncate(listing.description, 50))}</p>
           ${priceHtml}
           <div class="listing-meta">
             ${user ? `<span class="listing-seller"><span class="seller-avatar">${this.escapeHtml(this.initials(user.full_name || user.fullName))}</span>${this.escapeHtml(user.full_name || user.fullName)}</span>` : ''}
-            <span class="listing-time">${this.timeAgo(listing.created_at)}</span>
+            <span>${this.timeAgo(listing.created_at)}</span>
           </div>
         </div>
       </div>

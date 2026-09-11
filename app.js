@@ -51,8 +51,6 @@ const App = {
     });
     const select = document.getElementById('city-select');
     if (select) {
-      // The saved city can be outside the small initial option set. Keep the
-      // selector honest rather than presenting an empty field.
       if (![...select.options].some(option => option.value === this.currentCity)) {
         const option = new Option(this.currentCity, this.currentCity);
         select.add(option, 1);
@@ -168,40 +166,35 @@ const App = {
 
     const photo = listing.photos?.[0] || '';
     const user = listing.users;
-    const priceHtml = listing.price
-      ? Utils.formatPrice(listing.price)
-      : '';
+    const priceHtml = listing.price ? Utils.formatPrice(listing.price) : '';
 
     panel.innerHTML = `
       <button class="modal-close detail-close" onclick="App.closeDetailView()" aria-label="Close details">&times;</button>
-      <div class="detail-hero detail-hero-listing">
-        ${photo ? `<img src="${photo}" alt="${Utils.escapeHtml(listing.title)}" class="detail-photo">` : `<div class="detail-photo-placeholder" aria-hidden="true">${svgIcon('box', 40)}</div>`}
-        <div class="detail-header-info">
-          <div class="detail-kind"><span class="kind-dot kind-market"></span>${listing.type === 'service' ? 'Service offer' : 'Market listing'}</div>
+      <div class="detail-hero">
+        ${photo ? `<img src="${Utils.escapeHtml(photo)}" alt="${Utils.escapeHtml(listing.title)}" class="detail-photo">` : `<div class="detail-photo-placeholder" aria-hidden="true">${svgIcon('box', 36)}</div>`}
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;">
+          <span class="badge badge-amber" style="width:fit-content;">${listing.type === 'service' ? 'Service' : 'Item'}</span>
           <h3 class="detail-title" id="detail-title">${Utils.escapeHtml(listing.title)}</h3>
-          <div class="detail-price-row">
-            ${priceHtml ? `<div class="detail-price">${priceHtml}</div>` : ''}
-            ${listing.category ? `<span class="detail-tag">${Utils.escapeHtml(listing.category)}</span>` : ''}
-          </div>
+          ${priceHtml ? `<div class="detail-price">${Utils.escapeHtml(priceHtml)}</div>` : ''}
         </div>
       </div>
-      <div class="detail-meta">
-        ${user ? `<span class="d-chip d-chip-user">${svgIcon('user', 13)}${Utils.escapeHtml(user.full_name || user.fullName || 'Unknown')}</span>` : ''}
-        <span class="d-chip">${svgIcon('clock', 13)}${Utils.timeAgo(listing.created_at)}</span>
-        ${listing.city ? `<span class="d-chip">${svgIcon('mapPin', 13)}${Utils.escapeHtml(listing.city)}</span>` : ''}
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;">
+        ${user ? `<span class="badge badge-dim">${svgIcon('user', 12)} ${Utils.escapeHtml(user.full_name || user.fullName || 'Unknown')}</span>` : ''}
+        <span class="badge badge-dim">${svgIcon('clock', 12)} ${Utils.timeAgo(listing.created_at)}</span>
+        ${listing.city ? `<span class="badge badge-dim">${svgIcon('mapPin', 12)} ${Utils.escapeHtml(listing.city)}</span>` : ''}
       </div>
       <div class="detail-section">
-        <h4 class="detail-section-title">${svgIcon('file', 15)} Description</h4>
+        <h4 class="detail-section-title">${svgIcon('file', 14)} Description</h4>
         <p class="detail-desc">${Utils.escapeHtml(listing.description || 'No description provided.')}</p>
       </div>
       ${listing.tags?.length ? `
       <div class="detail-section">
         <h4 class="detail-section-title">${svgIcon('tag', 14)} Tags</h4>
-        <div class="detail-tags">
-          ${listing.tags.map(t => `<span class="detail-tag">${Utils.escapeHtml(t)}</span>`).join('')}
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${listing.tags.map(t => `<span class="badge badge-dim">${Utils.escapeHtml(t)}</span>`).join('')}
         </div>
       </div>` : ''}
-      <button class="detail-msg-btn" onclick="App.closeDetailView()">${svgIcon('messaging', 16)} Contact Seller</button>
+      <button class="btn-primary" style="width:100%;margin-top:16px;" onclick="App.closeDetailView()">${svgIcon('messaging', 16)} Contact Seller</button>
     `;
 
     overlay.classList.add('active');
@@ -239,7 +232,7 @@ const App = {
         sliced.forEach(l => { this._listingsCache[l.id] = l; });
         trending.innerHTML = sliced.map(l => Utils.renderListingCard(l)).join('');
       } else {
-        trending.innerHTML = '<div class="empty-state"><p>No trending items yet. Be the first to post!</p></div>';
+        trending.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + svgIcon('box', 28) + '</div><p>No trending items yet. Be the first to post!</p></div>';
       }
     } catch (err) {
       Listings.renderError(err.message, 'trending-grid');
@@ -252,21 +245,25 @@ const App = {
     if (!container) return;
 
     if (loads.length === 0) {
-      container.innerHTML = '<div class="empty-state"><p>No delivery jobs available right now.</p></div>';
+      container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + svgIcon('truck', 28) + '</div><p>No delivery jobs available right now.</p></div>';
       return;
     }
 
     container.innerHTML = loads.map(load => `
-      <div class="listing-card load-card" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
-        <div class="listing-photo load-thumb">${svgIcon('truck', 26)}</div>
-        <div class="listing-info">
-          <h4 class="listing-title">${Utils.escapeHtml(load.title)}</h4>
-          <p class="listing-desc">${Utils.escapeHtml(Utils.truncate(load.description || '', 60))}</p>
-          <div class="listing-price load-price-txt">${Utils.formatPrice(load.offered_price)}</div>
-          <div class="listing-meta">
-            <span class="cargo-tier cargo-${load.cargo_tier}">${svgIcon(CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || 'box', 13)} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
-            <span class="listing-time">${Utils.timeAgo(load.created_at)}</span>
+      <div class="load-row" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
+        <div class="load-icon">${svgIcon('truck', 20)}</div>
+        <div class="load-info">
+          <h4 class="load-title">${Utils.escapeHtml(load.title)}</h4>
+          <div class="load-route">
+            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${Utils.escapeHtml(load.pickup_address || 'Pickup')}</span>
+            <span style="color:var(--warm);">&rarr;</span>
+            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${Utils.escapeHtml(load.dropoff_address || 'Dropoff')}</span>
           </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <span class="badge badge-${load.cargo_tier}">${svgIcon(CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || 'box', 12)} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
+          <div class="load-price">${Utils.formatPrice(load.offered_price)}</div>
+          <span class="load-time">${svgIcon('clock', 10)} ${Utils.timeAgo(load.created_at)}</span>
         </div>
       </div>
     `).join('');
@@ -277,20 +274,23 @@ const App = {
     if (!container) return;
 
     if (providers.length === 0) {
-      container.innerHTML = '<div class="empty-state"><p>No service providers registered yet.</p></div>';
+      container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + svgIcon('users', 28) + '</div><p>No service providers registered yet.</p></div>';
       return;
     }
 
     container.innerHTML = providers.map(p => `
-      <div class="listing-card" data-id="${p.id}">
-        <div class="listing-info">
-          <h4 class="listing-title">${Utils.escapeHtml(p.business_name)}</h4>
-          <p class="listing-desc">${Utils.escapeHtml(Utils.truncate(p.description, 80))}</p>
-          <div class="listing-rating">
-            ${Utils.renderStars(p.rating_avg || 0, p.rating_count || 0)}
+      <div class="card card-interactive" data-id="${p.id}" onclick="App.openProviderDetail('${p.id}')">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px;">
+          <div style="width:48px;height:48px;border-radius:var(--rad-md);background:linear-gradient(135deg,rgba(232,164,56,0.15),rgba(45,175,163,0.1));border:1px solid rgba(232,164,56,0.25);display:grid;place-items:center;color:var(--warm);flex:none;">
+            ${svgIcon('users', 22)}
           </div>
-          <div class="listing-meta">
-            <span class="listing-category">${Utils.escapeHtml(p.category || '')}</span>
+          <div style="flex:1;min-width:0;">
+            <h4 class="listing-title" style="margin-bottom:2px;">${Utils.escapeHtml(p.business_name)}</h4>
+            <p class="listing-desc" style="margin-bottom:4px;">${Utils.escapeHtml(Utils.truncate(p.description, 60))}</p>
+            <div style="display:flex;align-items:center;gap:8px;">
+              ${Utils.renderStars(p.rating_avg || 0, p.rating_count || 0)}
+              ${p.category ? `<span class="badge badge-teal">${Utils.escapeHtml(p.category)}</span>` : ''}
+            </div>
           </div>
         </div>
       </div>
@@ -302,27 +302,26 @@ const App = {
     if (!container) return;
 
     if (loads.length === 0) {
-      container.innerHTML = '<div class="empty-state"><p>No loads posted yet. Post your first load!</p></div>';
+      container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + svgIcon('route', 28) + '</div><p>No loads posted yet. Post your first load!</p></div>';
       return;
     }
 
     container.innerHTML = loads.map(load => `
       <div class="load-row" data-id="${load.id}" tabindex="0" role="button" onclick="App.openLoadDetail('${load.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openLoadDetail('${load.id}')}">
-        <div class="load-route-icon">${svgIcon('route', 22)}</div>
+        <div class="load-icon">${svgIcon('route', 20)}</div>
         <div class="load-info">
           <h4 class="load-title">${Utils.escapeHtml(load.title)}</h4>
           <div class="load-route">
-            <span class="route-point route-start"><span class="route-dot"></span>${Utils.escapeHtml(load.pickup_address || 'Pickup')}</span>
-            <span class="load-arrow">${svgIcon('arrowRight', 15)}</span>
-            <span class="route-point route-end"><span class="route-dot"></span>${Utils.escapeHtml(load.dropoff_address || 'Dropoff')}</span>
+            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${Utils.escapeHtml(load.pickup_address || 'Pickup')}</span>
+            <span style="color:var(--warm);">&rarr;</span>
+            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${Utils.escapeHtml(load.dropoff_address || 'Dropoff')}</span>
           </div>
         </div>
-        <div class="load-details">
-          <span class="cargo-tier cargo-${load.cargo_tier}">${svgIcon(CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || 'box', 13)} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
-          ${load.weight_kg ? `<span class="load-weight">${svgIcon('weight', 13)}${load.weight_kg} kg</span>` : ''}
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <span class="badge badge-${load.cargo_tier}">${svgIcon(CONFIG.CARGO_TIERS[load.cargo_tier]?.icon || 'box', 12)} ${CONFIG.CARGO_TIERS[load.cargo_tier]?.label || load.cargo_tier}</span>
+          <div class="load-price">${Utils.formatPrice(load.offered_price)}</div>
+          <span class="load-time">${svgIcon('clock', 10)} ${Utils.timeAgo(load.created_at)}</span>
         </div>
-        <div class="load-price">${Utils.formatPrice(load.offered_price)}</div>
-        <div class="load-time">${svgIcon('clock', 12)}${Utils.timeAgo(load.created_at)}</div>
       </div>
     `).join('');
   },
@@ -339,43 +338,45 @@ const App = {
       const poster = load.users?.full_name || 'Load poster';
       const tier = CONFIG.CARGO_TIERS[load.cargo_tier] || { label: load.cargo_tier, icon: 'box' };
       const status = load.status === 'cancelled' ? 'cancelled' : (load.status === 'in_transit' ? 'in transit' : 'open');
+      const statusClass = load.status === 'cancelled' ? 'badge-dim' : 'badge-amber';
+
       panel.innerHTML = `
         <button class="modal-close detail-close" onclick="App.closeDetailView()" aria-label="Close details">&times;</button>
-        <div class="detail-hero detail-hero-load">
-          <div class="detail-photo-placeholder detail-load-art" aria-hidden="true">${svgIcon('truck', 42)}</div>
-          <div class="detail-header-info">
-            <span class="status-pill status-${Utils.escapeHtml(load.status === 'cancelled' ? 'cancelled' : 'open')}">${status}</span>
+        <div class="detail-hero">
+          <div class="detail-photo-placeholder" aria-hidden="true">${svgIcon('truck', 38)}</div>
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;">
+            <span class="badge ${statusClass}" style="width:fit-content;">${Utils.escapeHtml(status)}</span>
             <h3 class="detail-title" id="detail-title">${Utils.escapeHtml(load.title)}</h3>
             <div class="detail-price">${Utils.formatPrice(load.offered_price)}</div>
           </div>
         </div>
-        <div class="detail-meta">
-          <span class="d-chip d-chip-user">${svgIcon('user', 13)}${Utils.escapeHtml(poster)}</span>
-          <span class="d-chip">${svgIcon('clock', 13)}${Utils.timeAgo(load.created_at)}</span>
-          <span class="d-chip">${svgIcon('mapPin', 13)}${Utils.escapeHtml(load.city || 'Local')}</span>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;">
+          <span class="badge badge-dim">${svgIcon('user', 12)} ${Utils.escapeHtml(poster)}</span>
+          <span class="badge badge-dim">${svgIcon('clock', 12)} ${Utils.timeAgo(load.created_at)}</span>
+          <span class="badge badge-dim">${svgIcon('mapPin', 12)} ${Utils.escapeHtml(load.city || 'Local')}</span>
         </div>
-        <div class="detail-route">
-          <div class="route-stop route-stop-pickup">
-            <span class="route-stop-icon">${svgIcon('mapPin', 20)}</span>
-            <div class="route-stop-body"><span class="route-label">Pickup</span><span class="route-addr">${Utils.escapeHtml(load.pickup_address)}</span></div>
+        <div style="border-radius:var(--rad-md);padding:14px;background:var(--surface-2);border:1px solid var(--border);margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <div style="width:32px;height:32px;border-radius:var(--rad-sm);background:rgba(232,164,56,0.12);border:1px solid rgba(232,164,56,0.25);display:grid;place-items:center;color:var(--warm);">${svgIcon('mapPin', 16)}</div>
+            <div><div style="font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim);">Pickup</div><div style="font-size:13px;font-weight:500;color:var(--cream);">${Utils.escapeHtml(load.pickup_address)}</div></div>
           </div>
-          <div class="route-coupler">${svgIcon('arrowRight', 18)}</div>
-          <div class="route-stop route-stop-drop">
-            <span class="route-stop-icon">${svgIcon('mapPin', 20)}</span>
-            <div class="route-stop-body"><span class="route-label">Drop-off</span><span class="route-addr">${Utils.escapeHtml(load.dropoff_address)}</span></div>
+          <div style="width:1px;height:12px;background:var(--border);margin-left:15px;margin-bottom:4px;"></div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:var(--rad-sm);background:rgba(45,175,163,0.12);border:1px solid rgba(45,175,163,0.25);display:grid;place-items:center;color:var(--teal);">${svgIcon('mapPin', 16)}</div>
+            <div><div style="font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim);">Drop-off</div><div style="font-size:13px;font-weight:500;color:var(--cream);">${Utils.escapeHtml(load.dropoff_address)}</div></div>
           </div>
         </div>
         <div class="detail-section">
-          <h4 class="detail-section-title">${svgIcon('file', 15)} Load details</h4>
+          <h4 class="detail-section-title">${svgIcon('file', 14)} Load details</h4>
           <p class="detail-desc">${Utils.escapeHtml(load.description || 'No description provided.')}</p>
-          <div class="detail-tags">
-            <span class="detail-tag detail-tag-accent">${svgIcon(tier.icon, 14)} ${Utils.escapeHtml(tier.label)}</span>
-            ${load.weight_kg ? `<span class="detail-tag">${svgIcon('weight', 13)} ${Utils.escapeHtml(String(load.weight_kg))} kg</span>` : ''}
-            ${load.dimensions ? `<span class="detail-tag">${Utils.escapeHtml(load.dimensions)}</span>` : ''}
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span class="badge badge-amber">${svgIcon(tier.icon, 13)} ${Utils.escapeHtml(tier.label)}</span>
+            ${load.weight_kg ? `<span class="badge badge-dim">${svgIcon('weight', 12)} ${Utils.escapeHtml(String(load.weight_kg))} kg</span>` : ''}
+            ${load.dimensions ? `<span class="badge badge-dim">${Utils.escapeHtml(load.dimensions)}</span>` : ''}
           </div>
         </div>
-        ${isOwner && load.status === 'open' ? `<div class="flex gap-3 detail-owner-actions"><button class="detail-msg-btn" onclick="App.editLoad('${load.id}')">${svgIcon('file', 14)} Edit load</button><button class="detail-msg-btn detail-msg-cancel" onclick="App.cancelLoad('${load.id}')">${svgIcon('x', 14)} Cancel load</button></div>` : ''}
-        ${!isOwner ? `<button class="detail-msg-btn" onclick="App.closeDetailView()">${svgIcon('messaging', 16)} Contact driver</button>` : ''}
+        ${isOwner && load.status === 'open' ? `<div style="display:flex;gap:8px;margin-top:16px;"><button class="btn-secondary" style="flex:1;" onclick="App.editLoad('${load.id}')">${svgIcon('file', 14)} Edit</button><button class="btn-secondary" style="flex:1;color:var(--error);border-color:rgba(248,113,113,0.3);" onclick="App.cancelLoad('${load.id}')">${svgIcon('x', 14)} Cancel</button></div>` : ''}
+        ${!isOwner ? `<button class="btn-primary" style="width:100%;margin-top:16px;" onclick="App.closeDetailView()">${svgIcon('messaging', 16)} Contact driver</button>` : ''}
       `;
       overlay.classList.add('active'); panel.classList.add('active'); document.body.classList.add('scroll-lock');
     } catch (err) { Utils.showToast(err.message, 'error'); }

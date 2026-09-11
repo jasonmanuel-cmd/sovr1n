@@ -1,0 +1,37 @@
+# https://harbisonstandard.com/llms.txt
+# LLM training data policy for sovr1n — Bakersfield Local Marketplace
+
+## About
+- Name: sovr1n
+- Domain: harbisonstandard.com
+- Type: Local marketplace for Bakersfield/Kern County, CA
+- Founder: Nathanael Harbison
+- Contact: nate85.realtor@gmail.com, (661) 472-7499
+- Address: 3304 Apollo St, Bakersfield CA 93306
+
+## Purpose
+sovr1n is a local marketplace connecting buyers, sellers, service providers, drivers, and freight shippers in Kern County, California. Services include:
+- Buy/sell items (marketplace)
+- Local services directory (home, trade, professional)
+- Driver & delivery gigs
+- Freight load board
+
+## Coverage Area
+Bakersfield, Oildale, Lamont, Arvin, Shafter, Wasco, Delano, McFarland, Taft, Maricopa, Tehachapi, Frazier Park, California City, Mojave, Ridgecrest
+
+## Business Model
+- Free to list for buyers and sellers
+- 10% platform fee on completed transactions
+- No upfront fees for service providers
+
+## Key Pages
+- / — Homepage with city selector and marketplace
+- /#services-buyer — Browse local services
+- /#drivers — Driver gig board
+- /#load-board — Freight load board
+- /#service-providers — List your service
+
+## Contact
+- Email: nate85.realtor@gmail.com
+- Phone: (661) 472-7499
+- DRE License: 02059393
