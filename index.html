@@ -731,6 +731,12 @@
                 <p style="font-size:13px;font-weight:600;color:var(--warm);" id="drawer-user-name"></p>
                 <button class="btn-secondary" onclick="Auth.logout()">Sign Out</button>
             </div>
+            <!-- UTILITY LINKS -->
+            <div style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--border);margin-top:12px;">
+                <button class="btn-ghost" onclick="App.closeHamburgerDrawer();App.openModule('about')" style="width:100%;text-align:left;padding:8px 12px;">About sovr1n</button>
+                <button class="btn-ghost" onclick="App.closeHamburgerDrawer();App.openModule('faq')" style="width:100%;text-align:left;padding:8px 12px;">FAQ & Guidelines</button>
+                <button class="btn-ghost" onclick="App.closeHamburgerDrawer();App.openModule('terms')" style="width:100%;text-align:left;padding:8px 12px;">Terms of Service</button>
+            </div>
         </div>
     </div>
 </div>
@@ -766,6 +772,25 @@
                 </span>
                 <span style="font-weight:600;">Load Board — Post or find freight</span>
             </button>
+        </div>
+
+        <!-- PRICING INFO -->
+        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+            <p style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--dim);margin-bottom:10px;">Pricing</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;">
+                <div style="padding:8px;background:var(--surface-2);border-radius:var(--rad-sm);border-left:2px solid var(--warm);">
+                    <p style="color:var(--muted);">Customers & Profiles</p>
+                    <p style="color:var(--warm);font-weight:600;">FREE</p>
+                </div>
+                <div style="padding:8px;background:var(--surface-2);border-radius:var(--rad-sm);border-left:2px solid var(--warm);">
+                    <p style="color:var(--muted);">Shop Owners & Drivers</p>
+                    <p style="color:var(--warm);font-weight:600;">$2/mo or $20/yr</p>
+                </div>
+                <div style="grid-column:1/-1;padding:8px;background:var(--surface-2);border-radius:var(--rad-sm);border-left:2px solid var(--teal);">
+                    <p style="color:var(--muted);">Platform Fee</p>
+                    <p style="color:var(--teal);font-weight:600;">10% on transactions (2% for Hot Shot/Class A)</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -819,6 +844,17 @@
                     <option>California City</option><option>Mojave</option><option>Ridgecrest</option>
                 </select>
             </div>
+
+            <!-- DRIVER VERIFICATION FIELDS -->
+            <div style="padding:12px;background:rgba(45,175,163,0.08);border-radius:var(--rad-md);border-left:2px solid var(--teal);">
+                <p style="font-size:12px;font-weight:600;color:var(--cream);margin-bottom:8px;">Will you be a driver on sovr1n?</p>
+                <p style="font-size:11px;color:var(--dim);margin-bottom:10px;">Drivers must provide valid driver's license and proof of insurance. You'll upload these after account creation.</p>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;">
+                    <input type="checkbox" id="register-is-driver" style="width:16px;height:16px;cursor:pointer;">
+                    <span style="color:var(--cream);">I plan to be a driver</span>
+                </label>
+            </div>
+
             <button type="submit" class="btn-primary" style="width:100%;">Create Account</button>
             <p style="font-size:12px;text-align:center;color:var(--dim);">Already have an account? <a href="#" class="auth-switch" data-target="login-modal" style="color:var(--warm);">Sign in</a></p>
         </form>
@@ -1045,20 +1081,46 @@
     </div>
     <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
         <form id="post-load-form" style="display:flex;flex-direction:column;gap:16px;">
-            <div><label class="field-label">LOAD TITLE</label><input name="title" class="input-base" placeholder="e.g. Move sofa to Oildale" required></div>
-            <div><label class="field-label">DESCRIPTION</label><textarea name="description" class="input-base" rows="3" placeholder="What needs to be moved..."></textarea></div>
+            <div><label class="field-label">LOAD TITLE <span style="font-size:11px;color:var(--dim);">(brief summary)</span></label><input name="title" class="input-base" placeholder="e.g. Move sofa to Oildale" required></div>
+
+            <div><label class="field-label">DESCRIPTION <span style="font-size:11px;color:var(--dim);">(details about the load)</span></label><textarea name="description" class="input-base" rows="3" placeholder="What needs to be moved..."></textarea></div>
+
+            <div><label class="field-label">PRIOR DAMAGE? <span style="font-size:11px;color:var(--dim);">(note any existing damage to protect driver)</span></label><textarea name="priorDamage" class="input-base" rows="2" placeholder="e.g. Small scratch on top, bottom right corner dent..."></textarea></div>
+
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div><label class="field-label">PICKUP</label><input name="pickupAddress" class="input-base" required></div>
                 <div><label class="field-label">DROP-OFF</label><input name="dropoffAddress" class="input-base" required></div>
             </div>
+
+            <div><label class="field-label">DELIVERY TIMEFRAME <span style="font-size:11px;color:var(--dim);">(when do you need this delivered?)</span></label><input name="timeframe" class="input-base" placeholder="e.g. Today before 3pm, Within 2 hours, This weekend" required></div>
+
+            <div><label class="field-label">VEHICLE TYPE NEEDED <span style="font-size:11px;color:var(--dim);">(what size vehicle for this load?)</span></label><select name="vehicleType" class="input-base" required>
+                <option value="">Select vehicle class...</option>
+                <option value="car-pickup">Car/Pickup (sedan, SUV, truck)</option>
+                <option value="hotshot">Hot Shot (F250/350 + flatbed)</option>
+                <option value="class-a">Class A (semi truck + trailer)</option>
+            </select></div>
+
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div><label class="field-label">CARGO SIZE</label><select name="cargoTier" class="input-base" required><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="heavy">Heavy/XL</option></select></div>
                 <div><label class="field-label">WEIGHT (KG)</label><input name="weightKg" type="number" min="0" step="0.1" class="input-base"></div>
             </div>
+
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div><label class="field-label">DIMENSIONS</label><input name="dimensions" class="input-base" placeholder="e.g. 2m x 1m x 0.5m"></div>
-                <div><label class="field-label">OFFERED PRICE</label><input name="offeredPrice" type="number" min="0.01" step="0.01" class="input-base" required placeholder="0.00"></div>
+                <div><label class="field-label">YOUR OFFER</label><input name="offeredPrice" type="number" min="0.01" step="0.01" class="input-base" required placeholder="0.00"></div>
             </div>
+
+            <div style="padding:12px;background:rgba(232,164,56,0.08);border-radius:var(--rad-md);border-left:2px solid var(--warm);font-size:12px;color:var(--dim);">
+                <p><strong style="color:var(--warm);">How it works:</strong></p>
+                <p>1. You post your load with your offered price</p>
+                <p>2. Drivers can accept your price or make a counteroffer</p>
+                <p>3. Once you agree, a contract is generated automatically</p>
+                <p>4. Driver takes photos before pickup (protects everyone)</p>
+                <p>5. Upon delivery, buyer confirms condition</p>
+                <p style="margin-top:8px;"><strong style="color:var(--teal);">Pricing:</strong> 10% platform fee applies to completed transactions. Driver keeps all delivery earnings.</p>
+            </div>
+
             <button type="submit" class="btn-primary" id="post-load-submit" style="width:100%;padding:14px;">Post load</button>
         </form>
     </div>
@@ -1116,6 +1178,151 @@
             <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;">
                 <button class="btn-primary" onclick="shareCopy()">Copy Link</button>
                 <button class="btn-secondary" onclick="shareNative()">Share via...</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODULE: ABOUT -->
+<div class="module-view" id="mod-about">
+    <div class="module-header">
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">About sovr1n</h2>
+        </div>
+    </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="display:flex;flex-direction:column;gap:20px;">
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:18px;color:var(--cream);margin-bottom:8px;">Our Mission</h3>
+                <p style="font-size:14px;color:var(--dim);line-height:1.6;">Sovr1n is a community-focused marketplace platform designed to strengthen local commerce in Kern County. We connect buyers, sellers, drivers, and service providers—keeping resources and revenue local instead of flowing to distant corporate platforms.</p>
+            </div>
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:16px;color:var(--cream);margin-bottom:8px;">Why Sovr1n?</h3>
+                <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--dim);">
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Fair Pricing</strong> — Transparent 10% platform fee (not 25-40%)</div>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Driver Income</strong> — Drivers keep ~90% of agreed prices</div>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Built-in Contracts</strong> — Every deal is documented and protected</div>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Community Trust</strong> — Mutual ratings, secure messaging, verified profiles</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:16px;color:var(--cream);margin-bottom:8px;">Who We Serve</h3>
+                <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--dim);">
+                    <p><strong style="color:var(--warm);">Buyers:</strong> Need items delivered? Browse local marketplace items with guaranteed delivery contracts.</p>
+                    <p><strong style="color:var(--warm);">Shop Owners:</strong> Sell produce, goods, and services. Set your own delivery options and pricing.</p>
+                    <p><strong style="color:var(--warm);">Drivers:</strong> Make money on your schedule. Accept loads that fit your vehicle and earn competitive rates.</p>
+                    <p><strong style="color:var(--warm);">Service Providers:</strong> Reach local customers without corporate middlemen taking half your earnings.</p>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:16px;color:var(--cream);margin-bottom:8px;">Independent Resources, Local Confidence</h3>
+                <p style="font-size:14px;color:var(--dim);line-height:1.6;">Sovr1n is built for Bakersfield, by people who understand Kern County. We're not a VC-funded app chasing growth at any cost—we're a platform committed to sustainable, community-benefiting commerce.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODULE: TERMS -->
+<div class="module-view" id="mod-terms">
+    <div class="module-header">
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">Terms of Service</h2>
+        </div>
+    </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="display:flex;flex-direction:column;gap:16px;font-size:13px;color:var(--dim);line-height:1.7;">
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Connection Service</h3>
+                <p>Sovr1n is a marketplace platform that connects buyers, sellers, drivers, and service providers. We facilitate transactions but are not a party to individual deals.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">No Liability for Third-Party Actions</h3>
+                <p>Sovr1n is not responsible for lost items, damage, theft, injury, or any disputes between users. Each party assumes full responsibility for their actions and obligations under the generated contract.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Contracts & Disputes</h3>
+                <p>All transactions are governed by downloadable contracts generated by the platform. Both parties must review and accept terms before proceeding. Disputes should be resolved between parties or through legal channels.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Verification Requirements</h3>
+                <p>Drivers must provide valid driver's license and proof of insurance. Sovr1n performs basic validation but does not guarantee driver background or capability.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Prohibited Activities</h3>
+                <p>Users must not engage in illegal activities, fraud, harassment, or misrepresentation. Violating users may be suspended or banned.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Platform Fee</h3>
+                <p>Sovr1n charges a 10% platform fee on completed transactions (2% for Hot Shot/Class A loads). This fee funds platform operation and support.</p>
+            </div>
+            <div style="padding:12px;background:rgba(232,164,56,0.08);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+                <p style="font-size:12px;color:var(--muted);">By using sovr1n, you agree to these terms. For complete legal terms, contact support.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODULE: FAQ -->
+<div class="module-view" id="mod-faq">
+    <div class="module-header">
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">FAQ & Guidelines</h2>
+        </div>
+    </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="display:flex;flex-direction:column;gap:14px;font-size:13px;">
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">How do contracts work?</h3>
+                <p style="color:var(--dim);">When a buyer and driver agree on a load, sovr1n generates a downloadable contract with both names, pricing, delivery timeframe, and item description. Both parties can review and accept. Contracts protect all parties legally.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">What are the vehicle classes?</h3>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Cars/Pickups:</strong> Sedans, SUVs, pickup trucks for small loads (fees: $2/mo or $20/yr subscription)</p>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Hot Shot:</strong> F250/350 with flatbed trailer, max ~15,000-20,000 lbs (fees: 2%)</p>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Class A:</strong> Full-size semi trucks with trailers (fees: 2%)</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">Weight limits by vehicle?</h3>
+                <p style="color:var(--dim);">Each vehicle class has legal weight limits. <strong>Drivers are responsible for knowing their vehicle's capacity and local DOT regulations.</strong> Exceeding limits is the driver's legal liability, not sovr1n's.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">Insurance requirement?</h3>
+                <p style="color:var(--dim);">All drivers must provide proof of insurance covering loads. Your insurance must be valid and current. Sovr1n validates proof at signup but does not guarantee coverage.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">Pictures required?</h3>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Before pickup:</strong> Driver takes photos of load to document condition (protects both parties from damage claims).</p>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">At delivery:</strong> Buyer signs off confirming no damage received. This completes the contract.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">What area does sovr1n serve?</h3>
+                <p style="color:var(--dim);">Sovr1n focuses on Kern County, California—primarily Bakersfield, Shafter, and Lamont areas. Shop owners and drivers set their own delivery radius (e.g., "within 30 miles of Bakersfield").</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">How do ratings work?</h3>
+                <p style="color:var(--dim);">After each completed transaction, both parties can rate each other 1-5 stars with optional comments. Ratings build trust and reputation over time. All users see average ratings.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">What if something goes wrong?</h3>
+                <p style="color:var(--dim);">Refer to your signed contract—it's legally binding. Disputes should be resolved between parties directly. Sovr1n can facilitate communication but is not responsible for resolving conflicts.</p>
+            </div>
+            <div style="padding:12px;background:rgba(232,164,56,0.08);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+                <p style="font-size:12px;color:var(--muted);"><strong style="color:var(--cream);">Driver Responsibility:</strong> You are responsible for knowing all local, state, and federal transportation laws. Any violations of regulations are your legal responsibility, not sovr1n's.</p>
             </div>
         </div>
     </div>

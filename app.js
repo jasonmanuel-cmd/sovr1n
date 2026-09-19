@@ -462,6 +462,223 @@ const App = {
       }
     };
   },
+
+  // CONTRACT GENERATION (Phase 2)
+  generateContract(loadData, driverData, agreedfPrice) {
+    const contractId = `CONTRACT-${Date.now()}`;
+    const contractDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const contract = {
+      id: contractId,
+      date: contractDate,
+      partyA: {
+        name: loadData.postedBy || 'Party A',
+        role: 'Load Poster (Buyer)',
+        email: loadData.email || 'Not provided'
+      },
+      partyB: {
+        name: driverData.name || 'Party B',
+        role: 'Driver',
+        email: driverData.email || 'Not provided',
+        vehicleClass: loadData.vehicleTypeNeeded || 'Not specified'
+      },
+      load: {
+        title: loadData.title,
+        description: loadData.description,
+        priorDamage: loadData.priorDamage || 'None reported',
+        pickupLocation: loadData.pickupAddress,
+        dropoffLocation: loadData.dropoffAddress,
+        timeframe: loadData.timeframe,
+        dimensions: loadData.dimensions || 'Not specified',
+        weight: loadData.weightKg || 'Not specified'
+      },
+      pricing: {
+        agreedPrice: agreedfPrice,
+        platformFee: (agreedfPrice * 0.10).toFixed(2),
+        driverEarnings: (agreedfPrice * 0.90).toFixed(2),
+        note: 'Driver receives 100% of delivery fee. Platform fee is 10% of transaction.'
+      },
+      terms: [
+        '1. Driver will inspect load and take photographic documentation before pickup.',
+        '2. Buyer confirms any prior damage in writing before load pickup.',
+        '3. Driver agrees to deliver load by the agreed timeframe.',
+        '4. Delivery is considered complete upon buyer confirmation of condition.',
+        '5. Both parties agree to the terms outlined in this contract.',
+        '6. Drivers remain responsible for all local laws, regulations, and vehicle weight limits.',
+        '7. Delivery price is guaranteed and non-refundable upon completion.'
+      ]
+    };
+
+    return this.formatContractAsDocument(contract);
+  },
+
+  formatContractAsDocument(contract) {
+    const document = `
+DELIVERY CONTRACT
+Contract ID: ${contract.id}
+Date: ${contract.date}
+
+PARTIES:
+Party A (Load Poster):  ${contract.partyA.name}
+                        Role: ${contract.partyA.role}
+                        Email: ${contract.partyA.email}
+
+Party B (Driver):       ${contract.partyB.name}
+                        Role: ${contract.partyB.role}
+                        Email: ${contract.partyB.email}
+                        Vehicle Class: ${contract.partyB.vehicleClass}
+
+LOAD DETAILS:
+Title:                  ${contract.load.title}
+Description:            ${contract.load.description}
+Prior Damage:           ${contract.load.priorDamage}
+Pickup Location:        ${contract.load.pickupLocation}
+Dropoff Location:       ${contract.load.dropoffLocation}
+Required Delivery By:   ${contract.load.timeframe}
+Dimensions:             ${contract.load.dimensions}
+Weight:                 ${contract.load.weight} kg
+
+PRICING & FEES:
+Total Agreed Price:     $${contract.pricing.agreedPrice}
+Platform Fee (10%):     $${contract.pricing.platformFee}
+Driver Earnings:        $${contract.pricing.driverEarnings}
+
+Note: ${contract.pricing.note}
+
+TERMS & CONDITIONS:
+${contract.terms.map((term, i) => `  ${term}`).join('\n')}
+
+ACKNOWLEDGMENT:
+By accepting this contract, both parties agree to the terms above.
+This contract is legally binding.
+
+---
+Driver Name (Print):    _________________________
+Driver Signature:       _________________________
+Date:                   _________________________
+
+Buyer Name (Print):     _________________________
+Buyer Signature:        _________________________
+Date:                   _________________________
+    `;
+    return document;
+  },
+
+  downloadContract(contractText) {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(contractText));
+    element.setAttribute('download', `contract-${Date.now()}.txt`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    Utils.showToast('Contract downloaded!', 'success');
+  },
+
+  // DRIVER VERIFICATION
+  setupDriverVerification(userId) {
+    const verificationModal = `
+      <div style="padding:20px;">
+        <h3 style="color:var(--cream);margin-bottom:12px;">Driver Verification Required</h3>
+        <p style="color:var(--dim);margin-bottom:16px;">To become a driver, we need to verify your credentials.</p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="padding:12px;background:var(--surface-2);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+            <p style="font-weight:600;color:var(--cream);font-size:13px;margin-bottom:4px;">1. Driver's License</p>
+            <p style="font-size:12px;color:var(--dim);">Provide a valid driver's license. We'll verify it's current and valid.</p>
+            <input type="file" class="input-base" id="license-upload" accept="image/*" style="margin-top:8px;">
+          </div>
+
+          <div style="padding:12px;background:var(--surface-2);border-radius:var(--rad-md);border-left:2px solid var(--teal);">
+            <p style="font-weight:600;color:var(--cream);font-size:13px;margin-bottom:4px;">2. Proof of Insurance</p>
+            <p style="font-size:12px;color:var(--dim);">Upload proof that your vehicle is insured for commercial load carrying.</p>
+            <input type="file" class="input-base" id="insurance-upload" accept="image/*" style="margin-top:8px;">
+          </div>
+        </div>
+
+        <p style="font-size:11px;color:var(--dim);margin-top:16px;padding:10px;background:rgba(45,175,163,0.08);border-radius:var(--rad-md);">
+          <strong style="color:var(--teal);">Note:</strong> You're responsible for knowing and following all local, state, and federal transportation regulations. Any violations are your legal responsibility.
+        </p>
+      </div>
+    `;
+    return verificationModal;
+  },
+
+  // GEOGRAPHIC FILTERING
+  getKernCountyRadius() {
+    const radiusMap = {
+      'Bakersfield': { lat: 35.3733, lng: -119.0187, radius: 30 },
+      'Shafter': { lat: 35.5036, lng: -119.2784, radius: 30 },
+      'Lamont': { lat: 35.3675, lng: -119.0187, radius: 20 },
+      'Oildale': { lat: 35.3931, lng: -119.1175, radius: 15 },
+      'Arvin': { lat: 35.2044, lng: -119.1775, radius: 25 }
+    };
+    return radiusMap;
+  },
+
+  filterByRadius(listings, city, maxMiles = 30) {
+    const radiusMap = this.getKernCountyRadius();
+    const cityData = radiusMap[city];
+    if (!cityData) return listings;
+
+    return listings.filter(listing => {
+      if (!listing.lat || !listing.lng) return true;
+      const distance = this.calculateDistance(
+        cityData.lat, cityData.lng,
+        listing.lat, listing.lng
+      );
+      return distance <= (listing.maxRadius || maxMiles);
+    });
+  },
+
+  calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 3959; // Earth's radius in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  },
+
+  // SOCIAL SHARING
+  shareVia(platform) {
+    const url = window.location.href;
+    const text = 'Check out sovr1n - Local marketplace for Kern County! Independent resources, local confidence.';
+
+    const urls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+      reddit: `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent('Sovr1n - Local Marketplace')}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`
+    };
+
+    if (urls[platform]) {
+      window.open(urls[platform], '_blank', 'width=600,height=400');
+    }
+  },
+
+  // PRICING CONFIGURATION
+  getPricing() {
+    return {
+      profileFree: true,
+      customerFree: true,
+      shopOwnerMonthly: 2,
+      shopOwnerAnnual: 20,
+      driverMonthly: 2,
+      driverAnnual: 20,
+      platformFeePercent: 10,
+      hotShotFeePercent: 2,
+      classAFeePercent: 2
+    };
+  }
 };
 
 window.currentCity = CONFIG.DEFAULT_CITY;
