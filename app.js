@@ -678,6 +678,251 @@ Date:                   _________________________
       hotShotFeePercent: 2,
       classAFeePercent: 2
     };
+  },
+
+  // API INTEGRATION - CONTRACT GENERATION
+  async generateContractAPI(contractData) {
+    try {
+      const response = await fetch('/api/contracts/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Auth.getToken()}`
+        },
+        body: JSON.stringify(contractData)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Contract generation failed');
+      }
+
+      const result = await response.json();
+      Utils.showToast('Contract generated successfully!', 'success');
+      return result;
+    } catch (error) {
+      console.error('Contract generation error:', error);
+      Utils.showToast(error.message || 'Failed to generate contract', 'error');
+      throw error;
+    }
+  },
+
+  // API INTEGRATION - DRIVER VERIFICATION
+  async submitDriverVerificationAPI(verificationData) {
+    try {
+      const response = await fetch('/api/driver/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Auth.getToken()}`
+        },
+        body: JSON.stringify(verificationData)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Verification submission failed');
+      }
+
+      const result = await response.json();
+      Utils.showToast('Driver verification submitted! Check your email for updates.', 'success');
+      return result;
+    } catch (error) {
+      console.error('Driver verification error:', error);
+      Utils.showToast(error.message || 'Failed to submit verification', 'error');
+      throw error;
+    }
+  },
+
+  // API INTEGRATION - UPDATE LOAD STATUS
+  async updateLoadStatusAPI(loadId, newStatus, additionalData = {}) {
+    try {
+      const response = await fetch(`/api/loads/update-status?id=${loadId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Auth.getToken()}`
+        },
+        body: JSON.stringify({
+          loadId,
+          status: newStatus,
+          ...additionalData
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Status update failed');
+      }
+
+      const result = await response.json();
+      Utils.showToast(result.message, 'success');
+      return result;
+    } catch (error) {
+      console.error('Load status update error:', error);
+      Utils.showToast(error.message || 'Failed to update status', 'error');
+      throw error;
+    }
+  },
+
+  // FRONTEND - INITIATE CONTRACT FLOW
+  async initiateContractFlow(loadData, driverData) {
+    try {
+      // Prepare contract data
+      const contractData = {
+        loadId: loadData.id,
+        buyerId: loadData.poster_id,
+        driverId: driverData.id,
+        buyerName: loadData.poster_name || 'Buyer',
+        buyerEmail: loadData.poster_email || '',
+        buyerPhone: loadData.poster_phone || '',
+        buyerCity: loadData.city,
+        driverName: driverData.full_name || 'Driver',
+        driverEmail: driverData.email || '',
+        driverPhone: driverData.phone || '',
+        licenseNumber: driverData.license_number || '',
+        vehicleClass: loadData.vehicle_type_required || 'Not specified',
+        loadTitle: loadData.title,
+        loadDescription: loadData.description,
+        priorDamage: loadData.prior_damage || 'None reported',
+        pickupAddress: loadData.pickup_address,
+        dropoffAddress: loadData.dropoff_address,
+        timeframe: loadData.delivery_timeframe,
+        cargoSize: loadData.cargo_tier,
+        weightKg: loadData.weight_kg,
+        dimensions: loadData.dimensions,
+        agreedPrice: loadData.offered_price
+      };
+
+      // Generate contract via API
+      const contractResult = await this.generateContractAPI(contractData);
+
+      // Update load status to contracted
+      await this.updateLoadStatusAPI(loadData.id, 'contracted', {
+        contractId: contractResult.contractId,
+        driverId: driverData.id
+      });
+
+      // Show contract and download option
+      this.showContractModal(contractResult);
+
+      return contractResult;
+    } catch (error) {
+      console.error('Contract flow error:', error);
+    }
+  },
+
+  // FRONTEND - SHOW CONTRACT MODAL
+  showContractModal(contractResult) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-bg';
+    modal.innerHTML = `
+      <div class="modal-panel" style="max-width:600px;max-height:80vh;overflow-y:auto;">
+        <button class="modal-close" onclick="this.closest('.modal-bg').remove()">&times;</button>
+        <h2 class="font-display" style="font-size:18px;margin-bottom:12px;">Contract Generated</h2>
+        <div style="background:var(--surface-1);padding:12px;border-radius:var(--rad-md);margin-bottom:16px;border-left:2px solid var(--warm);">
+          <p style="font-size:12px;color:var(--dim);margin:0;">
+            <strong>Contract ID:</strong> ${contractResult.contractId}
+          </p>
+          <p style="font-size:12px;color:var(--dim);margin:4px 0 0 0;">
+            <strong>Total Price:</strong> $${contractResult.agreedPrice}
+          </p>
+          <p style="font-size:12px;color:var(--dim);margin:4px 0 0 0;">
+            <strong>Platform Fee:</strong> $${contractResult.platformFee} (Driver keeps: $${contractResult.driverEarnings})
+          </p>
+        </div>
+        <details style="margin-bottom:16px;">
+          <summary style="cursor:pointer;color:var(--cream);font-weight:600;">View Full Contract</summary>
+          <pre style="background:var(--surface-1);padding:12px;border-radius:var(--rad-md);font-size:11px;overflow-x:auto;max-height:300px;margin-top:8px;">
+${contractResult.contractText}
+          </pre>
+        </details>
+        <div style="display:flex;gap:8px;flex-direction:column;">
+          <button class="btn-primary" onclick="App.downloadContractText('${contractResult.contractId}')" style="width:100%;">Download Contract</button>
+          <button class="btn-secondary" onclick="this.closest('.modal-bg').remove()" style="width:100%;">Close</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  },
+
+  // DOWNLOAD CONTRACT AS TEXT FILE
+  downloadContractText(contractId) {
+    const modal = event.target.closest('.modal-bg');
+    const contractText = modal.querySelector('pre')?.textContent || '';
+
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(contractText));
+    element.setAttribute('download', `${contractId}.txt`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    Utils.showToast('Contract downloaded!', 'success');
+  },
+
+  // FRONTEND - DRIVER VERIFICATION FLOW
+  async initiateDriverVerification() {
+    if (!Auth.isLoggedIn()) {
+      Auth.openModal('login-modal');
+      return;
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-bg';
+    modal.innerHTML = `
+      <div class="modal-panel" style="max-width:500px;">
+        <button class="modal-close" onclick="this.closest('.modal-bg').remove()">&times;</button>
+        <h2 class="font-display" style="font-size:18px;margin-bottom:12px;">Driver Verification</h2>
+        <form id="driver-verify-form" style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <label class="field-label">Driver's License Number</label>
+            <input type="text" name="licenseNumber" class="input-base" placeholder="e.g. A12345678" required>
+          </div>
+          <div>
+            <label class="field-label">License State</label>
+            <input type="text" name="licenseState" class="input-base" placeholder="CA" maxlength="2" pattern="[A-Z]{2}" required>
+          </div>
+          <div>
+            <label class="field-label">Vehicle Class</label>
+            <select name="vehicleClass" class="input-base" required>
+              <option value="">Select vehicle class...</option>
+              <option value="car-pickup">Car/Pickup (sedan, SUV, truck)</option>
+              <option value="hotshot">Hot Shot (F250/350 + flatbed)</option>
+              <option value="class-a">Class A (semi truck)</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Insurance Provider</label>
+            <input type="text" name="insuranceProvider" class="input-base" placeholder="e.g. State Farm" required>
+          </div>
+          <div>
+            <label class="field-label">Insurance Policy Number</label>
+            <input type="text" name="insurancePolicy" class="input-base" placeholder="Policy #" required>
+          </div>
+          <div style="padding:12px;background:rgba(232,164,56,0.08);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+            <p style="font-size:12px;color:var(--dim);margin:0;">
+              <strong style="color:var(--warm);">Note:</strong> You'll be able to upload your license and insurance images after submitting this form. Verification typically takes 24-48 hours.
+            </p>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;">Submit Verification</button>
+        </form>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('driver-verify-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+
+      try {
+        await this.submitDriverVerificationAPI(data);
+        modal.remove();
+      } catch (error) {
+        // Error already shown via toast
+      }
+    });
   }
 };
 
