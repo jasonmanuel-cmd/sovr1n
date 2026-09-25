@@ -1,12 +1,18 @@
-const { supabase } = require('../../lib/supabase');
+const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { badRequest, serverError } = require('../../lib/errors');
+const { applySecurityHeaders, rateLimit } = require('../../lib/security');
 
 module.exports = async function handler(req, res) {
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, { limit: 60 })) return;
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { q, city, type, category, page = 1, limit = 20 } = req.query;
+  const { q, city, type, category } = req.query;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
 
   if (!q) return badRequest(res, 'Search query (q) is required');
 
@@ -14,7 +20,7 @@ module.exports = async function handler(req, res) {
   const searchTags = q.toLowerCase().split(/\s+/).filter(Boolean);
 
   try {
-    let query = supabase
+    let query = supabaseAdmin
       .from('listings')
       .select('*, users(full_name, avatar_url)', { count: 'exact' })
       .eq('is_active', true)
@@ -33,7 +39,7 @@ module.exports = async function handler(req, res) {
     const resultsCount = count || 0;
 
     if (resultsCount === 0) {
-      await supabase.from('search_log').insert({
+      await supabaseAdmin.from('search_log').insert({
         query: q,
         city: city || 'Bakersfield',
         results_count: 0,

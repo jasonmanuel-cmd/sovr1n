@@ -1,14 +1,20 @@
-const { supabase } = require('../../lib/supabase');
+const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { requireAuth } = require('../../lib/auth');
 const { badRequest, serverError } = require('../../lib/errors');
+const { applySecurityHeaders, rateLimit } = require('../../lib/security');
 
 module.exports = async function handler(req, res) {
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, { limit: req.method === 'POST' ? 15 : 120 })) return;
+
   if (req.method === 'GET') {
-    const { city, type, category, page = 1, limit = 20 } = req.query;
+    const { city, type, category } = req.query;
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
     try {
-      let query = supabase
+      let query = supabaseAdmin
         .from('listings')
         .select('*, users(full_name, avatar_url)', { count: 'exact' })
         .eq('is_active', true)
@@ -49,7 +55,7 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('listings')
         .insert({
           user_id: user.id,

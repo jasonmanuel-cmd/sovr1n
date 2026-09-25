@@ -43,6 +43,7 @@ const Search = {
       return;
     }
 
+    listings.forEach(l => { App._listingsCache[l.id] = l; });
     container.innerHTML = listings.map(l => Utils.renderListingCard(l)).join('');
   },
 

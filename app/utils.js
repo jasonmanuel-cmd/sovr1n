@@ -15,12 +15,15 @@ const Utils = {
     };
     if (body) opts.body = JSON.stringify(body);
 
-    const res = await fetch(`${CONFIG.API_BASE}${path}`, opts);
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'API request failed');
+    let res;
+    try {
+      res = await fetch(`${CONFIG.API_BASE}${path}`, opts);
+    } catch (_) {
+      throw new Error('Unable to reach the server. Please try again.');
     }
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Request failed. Please try again.');
     return data;
   },
 
@@ -63,12 +66,6 @@ const Utils = {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.textContent = message;
-    toast.style.cssText = `
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: ${type === 'error' ? '#C4786B' : type === 'success' ? '#7B9E87' : '#D4A574'};
-      color: #fff; padding: 12px 24px; border-radius: 8px; z-index: 10000;
-      font-size: 14px; font-weight: 500; animation: fadeInUp 0.3s ease;
-    `;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   },
@@ -86,6 +83,11 @@ const Utils = {
     return html;
   },
 
+  initials(name) {
+    if (!name) return '?';
+    return name.split(/\s+/).map(w => w[0] || '').slice(0, 2).join('').toUpperCase();
+  },
+
   renderListingCard(listing) {
     const user = listing.users;
     const photo = listing.photos?.[0] || '';
@@ -94,17 +96,18 @@ const Utils = {
       : '';
 
     return `
-      <div class="listing-card" data-id="${listing.id}">
+      <div class="card card-interactive listing-card" data-id="${listing.id}" tabindex="0" role="button" onclick="App.openDetailView('${listing.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openDetailView('${listing.id}')}" aria-label="View details for ${this.escapeHtml(listing.title)}">
         <div class="listing-photo">
-          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder">📦</div>`}
+          ${photo ? `<img src="${photo}" alt="${this.escapeHtml(listing.title)}" loading="lazy">` : `<div class="listing-photo-placeholder" aria-hidden="true">${svgIcon('box', 30)}</div>`}
+          ${listing.type ? `<span class="listing-type-chip">${listing.type === 'service' ? svgIcon('spark', 10) : svgIcon('bag', 10)} ${listing.type === 'service' ? 'Service' : 'Item'}</span>` : ''}
         </div>
         <div class="listing-info">
           <h4 class="listing-title">${this.escapeHtml(listing.title)}</h4>
-          <p class="listing-desc">${this.escapeHtml(this.truncate(listing.description, 60))}</p>
+          <p class="listing-desc">${this.escapeHtml(this.truncate(listing.description, 50))}</p>
           ${priceHtml}
           <div class="listing-meta">
-            ${user ? `<span class="listing-seller">${this.escapeHtml(user.full_name)}</span>` : ''}
-            <span class="listing-time">${this.timeAgo(listing.created_at)}</span>
+            ${user ? `<span class="listing-seller"><span class="seller-avatar">${this.escapeHtml(this.initials(user.full_name || user.fullName))}</span>${this.escapeHtml(user.full_name || user.fullName)}</span>` : ''}
+            <span>${this.timeAgo(listing.created_at)}</span>
           </div>
         </div>
       </div>

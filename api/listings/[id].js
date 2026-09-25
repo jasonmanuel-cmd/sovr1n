@@ -1,13 +1,16 @@
-const { supabase } = require('../../lib/supabase');
+const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { requireAuth } = require('../../lib/auth');
 const { badRequest, notFound, serverError } = require('../../lib/errors');
+const { applySecurityHeaders, rateLimit } = require('../../lib/security');
 
 module.exports = async function handler(req, res) {
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, { limit: req.method === 'GET' ? 120 : 30 })) return;
   const { id } = req.query;
 
   if (req.method === 'GET') {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('listings')
         .select('*, users(full_name, avatar_url)')
         .eq('id', id)
@@ -15,7 +18,7 @@ module.exports = async function handler(req, res) {
 
       if (error || !data) return notFound(res, 'Listing not found');
 
-      await supabase
+      await supabaseAdmin
         .from('listings')
         .update({ views: data.views + 1 })
         .eq('id', id);
@@ -33,7 +36,7 @@ module.exports = async function handler(req, res) {
     const { title, description, tags, price, photos, category, is_active } = req.body;
 
     try {
-      const { data: existing } = await supabase
+      const { data: existing } = await supabaseAdmin
         .from('listings')
         .select('user_id')
         .eq('id', id)
@@ -51,7 +54,7 @@ module.exports = async function handler(req, res) {
       if (category !== undefined) updates.category = category;
       if (is_active !== undefined) updates.is_active = is_active;
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('listings')
         .update(updates)
         .eq('id', id)
@@ -71,7 +74,7 @@ module.exports = async function handler(req, res) {
     if (!user) return;
 
     try {
-      const { data: existing } = await supabase
+      const { data: existing } = await supabaseAdmin
         .from('listings')
         .select('user_id')
         .eq('id', id)
@@ -80,7 +83,7 @@ module.exports = async function handler(req, res) {
       if (!existing) return notFound(res, 'Listing not found');
       if (existing.user_id !== user.id) return res.status(403).json({ error: 'Not your listing' });
 
-      const { error } = await supabase
+      const { error } = await supabaseAdmin
         .from('listings')
         .update({ is_active: false })
         .eq('id', id);

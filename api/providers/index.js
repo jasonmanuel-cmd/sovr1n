@@ -1,14 +1,18 @@
-const { supabase } = require('../../lib/supabase');
+const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { requireAuth } = require('../../lib/auth');
 const { badRequest, serverError } = require('../../lib/errors');
+const { applySecurityHeaders, rateLimit } = require('../../lib/security');
 
 module.exports = async function handler(req, res) {
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, { limit: req.method === 'POST' ? 15 : 60 })) return;
+
   if (req.method === 'GET') {
     const { city, category, page = 1, limit = 20 } = req.query;
     const offset = (page - 1) * limit;
 
     try {
-      let query = supabase
+      let query = supabaseAdmin
         .from('service_providers')
         .select('*, users(full_name, avatar_url)', { count: 'exact' })
         .eq('is_active', true)
@@ -42,7 +46,7 @@ module.exports = async function handler(req, res) {
     if (!businessName) return badRequest(res, 'Business name is required');
 
     try {
-      const { data: existing } = await supabase
+      const { data: existing } = await supabaseAdmin
         .from('service_providers')
         .select('id')
         .eq('user_id', user.id)
@@ -52,7 +56,7 @@ module.exports = async function handler(req, res) {
         return res.status(409).json({ error: 'Already registered as a provider' });
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('service_providers')
         .insert({
           user_id: user.id,

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://harbisonstandard.com/</loc>
+    <image:image>
+      <image:loc>https://harbisonstandard.com/sovr1n-logo.svg</image:loc>
+      <image:title>sovr1n Logo</image:title>
+      <image:caption>sovr1n — Harbison Standard — Bakersfield local marketplace</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://harbisonstandard.com/splash-logo.png</image:loc>
+      <image:title>sovr1n Splash Screen</image:title>
+      <image:caption>sovr1n marketplace splash — Bakersfield, Kern County, CA</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://harbisonstandard.com/splash-logo.jpg</image:loc>
+      <image:title>sovr1n Splash JPG</image:title>
+      <image:caption>sovr1n marketplace splash for Bakersfield local commerce</image:caption>
+    </image:image>
+  </url>
+</urlset>

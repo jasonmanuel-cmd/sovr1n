@@ -1,7 +1,11 @@
-const { supabase } = require('../../lib/supabase');
+const { supabaseAdmin } = require('../../lib/supabase-admin');
 const { notFound, serverError } = require('../../lib/errors');
+const { applySecurityHeaders, rateLimit } = require('../../lib/security');
 
 module.exports = async function handler(req, res) {
+  applySecurityHeaders(res);
+  if (!rateLimit(req, res, { limit: 60 })) return;
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -9,7 +13,7 @@ module.exports = async function handler(req, res) {
   const { id } = req.query;
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('service_providers')
       .select('*, users(full_name, avatar_url, city)')
       .eq('id', id)
