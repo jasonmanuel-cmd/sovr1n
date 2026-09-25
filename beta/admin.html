@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovr1n Beta Admin Dashboard</title>
+
+    <!-- Vercel Speed Insights -->
+    <script>
+      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: #1a1a2e;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .controls {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 15px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        button:hover { background: #0052a3; }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #f5f5f5;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            font-size: 12px;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover { background: #f9f9f9; }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-active { background: #d4edda; color: #155724; }
+        .status-completed { background: #cfe2ff; color: #084298; }
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            background: #e0e0e0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+        }
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 12px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-small:hover { background: #0052a3; }
+        .btn-danger {
+            background: #dc3545;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sovr1n Beta Testing Admin</h1>
+            <p>Manage beta testers, send surveys, track progress</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="total-testers">0</div>
+                    <div class="stat-label">Total Signups</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="active-testers">0</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="customers">0</div>
+                    <div class="stat-label">Customers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="drivers">0</div>
+                    <div class="stat-label">Drivers</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <input type="text" id="search" placeholder="Search by name or email...">
+            <select id="filter-role">
+                <option value="">All Roles</option>
+                <option value="customer">Customers</option>
+                <option value="driver">Drivers</option>
+                <option value="shop-owner">Shop Owners</option>
+            </select>
+            <select id="filter-status">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+            </select>
+            <button onclick="sendDailySurvey()">📧 Send Daily Survey</button>
+            <button onclick="sendWeeklySurvey()">📊 Send Weekly Survey</button>
+            <button onclick="exportList()">📥 Export List</button>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="table-container">
+            <table id="testers-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Signed Up</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="testers-body">
+                    <tr><td colspan="6" class="loading">Loading testers...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Send Survey Modal -->
+    <div class="modal" id="survey-modal">
+        <div class="modal-content">
+            <h2>Send Survey to Testers</h2>
+            <div class="form-group">
+                <label>Survey Type</label>
+                <select id="survey-type">
+                    <option value="daily">Daily Pulse Survey (1 min)</option>
+                    <option value="weekly">Weekly Deep Dive (10 min)</option>
+                    <option value="custom">Custom Message</option>
+                </select>
+            </div>
+            <div class="form-group" id="custom-message-group" style="display:none;">
+                <label>Message</label>
+                <textarea id="custom-message" placeholder="Enter your message..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Send to</label>
+                <select id="survey-recipients">
+                    <option value="all">All Testers</option>
+                    <option value="active">Active Only</option>
+                    <option value="customers">Customers Only</option>
+                    <option value="drivers">Drivers Only</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="confirmSendSurvey()">Send</button>
+                <button onclick="closeSurveyModal()" style="background: #999;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load testers
+        async function loadTesters() {
+            try {
+                const response = await fetch('https://sovr1n.com/api/beta/testers');
+                const data = await response.json();
+
+                if (!data.success) throw new Error(data.error);
+
+                const testers = data.testers || [];
+                displayTesters(testers);
+                updateStats(testers);
+            } catch (error) {
+                showMessage('Error loading testers: ' + error.message, 'error');
+            }
+        }
+
+        function displayTesters(testers) {
+            const tbody = document.getElementById('testers-body');
+            if (testers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px;">No testers yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = testers.map(tester => `
+                <tr>
+                    <td><strong>${tester.name}</strong></td>
+                    <td><a href="mailto:${tester.email}">${tester.email}</a></td>
+                    <td><span class="role-badge">${tester.role}</span></td>
+                    <td><span class="status-badge status-${tester.status}">${tester.status}</span></td>
+                    <td>${new Date(tester.signed_up_at).toLocaleDateString()}</td>
+                    <td class="action-buttons">
+                        <button class="btn-small" onclick="activateTester('${tester.id}')">Activate</button>
+                        <button class="btn-small" onclick="sendEmail('${tester.email}')">Email</button>
+                        <button class="btn-small btn-danger" onclick="removeTester('${tester.id}')">Remove</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats(testers) {
+            document.getElementById('total-testers').textContent = testers.length;
+            document.getElementById('active-testers').textContent = testers.filter(t => t.status === 'active').length;
+            document.getElementById('customers').textContent = testers.filter(t => t.role === 'customer').length;
+            document.getElementById('drivers').textContent = testers.filter(t => t.role === 'driver').length;
+        }
+
+        function sendDailySurvey() {
+            document.getElementById('survey-type').value = 'daily';
+            document.getElementById('custom-message-group').style.display = 'none';
+            document.getElementById('survey-modal').classList.add('active');
+        }
+
+        function sendWeeklySurvey() {
+            document.getElementById('survey-type').value = 'weekly';
+            document.getElementById('custom-message-group').style.display = 'none';
+            document.getElementById('survey-modal').classList.add('active');
+        }
+
+        function closeSurveyModal() {
+            document.getElementById('survey-modal').classList.remove('active');
+        }
+
+        async function confirmSendSurvey() {
+            const type = document.getElementById('survey-type').value;
+            const recipients = document.getElementById('survey-recipients').value;
+
+            try {
+                const response = await fetch('https://sovr1n.com/api/beta/send-survey', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type, recipients })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showMessage(`Survey sent to ${data.sent} testers!`, 'success');
+                    closeSurveyModal();
+                } else {
+                    showMessage('Error: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error sending survey: ' + error.message, 'error');
+            }
+        }
+
+        async function activateTester(testerId) {
+            try {
+                const response = await fetch('https://sovr1n.com/api/beta/testers/' + testerId, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'active' })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showMessage('Tester activated!', 'success');
+                    loadTesters();
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        function sendEmail(email) {
+            window.location.href = 'mailto:' + email;
+        }
+
+        async function removeTester(testerId) {
+            if (!confirm('Remove this tester?')) return;
+
+            try {
+                const response = await fetch('https://sovr1n.com/api/beta/testers/' + testerId, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showMessage('Tester removed', 'success');
+                    loadTesters();
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        function exportList() {
+            // Simple CSV export
+            const table = document.getElementById('testers-table');
+            let csv = 'Name,Email,Role,Status,Signed Up\n';
+
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length > 0) {
+                    csv += [
+                        cells[0].textContent,
+                        cells[1].textContent,
+                        cells[2].textContent,
+                        cells[3].textContent,
+                        cells[4].textContent
+                    ].join(',') + '\n';
+                }
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sovr1n-beta-testers.csv';
+            a.click();
+        }
+
+        function showMessage(msg, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}">${msg}</div>`;
+            setTimeout(() => messageDiv.innerHTML = '', 3000);
+        }
+
+        // Load on page load
+        loadTesters();
+        setInterval(loadTesters, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>
