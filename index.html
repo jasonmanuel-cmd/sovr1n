@@ -3,1772 +3,1418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sourc'n — Local Markets & Commerce. Find services, drivers, load boards, and local deals in your city.">
-    <title>Sourc'n | Local Markets & Commerce</title>
-    <meta property="og:title" content="Sourc'n | Local Markets & Commerce">
+    <meta name="description" content="sovr1n — Local Markets & Commerce. Find services, drivers, load boards, and local deals in your city.">
+    <title>sovr1n | Local Markets & Commerce</title>
+    <meta property="og:title" content="sovr1n | Local Markets & Commerce">
     <meta property="og:description" content="Bakersfield's local marketplace. Services, drivers, load boards, and deals — all nearby.">
     <meta property="og:type" content="website">
 
-    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700,500&f[]=outfit@400,500,600,700&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+    <!-- Libraries -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Vercel Speed Insights -->
+    <script>
+      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
     <script>
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    base:      '#FAF9F7',
-                    surface:   '#FFFFFF',
-                    surface2:  '#F5F3EF',
-                    surface3:  '#EDEAE5',
-                    warm:      '#1A1917',
-                    muted:     '#6B6560',
-                    copper:    '#C87D3A',
-                    copperDim: 'rgba(200,125,58,0.10)',
-                    sage:      '#22A06B',
-                    sageDim:   'rgba(34,160,107,0.10)',
-                    rose:      '#D95B3F',
-                    roseDim:   'rgba(217,91,63,0.10)',
-                    cream:     '#FAF9F7',
+                    surface: { 0: '#0a0a0f', 1: '#111118', 2: '#16161d', 3: '#1e1e28' },
+                    warm: { primary: '#4a9eff', secondary: '#8ab4d4' },
+                    ink: { primary: '#f5f5f7', secondary: '#9ca3af', tertiary: '#6b7280' },
+                    line: { DEFAULT: '#2a2a35', hover: '#3a3a45' }
                 },
                 fontFamily: {
-                    display: ['Clash Display','sans-serif'],
-                    body:    ['Outfit','sans-serif'],
-                },
+                    display: ['Space Grotesk', 'Inter', 'sans-serif'],
+                    body: ['Inter', 'sans-serif'],
+                    mono: ['JetBrains Mono', 'monospace'],
+                }
             }
         }
     }
     </script>
 
     <style>
+        /* ============================================================
+           SOVR1N 2026 — Chrome Design System
+           Metallic blue on deep midnight. Sovereign. Refined glass.
+           ============================================================ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: #FAF9F7;
-            color: #1A1917;
-            font-family: 'Outfit', sans-serif;
-            overflow-x: clip;
-            -webkit-font-smoothing: antialiased;
+
+        :root {
+            --surface-0: #0a0a0f;
+            --surface-1: #111118;
+            --surface-2: #16161d;
+            --surface-3: #1e1e28;
+            --surface-4: #25252f;
+            --warm: #4a9eff;
+            --warm-dim: #1a5cb0;
+            --warm-glow: rgba(74, 158, 255, 0.15);
+            --teal: #8ab4d4;
+            --teal-dim: #5a7da0;
+            --teal-glow: rgba(138, 180, 212, 0.12);
+            --cream: #f5f5f7;
+            --muted: #9ca3af;
+            --dim: #6b7280;
+            --border: #2a2a35;
+            --border-hover: #3a3a45;
+            --success: #34d399;
+            --error: #f87171;
+            --warning: #fbbf24;
+            --rad-sm: 6px;
+            --rad-md: 10px;
+            --rad-lg: 14px;
+            --rad-xl: 20px;
+            --rad-pill: 9999px;
+            --font-display: 'Space Grotesk', 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
+            --shadow-xl: 0 24px 64px rgba(0,0,0,0.7);
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
+
+        body {
+            background: var(--surface-0);
+            color: var(--cream);
+            font-family: var(--font-body);
+            overflow-x: clip;
+            line-height: 1.6;
+        }
+
+        ::selection { background: rgba(74, 158, 255, 0.3); color: var(--cream); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--rad-pill); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+        :focus-visible { outline: 2px solid var(--warm); outline-offset: 2px; border-radius: var(--rad-sm); }
 
         .mesh-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background:
-                radial-gradient(ellipse 600px 400px at 15% 20%, rgba(34,160,107,0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 500px 500px at 85% 70%, rgba(200,125,58,0.05) 0%, transparent 70%),
-                radial-gradient(ellipse 400px 300px at 50% 90%, rgba(217,91,63,0.04) 0%, transparent 70%);
+                radial-gradient(800px 500px at 8% -5%, rgba(74, 158, 255, 0.09), transparent 60%),
+                radial-gradient(700px 480px at 92% 12%, rgba(26, 92, 176, 0.06), transparent 58%),
+                radial-gradient(600px 420px at 78% 88%, rgba(138, 180, 212, 0.04), transparent 55%);
         }
 
-        .font-display { font-family: 'Clash Display', sans-serif; }
-        .font-body { font-family: 'Outfit', sans-serif; }
+        .font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
 
-        .glass {
-            background: rgba(255,255,255,0.72);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0,0,0,0.06);
+        .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 24px; border: none; border-radius: var(--rad-md);
+            background: linear-gradient(135deg, var(--warm), var(--warm-dim));
+            color: #f0f4ff; font-family: var(--font-body); font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+            box-shadow: 0 4px 16px rgba(74, 158, 255, 0.3); letter-spacing: 0.01em;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(74, 158, 255, 0.45); filter: brightness(1.08); }
+        .btn-primary:active { transform: translateY(0); filter: brightness(0.95); }
+
+        .btn-secondary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 24px; border: 1px solid var(--border); border-radius: var(--rad-md);
+            background: var(--surface-2); color: var(--cream); font-family: var(--font-body); font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: all var(--transition);
+        }
+        .btn-secondary:hover { border-color: var(--border-hover); background: var(--surface-3); transform: translateY(-1px); }
+
+        .btn-ghost {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 8px 16px; border: none; border-radius: var(--rad-md);
+            background: transparent; color: var(--muted); font-family: var(--font-body); font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: all var(--transition);
+        }
+        .btn-ghost:hover { color: var(--cream); background: var(--surface-2); }
+
+        .input-base {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--rad-md);
+            background: var(--surface-1); color: var(--cream); font-family: var(--font-body); font-size: 14px;
+            outline: none; transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+        .input-base::placeholder { color: var(--dim); }
+        .input-base:focus { border-color: var(--warm); box-shadow: 0 0 0 3px var(--warm-glow); background: var(--surface-2); }
+        .input-base:hover:not(:focus) { border-color: var(--border-hover); }
+
+        .input-icon { position: relative; }
+        .input-icon .input-base { padding-left: 42px; }
+        .input-icon svg {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--dim); pointer-events: none; width: 16px; height: 16px; transition: color var(--transition);
+        }
+        .input-icon:focus-within svg { color: var(--warm); }
+
+        select.input-base {
+            appearance: none; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
         }
 
-        .city-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #FFFFFF;
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 100px;
-            padding: 8px 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 13px;
-            font-weight: 600;
-            color: #1A1917;
-            letter-spacing: 0.01em;
+        .field-label { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+        .field-error { font-size: 12px; color: var(--error); margin-top: 4px; display: none; }
+        .field-error.visible { display: block; }
+        .input-error { border-color: var(--error) !important; }
+
+        .card {
+            background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--rad-lg);
+            overflow: hidden; transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
         }
-        .city-pill:hover {
-            background: rgba(200,125,58,0.06);
-            border-color: rgba(200,125,58,0.2);
-            transform: translateY(-1px);
+        .card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .card-interactive { cursor: pointer; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 10px; border-radius: var(--rad-pill);
+            font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
         }
+        .badge-amber { background: rgba(74, 158, 255, 0.12); color: var(--warm); border: 1px solid rgba(74, 158, 255, 0.3); }
+        .badge-teal { background: rgba(138, 180, 212, 0.1); color: var(--teal); border: 1px solid rgba(138, 180, 212, 0.25); }
+        .badge-dim { background: var(--surface-3); color: var(--muted); border: 1px solid var(--border); }
 
         .modal-bg {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.35);
-            z-index: 100;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s;
-            backdrop-filter: blur(4px);
+            position: fixed; inset: 0; background: rgba(5, 5, 10, 0.75);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 30; opacity: 0; pointer-events: none; transition: opacity 250ms ease;
         }
         .modal-bg.open { opacity: 1; pointer-events: auto; }
+
         .modal-panel {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: #FFFFFF;
-            border-radius: 28px 28px 0 0;
-            z-index: 101;
-            transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1);
-            max-height: 85vh;
-            overflow-y: auto;
-            border-top: 1px solid rgba(0,0,0,0.06);
+            background: linear-gradient(180deg, var(--surface-2), var(--surface-1));
+            border: 1px solid var(--border); border-radius: var(--rad-xl) var(--rad-xl) 0 0;
+            z-index: 31; transform: translateY(100%);
+            transition: transform 350ms cubic-bezier(0.32, 0.72, 0, 1);
+            max-height: 88dvh; overflow-y: auto; box-shadow: var(--shadow-xl);
         }
         .modal-bg.open .modal-panel { transform: translateY(0); }
+
         .modal-close {
-            position: absolute; top: 20px; right: 20px;
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.06);
-            color: #1A1917; font-size: 20px; cursor: pointer;
-            display: grid; place-items: center;
-            transition: all 0.2s;
+            position: absolute; top: 16px; right: 16px;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--surface-3); border: 1px solid var(--border);
+            color: var(--muted); font-size: 18px; cursor: pointer;
+            display: grid; place-items: center; transition: all var(--transition); z-index: 2;
         }
-        .modal-close:hover { background: rgba(0,0,0,0.08); }
-
-        .search-bar {
-            background: #FFFFFF;
-            border: 1px solid rgba(0,0,0,0.10);
-            border-radius: 16px;
-            padding: 14px 18px;
-            color: #1A1917;
-            font-size: 15px;
-            font-family: 'Outfit', sans-serif;
-            width: 100%;
-            outline: none;
-            transition: all 0.3s;
-        }
-        .search-bar:focus {
-            border-color: rgba(200,125,58,0.4);
-            box-shadow: 0 0 0 3px rgba(200,125,58,0.08);
-        }
-        .search-bar::placeholder { color: #9A9490; }
-
-        .action-box {
-            position: relative;
-            border-radius: 28px;
-            padding: 3px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
-            display: flex;
-            flex-direction: column;
-            min-height: 160px;
-            overflow: hidden;
-        }
-        .action-box-inner {
-            position: relative;
-            border-radius: 25px;
-            padding: 28px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            height: 100%;
-            background: #FFFFFF;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-        .action-box::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 28px;
-            opacity: 0;
-            transition: opacity 0.4s cubic-bezier(0.32,0.72,0,1);
-        }
-        .action-box:hover { transform: translateY(-6px) scale(1.01); }
-        .action-box:hover::before { opacity: 1; }
-        .action-box:active { transform: translateY(-2px) scale(0.98); }
-
-        .action-box .action-box-inner {
-            transition: transform 0.4s cubic-bezier(0.32,0.72,0,1), box-shadow 0.4s cubic-bezier(0.32,0.72,0,1);
-        }
-        .action-box:hover .action-box-inner {
-            transform: translateX(2px);
-        }
-        .action-box:hover .box-arrow {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .box-panelA:hover .action-box-inner { box-shadow: 0 8px 24px rgba(34,160,107,0.12); }
-        .box-panelB:hover .action-box-inner { box-shadow: 0 8px 24px rgba(200,125,58,0.12); }
-        .box-standalone:hover .action-box-inner { box-shadow: 0 8px 24px rgba(217,91,63,0.12); }
-
-        .action-box .box-icon {
-            width: 52px; height: 52px;
-            border-radius: 16px;
-            display: grid; place-items: center;
-            font-size: 24px;
-            transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
-        }
-        .action-box:hover .box-icon { transform: scale(1.12) rotate(-4deg); }
-        .action-box .box-title {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 600;
-            font-size: 22px;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-        }
-        .action-box .box-sub {
-            font-size: 13px;
-            opacity: 0.65;
-            line-height: 1.5;
-            font-weight: 400;
-        }
-
-        .box-arrow {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            opacity: 0;
-            transform: translateX(8px);
-            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
-        }
-        .action-box:hover .box-arrow {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .box-panelA {
-            background: linear-gradient(135deg, rgba(34,160,107,0.08) 0%, rgba(34,160,107,0.02) 100%);
-        }
-        .box-panelA::before { background: radial-gradient(circle at 30% 30%, rgba(34,160,107,0.08), transparent 70%); }
-        .box-panelA .box-icon { background: rgba(34,160,107,0.10); color: #22A06B; }
-        .box-panelA .box-title { color: #1A8A5B; }
-        .box-panelA .box-arrow { background: rgba(34,160,107,0.10); color: #22A06B; }
-
-        .box-panelB {
-            background: linear-gradient(135deg, rgba(200,125,58,0.08) 0%, rgba(200,125,58,0.02) 100%);
-        }
-        .box-panelB::before { background: radial-gradient(circle at 70% 30%, rgba(200,125,58,0.08), transparent 70%); }
-        .box-panelB .box-icon { background: rgba(200,125,58,0.10); color: #C87D3A; }
-        .box-panelB .box-title { color: #B06E2F; }
-        .box-panelB .box-arrow { background: rgba(200,125,58,0.10); color: #C87D3A; }
-
-        .box-standalone {
-            background: linear-gradient(135deg, rgba(217,91,63,0.08) 0%, rgba(217,91,63,0.02) 100%);
-        }
-        .box-standalone::before { background: radial-gradient(circle at 50% 50%, rgba(217,91,63,0.08), transparent 70%); }
-        .box-standalone .box-icon { background: rgba(217,91,63,0.10); color: #D95B3F; }
-        .box-standalone .box-title { color: #C04E35; }
-        .box-standalone .box-arrow { background: rgba(217,91,63,0.10); color: #D95B3F; }
-
-        .panel-label {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            opacity: 0.6;
-        }
+        .modal-close:hover { background: var(--surface-4); color: var(--cream); }
 
         .module-view {
-            position: fixed; inset: 0;
-            background: #FAF9F7;
-            z-index: 90;
-            transform: translateX(100%);
-            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1);
-            overflow-y: auto;
+            position: fixed; inset: 0; background: var(--surface-0); z-index: 20;
+            transform: translateX(100%); transition: transform 350ms cubic-bezier(0.32, 0.72, 0, 1); overflow-y: auto;
         }
         .module-view.active { transform: translateX(0); }
+
         .module-header {
-            position: sticky; top: 0; z-index: 5;
-            background: rgba(250,249,247,0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-        .module-back {
-            width: 44px; height: 44px;
-            border-radius: 14px;
-            background: rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.06);
-            color: #1A1917;
-            font-size: 18px;
-            cursor: pointer;
-            display: grid; place-items: center;
-            transition: all 0.2s;
-        }
-        .module-back:hover { background: rgba(0,0,0,0.08); }
-
-        .badge-verified {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #1A8A5B;
-            background: rgba(34,160,107,0.08);
-            padding: 4px 10px;
-            border-radius: 100px;
-            letter-spacing: 0.02em;
-        }
-        .badge-rating {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #C87D3A;
+            position: sticky; top: 0; z-index: 10;
+            background: rgba(10, 10, 15, 0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
         }
 
-        .listing-card {
-            background: #FFFFFF;
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        .back-btn {
+            width: 36px; height: 36px; border-radius: var(--rad-md);
+            background: var(--surface-2); border: 1px solid var(--border);
+            color: var(--cream); font-size: 16px; cursor: pointer;
+            display: grid; place-items: center; transition: all var(--transition);
         }
-        .listing-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0,0,0,0.1);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+        .back-btn:hover { background: var(--surface-3); border-color: var(--border-hover); }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(10, 10, 15, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-around;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px); z-index: 15;
         }
-        .listing-img {
-            width: 100%;
-            aspect-ratio: 4/3;
-            object-fit: cover;
-            background: #F5F3EF;
+        .bottom-nav a {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            text-decoration: none; padding: 8px 14px; min-width: 48px;
+            color: var(--dim); font-size: 10px; font-weight: 500; transition: color var(--transition);
+        }
+        .bottom-nav a:hover, .bottom-nav a.active { color: var(--warm); }
+        .bottom-nav a svg { width: 20px; height: 20px; }
+
+        .toast {
+            position: fixed; bottom: 24px; left: 50%;
+            transform: translateX(-50%) translateY(16px);
+            padding: 12px 22px; border-radius: var(--rad-pill);
+            font-size: 13px; font-weight: 500; z-index: 40; opacity: 0;
+            animation: toast-in 250ms ease forwards, toast-out 250ms ease 2.8s forwards;
+            pointer-events: auto; white-space: nowrap; backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+            background: rgba(22, 22, 29, 0.95); color: var(--cream);
+        }
+        .toast-success { border-left: 3px solid var(--success); }
+        .toast-error { border-left: 3px solid var(--error); }
+        .toast-info { border-left: 3px solid var(--teal); }
+        @keyframes toast-in { to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateX(-50%) translateY(-8px); } }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+            background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--rad-md);
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-card { height: 240px; }
+        .skeleton-line { height: 12px; margin-bottom: 8px; }
+        .skeleton-line.w-3/4 { width: 75%; }
+        .skeleton-line.w-1/3 { width: 33%; }
+
+        .empty-state { text-align: center; padding: 48px 20px; }
+        .empty-state-icon {
+            width: 56px; height: 56px; margin: 0 auto 16px; border-radius: var(--rad-lg);
+            background: var(--surface-2); border: 1px solid var(--border);
+            display: grid; place-items: center; color: var(--dim); font-size: 24px;
+        }
+        .empty-state p { color: var(--dim); font-size: 14px; }
+
+        .error-banner {
+            background: rgba(248, 113, 113, 0.08); border: 1px solid rgba(248, 113, 113, 0.25);
+            border-radius: var(--rad-md); padding: 18px; text-align: center; margin: 16px 0;
+        }
+        .error-banner .error-title { font-weight: 600; color: var(--cream); margin-bottom: 4px; }
+        .error-banner .error-desc { font-size: 13px; color: var(--dim); }
+
+        .breadcrumb { font-size: 12px; color: var(--dim); display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color var(--transition); }
+        .breadcrumb a:hover { color: var(--warm); }
+
+        .listing-card { position: relative; }
+        .listing-photo { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: var(--surface-2); }
+        .listing-photo-placeholder {
+            width: 100%; aspect-ratio: 16/10; display: grid; place-items: center;
+            background: linear-gradient(150deg, var(--surface-3), var(--surface-2)); color: var(--dim); font-size: 28px;
+        }
+        .listing-info { padding: 16px; }
+        .listing-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--cream); margin-bottom: 4px; }
+        .listing-desc { font-size: 13px; color: var(--dim); margin-bottom: 10px; line-height: 1.5; }
+        .listing-price { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--warm); margin-bottom: 8px; }
+        .listing-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--dim); }
+        .listing-seller { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+        .seller-avatar {
+            display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--warm), var(--warm-dim));
+            color: #0a0a0f; font-size: 9px; font-weight: 700; flex: none;
+        }
+        .listing-type-chip {
+            position: absolute; top: 10px; left: 10px;
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border-radius: var(--rad-pill);
+            font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+            background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(6px);
+            border: 1px solid var(--border); color: var(--cream);
         }
 
         .load-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 16px 18px;
-            background: #FFFFFF;
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 18px;
-            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+            background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--rad-md);
+            transition: all var(--transition); cursor: pointer;
         }
-        .load-row:hover {
-            border-color: rgba(0,0,0,0.1);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        .load-row:hover { border-color: var(--border-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .load-icon {
+            width: 40px; height: 40px; border-radius: var(--rad-md); flex: none;
+            display: grid; place-items: center; background: var(--surface-2);
+            border: 1px solid var(--border); color: var(--warm);
         }
+        .load-info { flex: 1; min-width: 0; }
+        .load-title { font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--cream); margin-bottom: 2px; }
+        .load-route { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--dim); }
+        .load-price { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--warm); white-space: nowrap; }
+        .load-time { font-size: 11px; color: var(--dim); white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
 
-        .trend-card {
-            background: #FFFFFF;
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 18px;
-            padding: 20px;
-            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        .detail-overlay {
+            position: fixed; inset: 0; z-index: 30; background: rgba(5, 5, 10, 0.65);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            opacity: 0; pointer-events: none; transition: opacity 250ms ease;
         }
-        .trend-card:hover {
-            border-color: rgba(0,0,0,0.1);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        .detail-overlay.active { opacity: 1; pointer-events: auto; }
+        .detail-panel {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 31;
+            background: linear-gradient(180deg, var(--surface-2), var(--surface-1));
+            border: 1px solid var(--border); border-radius: var(--rad-xl) var(--rad-xl) 0 0;
+            max-height: 85dvh; overflow-y: auto; transform: translateY(100%);
+            transition: transform 350ms cubic-bezier(0.32, 0.72, 0, 1); padding: 20px 20px 28px; box-shadow: var(--shadow-xl);
         }
+        .detail-panel.active { transform: translateY(0); }
+        .detail-panel .handle { width: 36px; height: 3px; border-radius: var(--rad-pill); background: var(--border); margin: 0 auto 16px; }
+        .detail-photo { width: 100%; max-height: 200px; object-fit: cover; border-radius: var(--rad-md); margin-bottom: 16px; }
+        .detail-hero { display: flex; gap: 14px; align-items: stretch; }
+        .detail-photo-placeholder {
+            width: 72px; height: 72px; border-radius: var(--rad-md); flex: none;
+            display: grid; place-items: center; background: var(--surface-3);
+            border: 1px solid var(--border); color: var(--warm); font-size: 28px;
+        }
+        .detail-title { font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--cream); line-height: 1.25; margin: 0; }
+        .detail-price { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--warm); }
+        .detail-section { margin-top: 18px; }
+        .detail-section-title {
+            font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+            color: var(--cream); margin: 0 0 8px; text-transform: uppercase; display: flex; align-items: center; gap: 6px;
+        }
+        .detail-desc { font-size: 14px; line-height: 1.65; color: var(--muted); margin: 0 0 12px; }
 
         .chat-fab {
-            position: fixed;
-            bottom: 28px; right: 28px;
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #C87D3A, #D95B3F);
-            color: #FFFFFF;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 80;
-            box-shadow: 0 6px 20px rgba(200,125,58,0.35);
-            display: grid; place-items: center;
-            transition: all 0.4s cubic-bezier(0.32,0.72,0,1);
+            position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--warm), var(--warm-dim));
+            color: #f0f4ff; border: none; font-size: 22px; cursor: pointer;
+            z-index: 25; box-shadow: 0 6px 20px rgba(74, 158, 255, 0.35);
+            display: grid; place-items: center; transition: transform var(--transition), box-shadow var(--transition);
         }
-        .chat-fab:hover { transform: scale(1.08); box-shadow: 0 10px 30px rgba(200,125,58,0.45); }
+        .chat-fab:hover { transform: scale(1.05); box-shadow: 0 8px 28px rgba(74, 158, 255, 0.5); }
+
         .chat-panel {
-            position: fixed;
-            bottom: 0; right: 0;
-            width: min(420px, 100vw);
-            height: min(540px, 82vh);
-            background: #FFFFFF;
-            border-radius: 24px 24px 0 0;
-            z-index: 81;
-            transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.32,0.72,0,1);
-            display: flex; flex-direction: column;
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.06);
-            border-bottom: none;
-            box-shadow: 0 -8px 32px rgba(0,0,0,0.08);
+            position: fixed; bottom: 0; right: 0; width: min(380px, 100vw); height: min(480px, 78vh);
+            background: var(--surface-1); border: 1px solid var(--border);
+            border-radius: var(--rad-lg) var(--rad-lg) 0 0; z-index: 32;
+            transform: translateY(100%); transition: transform 350ms cubic-bezier(0.32, 0.72, 0, 1);
+            display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-xl);
         }
         .chat-panel.open { transform: translateY(0); }
-        .chat-header {
-            padding: 18px 22px;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .chat-messages {
-            flex: 1; overflow-y: auto;
-            padding: 18px 22px;
-            display: flex; flex-direction: column; gap: 12px;
-        }
-        .chat-msg {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
+        .chat-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: var(--rad-md); font-size: 13px; line-height: 1.5; }
         .chat-msg.sent {
-            background: linear-gradient(135deg, #C87D3A, #D95B3F);
-            color: #FFFFFF;
-            align-self: flex-end;
-            border-bottom-right-radius: 6px;
-            font-weight: 500;
+            background: linear-gradient(135deg, var(--warm), var(--warm-dim));
+            color: #0a0a0f; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500;
         }
-        .chat-msg.received {
-            background: #F5F3EF;
-            color: #1A1917;
-            align-self: flex-start;
-            border-bottom-left-radius: 6px;
-        }
-        .chat-input-row {
-            display: flex; gap: 10px;
-            padding: 14px 18px;
-            border-top: 1px solid rgba(0,0,0,0.06);
-        }
+        .chat-msg.received { background: var(--surface-3); color: var(--cream); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+        .chat-input-row { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--border); }
         .chat-input {
-            flex: 1;
-            background: #F5F3EF;
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 14px;
-            padding: 12px 16px;
-            color: #1A1917;
-            font-size: 14px;
-            font-family: 'Outfit', sans-serif;
-            outline: none;
-            transition: border-color 0.2s;
+            flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--rad-md);
+            padding: 10px 14px; color: var(--cream); font-size: 13px; outline: none; transition: border-color var(--transition);
         }
-        .chat-input:focus { border-color: rgba(200,125,58,0.3); }
+        .chat-input:focus { border-color: var(--warm); }
         .chat-send {
-            width: 44px; height: 44px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #C87D3A, #D95B3F);
-            color: #FFFFFF;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            display: grid; place-items: center;
-            transition: all 0.2s;
+            width: 38px; height: 38px; border-radius: var(--rad-md);
+            background: linear-gradient(135deg, var(--warm), var(--warm-dim));
+            color: #0a0a0f; border: none; font-size: 16px; cursor: pointer;
+            display: grid; place-items: center; transition: transform var(--transition);
         }
         .chat-send:hover { transform: scale(1.05); }
 
-        .create-cat-btn { transition: all 0.25s; }
-        .create-cat-btn:hover { transform: translateY(-2px); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .fade-up { animation: fadeUp 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards; opacity: 0; }
+        .fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.04s; }
+        .delay-2 { animation-delay: 0.08s; }
+        .delay-3 { animation-delay: 0.12s; }
+        .delay-4 { animation-delay: 0.16s; }
+        .delay-5 { animation-delay: 0.2s; }
+        .delay-6 { animation-delay: 0.24s; }
 
-        .empty-state {
-            text-align: center;
-            padding: 48px 24px;
-            color: #9A9490;
-            font-size: 14px;
-        }
-        .listing-info { padding: 18px; }
-        .listing-title {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            color: #1A1917;
-            margin-bottom: 6px;
-        }
-        .listing-desc {
-            font-size: 13px;
-            color: #6B6560;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-        .listing-price {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 700;
-            font-size: 18px;
-            color: #C87D3A;
-            margin-bottom: 10px;
-        }
-        .listing-meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            color: #9A9490;
-        }
-        .listing-time { color: #9A9490; }
-        .listing-rating {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: #C87D3A;
-            margin-bottom: 8px;
-        }
         .stars { display: inline-flex; gap: 1px; }
-        .star { color: rgba(0,0,0,0.12); font-size: 14px; }
-        .star.filled { color: #C87D3A; }
-        .rating-count { color: #9A9490; font-size: 12px; margin-left: 4px; }
-        .listing-photo {
-            width: 100%;
-            aspect-ratio: 4/3;
-            overflow: hidden;
-            border-radius: 18px 18px 0 0;
-            background: #F5F3EF;
-        }
-        .listing-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .listing-photo-placeholder {
-            width: 100%;
-            height: 100%;
-            display: grid;
-            place-items: center;
-            font-size: 32px;
-            background: #F5F3EF;
-        }
-        .listing-seller {
-            color: #6B6560;
-            font-weight: 600;
-        }
-        .listing-category {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 8px;
-            background: rgba(34,160,107,0.08);
-            color: #1A8A5B;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .cargo-tier {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .cargo-small { background: rgba(34,160,107,0.08); color: #1A8A5B; }
-        .cargo-medium { background: rgba(200,125,58,0.08); color: #C87D3A; }
-        .cargo-large { background: rgba(217,91,63,0.08); color: #D95B3F; }
+        .star { color: var(--border); font-size: 13px; }
+        .star.filled { color: var(--warm); }
+        .rating-count { color: var(--dim); font-size: 11px; margin-left: 4px; }
 
-        .load-info { flex: 1; min-width: 0; }
-        .load-title {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 600;
-            font-size: 15px;
-            color: #1A1917;
-            margin-bottom: 4px;
-        }
-        .load-route {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #6B6560;
-        }
-        .load-arrow { color: #C87D3A; font-weight: 700; }
-        .load-details {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-        .load-weight { font-size: 11px; color: #9A9490; }
-        .load-price {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 700;
-            font-size: 16px;
-            color: #C87D3A;
-            white-space: nowrap;
-        }
-        .load-time {
-            font-size: 11px;
-            color: #9A9490;
-            white-space: nowrap;
-        }
+        .leaflet-container { background: var(--surface-1); font-family: var(--font-body); border: 1px solid var(--border); border-radius: var(--rad-md); }
+        .leaflet-tile { filter: brightness(0.6) contrast(1.1) saturate(0.7); }
+        .leaflet-control-zoom a { background: var(--surface-2) !important; color: var(--cream) !important; border-color: var(--border) !important; }
+        .leaflet-control-attribution { background: var(--surface-1) !important; color: var(--dim) !important; font-size: 10px !important; }
+        .leaflet-control-attribution a { color: var(--teal) !important; }
+        .leaflet-popup-content-wrapper { background: var(--surface-2) !important; color: var(--cream) !important; border-radius: var(--rad-md) !important; border: 1px solid var(--border); box-shadow: var(--shadow-lg); }
+        .leaflet-popup-tip { background: var(--surface-2) !important; }
 
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 10000;
-            opacity: 0;
-            animation: toastIn 0.3s ease forwards, toastOut 0.3s ease 2.5s forwards;
-            pointer-events: none;
+        .skip-link {
+            position: fixed; top: -100%; left: 16px; z-index: 50; background: var(--cream);
+            color: var(--surface-0); padding: 10px 20px; border-radius: var(--rad-md);
+            font-weight: 600; font-size: 13px; text-decoration: none; transition: top var(--transition);
         }
-        .toast-success { background: #22A06B; color: #FFFFFF; }
-        .toast-error { background: #D95B3F; color: #FFFFFF; }
-        .toast-info { background: #C87D3A; color: #FFFFFF; }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        @keyframes toastOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        .site-footer {
-            background: #FFFFFF;
-            border-top: 1px solid rgba(0,0,0,0.06);
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.10); border-radius: 3px; }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideRight {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .fade-up { animation: fadeUp 0.5s cubic-bezier(0.32,0.72,0,1) forwards; opacity: 0; }
-        .fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; }
-        .scale-in { animation: scaleIn 0.5s cubic-bezier(0.32,0.72,0,1) forwards; opacity: 0; }
-
-        .delay-1 { animation-delay: 0.05s; }
-        .delay-2 { animation-delay: 0.1s; }
-        .delay-3 { animation-delay: 0.15s; }
-        .delay-4 { animation-delay: 0.2s; }
-        .delay-5 { animation-delay: 0.25s; }
-        .delay-6 { animation-delay: 0.3s; }
-        .delay-7 { animation-delay: 0.35s; }
-
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.8s cubic-bezier(0.32,0.72,0,1), transform 0.8s cubic-bezier(0.32,0.72,0,1);
-        }
-        .scroll-reveal.revealed {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .scroll-reveal.delay-1 { transition-delay: 0.05s; }
-        .scroll-reveal.delay-2 { transition-delay: 0.1s; }
-        .scroll-reveal.delay-3 { transition-delay: 0.15s; }
-        .scroll-reveal.delay-4 { transition-delay: 0.2s; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .fade-up, .fade-in, .slide-right, .scale-in, .scroll-reveal {
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-                transition: none !important;
-            }
-            .scroll-reveal.revealed {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-            .action-box:hover,
-            .listing-card:hover,
-            .city-pill:hover,
-            .chat-fab:hover,
-            .modal-panel,
-            .chat-panel,
-            .module-view {
-                transition-duration: 0.01ms !important;
-            }
-            .action-box, .trend-card, .hero-gsap-reveal {
-                opacity: 1 !important;
-                transform: none !important;
-                filter: none !important;
-            }
-        }
+        .skip-link:focus { top: 16px; }
+        body.scroll-lock { overflow: hidden; }
 
         @media (max-width: 640px) {
-            .chat-fab {
-                bottom: 20px;
-                right: 16px;
-                width: 56px;
-                height: 56px;
-            }
-            main {
-                padding-bottom: 100px !important;
-            }
+            .chat-fab { bottom: 76px; right: 14px; width: 48px; height: 48px; }
+            .bottom-nav { transform: translateY(0) !important; }
+            main { padding-bottom: 80px !important; }
+        }
+        @media (min-width: 641px) {
+            .bottom-nav { display: none !important; }
         }
 
-        /* ===== MOBILE DRAWER ===== */
-        .hamburger-btn {
-            width: 40px; height: 40px;
-            border-radius: 12px;
-            background: transparent;
-            border: 1px solid rgba(0,0,0,0.08);
-            cursor: pointer;
-            display: grid; place-items: center;
-            transition: all 0.2s;
-            color: #1A1917; flex-shrink: 0;
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         }
-        .hamburger-btn:hover { background: rgba(0,0,0,0.04); }
-        .drawer-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 200;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s;
-            backdrop-filter: blur(4px);
-        }
-        .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-        .mobile-drawer {
-            position: absolute; top: 0; left: 0; bottom: 0;
-            width: min(300px, 85vw);
-            background: #FFFFFF;
-            transform: translateX(-100%);
-            transition: transform 0.45s cubic-bezier(0.32,0.72,0,1);
-            overflow-y: auto; padding: 24px 16px;
-            border-right: 1px solid rgba(0,0,0,0.06);
-        }
-        .drawer-overlay.open .mobile-drawer { transform: translateX(0); }
-        .drawer-nav-item {
-            display: flex; align-items: center; gap: 13px;
-            padding: 12px 13px; border-radius: 15px;
-            cursor: pointer; transition: all 0.2s;
-            margin-bottom: 3px;
-            font-size: 14px; font-weight: 600; color: #1A1917;
-        }
-        .drawer-nav-item:hover { background: rgba(0,0,0,0.04); }
-        .drawer-nav-icon {
-            width: 36px; height: 36px; border-radius: 10px;
-            display: grid; place-items: center; font-size: 16px; flex-shrink: 0;
-        }
-
-        /* ===== 4-PILLAR GRID ===== */
-        .pillar-section { margin-bottom: 20px; }
-        .pillar-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .pillar-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 5px 12px; border-radius: 100px;
-            font-size: 11px; font-weight: 700;
-            letter-spacing: 0.06em; text-transform: uppercase;
-            white-space: nowrap; flex-shrink: 0;
-        }
-        .pillar-badge.market   { background: rgba(34,160,107,0.08);  color: #1A8A5B; border: 1px solid rgba(34,160,107,0.15); }
-        .pillar-badge.services { background: rgba(200,125,58,0.08);  color: #B06E2F; border: 1px solid rgba(200,125,58,0.15); }
-        .pillar-badge.rentals  { background: rgba(100,116,215,0.08); color: #4A5BC7; border: 1px solid rgba(100,116,215,0.15); }
-        .pillar-badge.transport{ background: rgba(217,91,63,0.08);   color: #C04E35; border: 1px solid rgba(217,91,63,0.15); }
-        .pillar-divider { flex: 1; height: 1px; background: rgba(0,0,0,0.06); }
-
-        .box-rentals { background: linear-gradient(135deg, rgba(100,116,215,0.08) 0%, rgba(100,116,215,0.02) 100%); }
-        .box-rentals::before { background: radial-gradient(circle at 30% 30%, rgba(100,116,215,0.08), transparent 70%); }
-        .box-rentals .box-icon  { background: rgba(100,116,215,0.10); color: #5B6AD4; }
-        .box-rentals .box-title { color: #4A5BC7; }
-        .box-rentals .box-arrow { background: rgba(100,116,215,0.10); color: #5B6AD4; }
-        .box-rentals:hover .action-box-inner { box-shadow: 0 8px 24px rgba(100,116,215,0.12); }
-
-        .box-rentals-offer { background: linear-gradient(135deg, rgba(147,100,215,0.08) 0%, rgba(147,100,215,0.02) 100%); }
-        .box-rentals-offer::before { background: radial-gradient(circle at 70% 30%, rgba(147,100,215,0.08), transparent 70%); }
-        .box-rentals-offer .box-icon  { background: rgba(147,100,215,0.10); color: #8B5CF6; }
-        .box-rentals-offer .box-title { color: #7C3AED; }
-        .box-rentals-offer .box-arrow { background: rgba(147,100,215,0.10); color: #8B5CF6; }
-        .box-rentals-offer:hover .action-box-inner { box-shadow: 0 8px 24px rgba(147,100,215,0.12); }
-
-        .box-transport { background: linear-gradient(135deg, rgba(217,91,63,0.08) 0%, rgba(217,91,63,0.02) 100%); }
-        .box-transport::before { background: radial-gradient(circle at 30% 30%, rgba(217,91,63,0.08), transparent 70%); }
-        .box-transport .box-icon  { background: rgba(217,91,63,0.10); color: #D95B3F; }
-        .box-transport .box-title { color: #C04E35; }
-        .box-transport .box-arrow { background: rgba(217,91,63,0.10); color: #D95B3F; }
-        .box-transport:hover .action-box-inner { box-shadow: 0 8px 24px rgba(217,91,63,0.12); }
-
-        .box-transport-post { background: linear-gradient(135deg, rgba(180,60,100,0.08) 0%, rgba(180,60,100,0.02) 100%); }
-        .box-transport-post::before { background: radial-gradient(circle at 70% 30%, rgba(180,60,100,0.08), transparent 70%); }
-        .box-transport-post .box-icon  { background: rgba(180,60,100,0.10); color: #B43C64; }
-        .box-transport-post .box-title { color: #A33358; }
-        .box-transport-post .box-arrow { background: rgba(180,60,100,0.10); color: #B43C64; }
-        .box-transport-post:hover .action-box-inner { box-shadow: 0 8px 24px rgba(180,60,100,0.12); }
-
-        /* ===== DASHBOARD ===== */
-        .dashboard-profile-card {
-            background: linear-gradient(135deg, #FFFFFF 0%, #FAF9F7 100%);
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 22px; padding: 20px; margin-bottom: 14px;
-        }
-        .profile-avatar {
-            width: 66px; height: 66px; border-radius: 50%;
-            background: linear-gradient(135deg, #C87D3A, #D95B3F);
-            display: grid; place-items: center;
-            font-size: 24px; color: #FFFFFF;
-            font-family: 'Clash Display', sans-serif; font-weight: 700;
-            overflow: hidden; flex-shrink: 0;
-            border: 3px solid rgba(200,125,58,0.15);
-        }
-        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-age-badge {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 11px; font-weight: 600; color: #6B6560;
-            background: rgba(0,0,0,0.04); padding: 3px 9px; border-radius: 100px;
-        }
-        .inbox-btn {
-            width: 100%; display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 17px;
-            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 17px; cursor: pointer; transition: all 0.2s;
-            margin-bottom: 18px; text-align: left;
-        }
-        .inbox-btn:hover { border-color: rgba(200,125,58,0.2); background: rgba(200,125,58,0.02); }
-        .inbox-badge {
-            min-width: 20px; height: 20px; border-radius: 10px;
-            background: #D95B3F; color: #FFFFFF;
-            font-size: 11px; font-weight: 700;
-            display: grid; place-items: center; padding: 0 5px;
-        }
-        .section-title {
-            font-family: 'Clash Display', sans-serif;
-            font-weight: 600; font-size: 15px; color: #1A1917; margin-bottom: 10px;
-        }
-        .accordion-item {
-            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 17px; overflow: hidden; margin-bottom: 7px;
-        }
-        .accordion-item:hover { border-color: rgba(0,0,0,0.09); }
-        .accordion-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 17px; cursor: pointer; transition: background 0.2s;
-        }
-        .accordion-header:hover { background: rgba(0,0,0,0.02); }
-        .accordion-title { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #1A1917; }
-        .accordion-arrow { transition: transform 0.3s cubic-bezier(0.32,0.72,0,1); color: #9A9490; }
-        .accordion-item.open .accordion-arrow { transform: rotate(180deg); }
-        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.32,0.72,0,1); }
-        .accordion-item.open .accordion-body { max-height: 500px; }
-        .accordion-content { padding: 2px 17px 16px; }
-        .notif-badge {
-            min-width: 18px; height: 18px; border-radius: 9px;
-            background: #D95B3F; color: #FFFFFF;
-            font-size: 10px; font-weight: 700;
-            display: grid; place-items: center; padding: 0 4px;
-        }
-        .add-btn {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 7px 13px; border-radius: 9px;
-            background: rgba(200,125,58,0.08); border: 1px solid rgba(200,125,58,0.12);
-            color: #C87D3A; font-size: 12px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; margin-top: 9px;
-        }
-        .add-btn:hover { background: rgba(200,125,58,0.14); }
-        .order-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
-        .order-tabs::-webkit-scrollbar { display: none; }
-        .order-tab {
-            flex-shrink: 0; padding: 7px 15px; border-radius: 100px;
-            border: 1px solid rgba(0,0,0,0.08); background: #FFFFFF;
-            font-size: 12px; font-weight: 600; color: #6B6560;
-            cursor: pointer; transition: all 0.2s; white-space: nowrap;
-        }
-        .order-tab.active { background: #1A1917; color: #FFFFFF; border-color: #1A1917; }
-        .order-row {
-            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 14px; padding: 13px 15px; margin-bottom: 7px; transition: all 0.2s;
-        }
-        .order-row:hover { border-color: rgba(0,0,0,0.10); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .order-status-pill {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 3px 8px; border-radius: 100px;
-            font-size: 10px; font-weight: 700; letter-spacing: 0.02em;
-        }
-        .status-requesting  { background: rgba(200,125,58,0.08);  color: #C87D3A; }
-        .status-in_progress { background: rgba(100,116,215,0.08); color: #5B6AD4; }
-        .status-completed   { background: rgba(34,160,107,0.08);  color: #1A8A5B; }
-        .status-cancelled   { background: rgba(0,0,0,0.06);       color: #9A9490; }
     </style>
+    <!-- ============================================================
+         LOCAL SEO / GEO / AEO — Structured Data & Voice Search
+         ============================================================ -->
+    <link rel="canonical" href="https://harbisonstandard.com/">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="geo.region" content="US-CA">
+    <meta name="geo.placename" content="Bakersfield">
+    <meta name="geo.position" content="35.3733;-119.0187">
+    <meta name="ICBM" content="35.3733, -119.0187">
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://harbisonstandard.com/#organization",
+      "name": "sovr1n",
+      "alternateName": "Harbison Standard",
+      "url": "https://harbisonstandard.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://harbisonstandard.com/sovr1n-logo.svg",
+        "width": 512,
+        "height": 512
+      },
+      "description": "sovr1n is Bakersfield's local marketplace for services, drivers, load boards, and local deals in Kern County, California.",
+      "email": "nate85.realtor@gmail.com",
+      "telephone": "+1-661-472-7499",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "3304 Apollo St",
+        "addressLocality": "Bakersfield",
+        "addressRegion": "CA",
+        "postalCode": "93306",
+        "addressCountry": "US"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Nathanael Harbison",
+        "jobTitle": "Founder / Real Estate Agent",
+        "identifier": "DRE 02059393"
+      },
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": "Kern County",
+        "containedInPlace": { "@type": "State", "name": "California" }
+      }
+    }
+    </script>
+
+    <!-- LocalBusiness Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": "https://harbisonstandard.com/#localbusiness",
+      "name": "sovr1n — Harbison Standard",
+      "alternateName": "sovr1n",
+      "url": "https://harbisonstandard.com",
+      "logo": "https://harbisonstandard.com/sovr1n-logo.svg",
+      "image": "https://harbisonstandard.com/splash-logo.png",
+      "description": "sovr1n is Bakersfield's local marketplace for services, drivers, load boards, and local deals in Kern County, California.",
+      "priceRange": "$$",
+      "telephone": "+1-661-472-7499",
+      "email": "nate85.realtor@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "3304 Apollo St",
+        "addressLocality": "Bakersfield",
+        "addressRegion": "CA",
+        "postalCode": "93306",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 35.3733,
+        "longitude": -119.0187
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bakersfield" },
+        { "@type": "City", "name": "Oildale" },
+        { "@type": "City", "name": "Lamont" },
+        { "@type": "City", "name": "Arvin" },
+        { "@type": "City", "name": "Shafter" },
+        { "@type": "City", "name": "Wasco" },
+        { "@type": "City", "name": "Delano" },
+        { "@type": "City", "name": "McFarland" },
+        { "@type": "City", "name": "Taft" },
+        { "@type": "City", "name": "Maricopa" },
+        { "@type": "City", "name": "Tehachapi" },
+        { "@type": "City", "name": "Frazier Park" },
+        { "@type": "City", "name": "California City" },
+        { "@type": "City", "name": "Mojave" },
+        { "@type": "City", "name": "Ridgecrest" }
+      ],
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "sovr1n Services",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Local Marketplace Listings" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Local Services Directory" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Driver & Delivery Gigs" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Freight Load Board" } }
+        ]
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://harbisonstandard.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- WebSite Schema with SearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://harbisonstandard.com/#website",
+      "name": "sovr1n",
+      "alternateName": "Harbison Standard",
+      "url": "https://harbisonstandard.com",
+      "description": "Bakersfield's local marketplace — shop, hire, rent & haul in Kern County, CA.",
+      "publisher": { "@id": "https://harbisonstandard.com/#organization" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://harbisonstandard.com/?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- BreadcrumbList Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://harbisonstandard.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Bakersfield, CA",
+          "item": "https://harbisonstandard.com/#bakersfield"
+        }
+      ]
+    }
+    </script>
+
+    <!-- FAQPage Schema for Voice Search / AEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is sovr1n?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "sovr1n is Bakersfield's local marketplace for services, drivers, load boards, and local deals in Kern County, California. Shop, hire, rent, and haul right in your city."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What cities does sovr1n serve?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "sovr1n serves Bakersfield and all of Kern County, including Oildale, Lamont, Arvin, Shafter, Wasco, Delano, McFarland, Taft, Maricopa, Tehachapi, Frazier Park, California City, Mojave, and Ridgecrest."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I list my services on sovr1n?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sign up for a free sovr1n account, select 'Service Provider' as your role, and create your listing. There are no upfront fees — sovr1n takes a 10% commission per completed job."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I find delivery driver gigs in Bakersfield?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Open sovr1n, select the 'Drivers' section, and browse available delivery gigs near you in Bakersfield and Kern County."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the sovr1n load board?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The sovr1n load board lets you post or find freight and hauling jobs in Kern County. Drivers can browse loads, and shippers can post cargo details, pickup/drop-off locations, and offered prices."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who runs sovr1n?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "sovr1n is founded and operated by Nathanael Harbison, a licensed real estate agent (DRE 02059393) based in Bakersfield, CA."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I contact sovr1n?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can contact sovr1n by email at nate85.realtor@gmail.com or by phone at (661) 472-7499. The business is located at 3304 Apollo St, Bakersfield, CA 93306."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Speakable Markup for Voice Search (Google Assistant / Alexa) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "sovr1n | Local Markets & Commerce",
+      "url": "https://harbisonstandard.com/",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".hero-tagline", ".speakable-summary"]
+      },
+      "mainEntity": { "@id": "https://harbisonstandard.com/#localbusiness" }
+    }
+    </script>
+
 </head>
 <body>
-
+<a class="skip-link" href="#main-content">Skip to content</a>
+<p class="speakable-summary sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">sovr1n is Bakersfield's local marketplace. Shop, hire, rent and haul in Kern County, California. Find services, driver gigs, freight loads, and local deals near you.</p>
 <div class="mesh-bg"></div>
 
-<!-- ============ HEADER ============ -->
-<header class="fixed top-0 inset-x-0 z-50 glass" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center gap-3">
-        <!-- Left: Hamburger -->
-        <button class="hamburger-btn" onclick="App.openDrawer()" aria-label="Open menu">
-            <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+<!-- HOMEPAGE HEADER -->
+<header style="position:relative;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:20px 24px;max-width:640px;margin:0 auto;width:100%;">
+    <div style="display:flex;align-items:center;gap:10px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        <span class="font-display" style="font-weight:700;font-size:20px;letter-spacing:-0.03em;background:linear-gradient(120deg,#e8f4ff 0%,#4a9eff 40%,#c8e4ff 75%,#ffffff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">sovr1n</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn-ghost btn-sm" id="hamburger-btn" onclick="App.openHamburgerDrawer()" aria-label="Open menu" style="width:38px;height:38px;padding:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
         </button>
-
-        <!-- Center: Brand + City picker -->
-        <div class="flex items-center gap-2.5 flex-1 justify-center min-w-0">
-            <a href="#" class="flex items-center gap-2 flex-shrink-0" onclick="App.closeAllModules(); return false;">
-                <div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
-                    <svg width="14" height="14" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-                </div>
-                <span class="font-display font-semibold text-base tracking-tight hidden sm:block" style="color:#1A1917;">Sourc'n</span>
-            </a>
-            <button class="city-pill" onclick="App.openCityModal()" id="city-pill-btn" style="padding:7px 14px; font-size:12px;">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                <span id="city-name-display">Bakersfield</span>
-                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-        </div>
-
-        <!-- Right: Auth / Profile portal -->
-        <div id="auth-buttons" class="flex items-center gap-2 flex-shrink-0">
-            <button class="text-xs font-semibold px-3.5 py-2 rounded-xl transition-all" style="background:#FFFFFF; color:#1A1917; border:1px solid rgba(0,0,0,0.10);" onclick="Auth.openModal('login-modal')">Sign In</button>
-            <button class="text-xs font-semibold px-3.5 py-2 rounded-xl transition-all hidden sm:block" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="Auth.openModal('register-modal')">Sign Up</button>
-        </div>
-        <div id="user-menu" class="hidden items-center gap-2 flex-shrink-0">
-            <button class="text-xs font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all" style="background:rgba(200,125,58,0.08); color:#C87D3A; border:1px solid rgba(200,125,58,0.12);" onclick="App.openModule('dashboard')">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                <span id="user-name" class="hidden sm:inline max-w-20 truncate"></span>
-                <span class="sm:hidden">Me</span>
-            </button>
-            <button class="text-xs font-semibold px-2.5 py-2 rounded-xl transition-all" title="Sign out" style="background:rgba(0,0,0,0.04); color:#6B6560;" onclick="Auth.logout()">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-            </button>
-        </div>
+        <button class="btn-secondary btn-sm" onclick="App.openProfileOrLogin()" id="header-auth-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Sign in
+        </button>
     </div>
 </header>
 
-<!-- ============ MOBILE DRAWER ============ -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="if(event.target===this)App.closeDrawer()">
-    <div class="mobile-drawer">
-        <div class="flex items-center gap-3 mb-7 pt-1">
-            <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
-                <svg width="15" height="15" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+<!-- HAMBURGER DRAWER -->
+<div class="modal-bg" id="hamburger-drawer" role="dialog" aria-modal="true" onclick="if(event.target===this)App.closeHamburgerDrawer()">
+    <div class="modal-panel" style="max-width:420px;margin:0 auto;padding:24px;">
+        <button class="modal-close" onclick="App.closeHamburgerDrawer()" aria-label="Close menu">&times;</button>
+        <h2 class="font-display" style="font-size:22px;font-weight:600;margin-bottom:4px;color:var(--cream);">Choose your city</h2>
+        <p style="font-size:13px;color:var(--dim);margin-bottom:20px;">Pick a city to get started.</p>
+        <div class="input-icon" style="margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" class="input-base" placeholder="Search cities..." id="drawer-city-search" oninput="App.filterCitiesIn('drawer-city-search','drawer-city-list')">
+        </div>
+        <div id="drawer-city-list" style="max-height:260px;overflow-y:auto;margin-bottom:20px;"></div>
+        <div style="border-top:1px solid var(--border);padding-top:16px;">
+            <div id="drawer-auth-buttons" style="display:flex;flex-direction:column;gap:8px;">
+                <button class="btn-secondary" onclick="App.closeHamburgerDrawer();Auth.openModal('login-modal')">Sign In</button>
+                <button class="btn-primary" onclick="App.closeHamburgerDrawer();Auth.openModal('register-modal')">Sign Up</button>
             </div>
-            <span class="font-display font-semibold text-base" style="color:#1A1917;">Sourc'n</span>
-            <button style="margin-left:auto;width:34px;height:34px;border-radius:11px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);cursor:pointer;display:grid;place-items:center;color:#1A1917;font-size:18px;" onclick="App.closeDrawer()">&times;</button>
-        </div>
-        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('market-shoppers')">
-            <div class="drawer-nav-icon" style="background:rgba(34,160,107,0.08);color:#22A06B;">🛒</div>Shop Local Market
-        </div>
-        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('services-buyer')">
-            <div class="drawer-nav-icon" style="background:rgba(200,125,58,0.08);color:#C87D3A;">🔧</div>Find Services
-        </div>
-        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('rentals-seek')">
-            <div class="drawer-nav-icon" style="background:rgba(100,116,215,0.08);color:#5B6AD4;">🏠</div>Browse Rentals
-        </div>
-        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('drivers')">
-            <div class="drawer-nav-icon" style="background:rgba(217,91,63,0.08);color:#D95B3F;">🚛</div>Driver Gigs
-        </div>
-        <div style="height:1px;background:rgba(0,0,0,0.06);margin:10px 0;"></div>
-        <div class="drawer-nav-item" onclick="App.closeDrawer();App.openModule('create')">
-            <div class="drawer-nav-icon" style="background:rgba(217,91,63,0.06);color:#D95B3F;">✏️</div>Post a Listing
-        </div>
-        <div class="drawer-nav-item" id="drawer-dashboard-item" style="display:none;" onclick="App.closeDrawer();App.openModule('dashboard')">
-            <div class="drawer-nav-icon" style="background:rgba(200,125,58,0.08);color:#C87D3A;">👤</div>My Dashboard
+            <div id="drawer-user-menu" style="display:none;flex-direction:column;gap:8px;">
+                <p style="font-size:13px;font-weight:600;color:var(--warm);" id="drawer-user-name"></p>
+                <button class="btn-secondary" onclick="Auth.logout()">Sign Out</button>
+            </div>
+            <!-- UTILITY LINKS -->
+            <div style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--border);margin-top:12px;">
+                <button class="btn-ghost" onclick="App.closeHamburgerDrawer();App.openModule('about')" style="width:100%;text-align:left;padding:8px 12px;">About sovr1n</button>
+                <button class="btn-ghost" onclick="App.closeHamburgerDrawer();App.openModule('faq')" style="width:100%;text-align:left;padding:8px 12px;">FAQ & Guidelines</button>
+                <button class="btn-ghost" onclick="App.closeHamburgerDrawer();App.openModule('terms')" style="width:100%;text-align:left;padding:8px 12px;">Terms of Service</button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- ============ CITY MODAL ============ -->
-<div class="modal-bg" id="city-modal" role="dialog" aria-modal="true" aria-labelledby="city-modal-title" onclick="if(event.target===this)App.closeCityModal()">
-    <div class="modal-panel p-6 pt-10">
-        <button class="modal-close" onclick="App.closeCityModal()">&times;</button>
-        <h2 id="city-modal-title" class="font-display font-semibold text-2xl mb-1" style="color:#1A1917;">Select your city</h2>
-        <p class="text-sm mb-6" style="color:#6B6560;">Browse local listings near you.</p>
-        <input type="text" class="search-bar mb-6" placeholder="Search cities..." id="city-search" oninput="App.filterCities()">
-        <div id="city-list"></div>
+<!-- ROLE MODAL -->
+<div class="modal-bg" id="role-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)App.closeRoleModal()">
+    <div class="modal-panel" style="max-width:420px;margin:0 auto;padding:24px;">
+        <button class="modal-close" onclick="App.closeRoleModal()" aria-label="Close">&times;</button>
+        <h2 class="font-display" style="font-size:22px;font-weight:600;margin-bottom:4px;color:var(--cream);">What brings you here?</h2>
+        <p style="font-size:13px;color:var(--dim);margin-bottom:20px;">Choose how you'd like to use sovr1n in <span id="role-modal-city">your city</span>.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('customer')">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <span style="font-weight:600;">Customer — Browse services & deals</span>
+            </button>
+            <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('service_provider')">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+                <span style="font-weight:600;">Service Provider — Offer your services</span>
+            </button>
+            <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('driver')">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                </span>
+                <span style="font-weight:600;">Driver — Find delivery gigs</span>
+            </button>
+            <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('load_board')">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>
+                </span>
+                <span style="font-weight:600;">Load Board — Post or find freight</span>
+            </button>
+        </div>
+
+        <!-- PRICING INFO -->
+        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+            <p style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--dim);margin-bottom:10px;">Pricing</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;">
+                <div style="padding:8px;background:var(--surface-2);border-radius:var(--rad-sm);border-left:2px solid var(--warm);">
+                    <p style="color:var(--muted);">Customers & Profiles</p>
+                    <p style="color:var(--warm);font-weight:600;">FREE</p>
+                </div>
+                <div style="padding:8px;background:var(--surface-2);border-radius:var(--rad-sm);border-left:2px solid var(--warm);">
+                    <p style="color:var(--muted);">Shop Owners & Drivers</p>
+                    <p style="color:var(--warm);font-weight:600;">$2/mo or $20/yr</p>
+                </div>
+                <div style="grid-column:1/-1;padding:8px;background:var(--surface-2);border-radius:var(--rad-sm);border-left:2px solid var(--teal);">
+                    <p style="color:var(--muted);">Platform Fee</p>
+                    <p style="color:var(--teal);font-weight:600;">10% on transactions (2% for Hot Shot/Class A)</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- ============ LOGIN MODAL ============ -->
+<!-- LOGIN MODAL -->
 <div class="modal-bg auth-modal" id="login-modal" onclick="if(event.target===this)Auth.closeAllModals()">
-    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+    <div class="modal-panel" style="max-width:420px;margin:0 auto;padding:24px;">
         <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
-        <h2 class="font-display font-semibold text-2xl mb-1" style="color:#1A1917;">Welcome back</h2>
-        <p class="text-sm mb-6" style="color:#6B6560;">Sign in to your Sourc'n account.</p>
-        <form id="login-form" class="space-y-4">
+        <h2 class="font-display" style="font-size:22px;font-weight:600;margin-bottom:4px;color:var(--cream);">Welcome back</h2>
+        <p style="font-size:13px;color:var(--dim);margin-bottom:20px;">Sign in to your sovr1n account.</p>
+        <form id="login-form" style="display:flex;flex-direction:column;gap:14px;">
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">EMAIL</label>
-                <input type="email" class="search-bar" placeholder="you@email.com" id="login-email" required>
+                <label class="field-label" for="login-email">EMAIL</label>
+                <input type="email" class="input-base" placeholder="you@email.com" id="login-email" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">PASSWORD</label>
-                <input type="password" class="search-bar" placeholder="Your password" id="login-password" required>
+                <label class="field-label" for="login-password">PASSWORD</label>
+                <input type="password" class="input-base" placeholder="Your password" id="login-password" required>
             </div>
-            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;">Sign In</button>
-            <p class="text-xs text-center" style="color:#9A9490;">Don't have an account? <a href="#" class="auth-switch" data-target="register-modal" style="color:#C87D3A;">Sign up</a></p>
+            <button type="submit" class="btn-primary" style="width:100%;">Sign In</button>
+            <p style="font-size:12px;text-align:center;color:var(--dim);">Don't have an account? <a href="#" class="auth-switch" data-target="register-modal" style="color:var(--warm);">Sign up</a></p>
         </form>
     </div>
 </div>
 
-<!-- ============ REGISTER MODAL ============ -->
+<!-- REGISTER MODAL -->
 <div class="modal-bg auth-modal" id="register-modal" onclick="if(event.target===this)Auth.closeAllModals()">
-    <div class="modal-panel p-6 pt-10" style="max-width:420px; margin:0 auto;">
+    <div class="modal-panel" style="max-width:420px;margin:0 auto;padding:24px;">
         <button class="modal-close" onclick="Auth.closeAllModals()">&times;</button>
-        <h2 class="font-display font-semibold text-2xl mb-1" style="color:#1A1917;">Join Sourc'n</h2>
-        <p class="text-sm mb-6" style="color:#6B6560;">Create your local marketplace account.</p>
-        <form id="register-form" class="space-y-4">
+        <h2 class="font-display" style="font-size:22px;font-weight:600;margin-bottom:4px;color:var(--cream);">Join sovr1n</h2>
+        <p style="font-size:13px;color:var(--dim);margin-bottom:20px;">Create your local marketplace account.</p>
+        <form id="register-form" style="display:flex;flex-direction:column;gap:14px;">
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">FULL NAME</label>
-                <input type="text" class="search-bar" placeholder="Your name" id="register-name" required>
+                <label class="field-label" for="register-name">FULL NAME</label>
+                <input type="text" class="input-base" placeholder="Your name" id="register-name" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">EMAIL</label>
-                <input type="email" class="search-bar" placeholder="you@email.com" id="register-email" required>
+                <label class="field-label" for="register-email">EMAIL</label>
+                <input type="email" class="input-base" placeholder="you@email.com" id="register-email" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">PASSWORD</label>
-                <input type="password" class="search-bar" placeholder="Create a password" id="register-password" required>
+                <label class="field-label" for="register-password">PASSWORD</label>
+                <input type="password" class="input-base" placeholder="Create a password" id="register-password" required>
             </div>
             <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">CITY</label>
-                <select class="search-bar" id="register-city">
-                    <option value="Bakersfield">Bakersfield</option>
-                    <option value="Oildale">Oildale</option>
-                    <option value="Shafter">Shafter</option>
-                    <option value="Tehachapi">Tehachapi</option>
-                    <option value="Delano">Delano</option>
-                    <option value="Wasco">Wasco</option>
-                    <option value="Ridgecrest">Ridgecrest</option>
+                <label class="field-label" for="register-city">CITY</label>
+                <select class="input-base" id="register-city">
+                    <option>Bakersfield</option><option>Oildale</option><option>Lamont</option><option>Arvin</option>
+                    <option>Shafter</option><option>Wasco</option><option>Delano</option><option>McFarland</option>
+                    <option>Taft</option><option>Maricopa</option><option>Tehachapi</option><option>Frazier Park</option>
+                    <option>California City</option><option>Mojave</option><option>Ridgecrest</option>
                 </select>
             </div>
-            <button type="submit" class="w-full text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;">Create Account</button>
-            <p class="text-xs text-center" style="color:#9A9490;">Already have an account? <a href="#" class="auth-switch" data-target="login-modal" style="color:#C87D3A;">Sign in</a></p>
+
+            <!-- DRIVER VERIFICATION FIELDS -->
+            <div style="padding:12px;background:rgba(138,180,212,0.07);border-radius:var(--rad-md);border-left:2px solid var(--teal);">
+                <p style="font-size:12px;font-weight:600;color:var(--cream);margin-bottom:8px;">Will you be a driver on sovr1n?</p>
+                <p style="font-size:11px;color:var(--dim);margin-bottom:10px;">Drivers must provide valid driver's license and proof of insurance. You'll upload these after account creation.</p>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;">
+                    <input type="checkbox" id="register-is-driver" style="width:16px;height:16px;cursor:pointer;">
+                    <span style="color:var(--cream);">I plan to be a driver</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width:100%;">Create Account</button>
+            <p style="font-size:12px;text-align:center;color:var(--dim);">Already have an account? <a href="#" class="auth-switch" data-target="login-modal" style="color:var(--warm);">Sign in</a></p>
         </form>
     </div>
 </div>
 
-<!-- ============ MAIN ============ -->
-<main class="relative z-10 pt-28 pb-24 px-5 max-w-6xl mx-auto">
+<!-- MAIN HOMEPAGE -->
+<main id="main-content" style="position:relative;z-index:1;max-width:600px;margin:0 auto;padding:0 20px 40px;">
+    <h1 class="font-display fade-up" style="font-size:clamp(48px,9vw,72px);font-weight:700;letter-spacing:-4px;text-align:center;background:linear-gradient(120deg,#e8f4ff 0%,#4a9eff 30%,#c8e4ff 55%,#ffffff 75%,#4a9eff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 32px rgba(74,158,255,0.4));">
+        sovr1n<span style="font-size:0.4em;vertical-align:top;letter-spacing:0;">&#10022;</span>
+    </h1>
+    <p class="hero-tagline fade-up delay-1" style="text-align:center;color:var(--dim);font-size:15px;line-height:1.6;max-width:420px;margin:8px auto 24px;">
+        Your local marketplace &mdash; shop, hire, rent &amp; haul, right in your city.
+    </p>
 
-    <!-- HERO -->
-    <div class="mb-16 fade-up" style="max-width:640px;">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style="background:rgba(34,160,107,0.06); border:1px solid rgba(34,160,107,0.12);">
-            <span style="width:6px;height:6px;border-radius:50%;background:#22A06B;"></span>
-            <span class="text-xs font-semibold" style="color:#1A8A5B; letter-spacing:0.04em;">LOCAL MARKETS & COMMERCE</span>
+    <select id="city-select" class="input-base fade-up delay-2" style="width:min(280px,100%);margin:0 auto 16px;display:block;">
+        <option value="" disabled>City / Area</option>
+        <option value="Bakersfield">Bakersfield</option><option value="Oildale">Oildale</option>
+        <option value="Lamont">Lamont</option><option value="Arvin">Arvin</option>
+        <option value="Shafter">Shafter</option><option value="Wasco">Wasco</option>
+        <option value="Delano">Delano</option><option value="McFarland">McFarland</option>
+        <option value="Taft">Taft</option><option value="Maricopa">Maricopa</option>
+        <option value="Tehachapi">Tehachapi</option><option value="Frazier Park">Frazier Park</option>
+        <option value="California City">California City</option><option value="Mojave">Mojave</option>
+        <option value="Ridgecrest">Ridgecrest</option>
+    </select>
+
+    <div class="fade-up delay-3" style="position:relative;margin:0 auto 20px;max-width:560px;border-radius:var(--rad-lg);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-md);">
+        <div id="city-map" style="width:100%;height:180px;background:var(--surface-1);"></div>
+        <div style="position:absolute;bottom:10px;left:12px;z-index:400;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--rad-pill);background:rgba(10,10,15,0.85);backdrop-filter:blur(8px);border:1px solid var(--border);color:var(--cream);font-size:12px;font-weight:600;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--warm);box-shadow:0 0 8px var(--warm);"></span>
+            <span id="current-city-label">Bakersfield</span>, CA
         </div>
-        <h1 class="font-display font-semibold text-4xl sm:text-5xl md:text-6xl leading-[1.05] mb-5" style="color:#1A1917; letter-spacing:-0.03em; max-width:520px;">
-            Find what's
-            <span style="background:linear-gradient(135deg,#C87D3A,#D95B3F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">nearby.</span>
-        </h1>
-        <p class="text-lg leading-relaxed mb-8" style="color:#6B6560; max-width:480px;">
-            Services, drivers, deals, and local work — all in your city. No algorithms. Just neighbors.
-        </p>
     </div>
 
-    <!-- SEARCH -->
-    <div class="mb-16 fade-up delay-2" style="max-width:520px;">
-        <div class="relative">
-            <svg class="absolute left-5 top-1/2 -translate-y-1/2" width="18" height="18" fill="none" stroke="#9A9490" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input type="text" class="search-bar" style="padding-left:48px;" placeholder="Search for anything local..." id="main-search" onkeydown="if(event.key==='Enter')Search.handleSearch(this.value, 'all')">
-        </div>
-    </div>
+    <div id="home-city-list" class="fade-up delay-4" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;margin:0 auto 28px;max-width:560px;"></div>
 
-    <!-- 4-PILLAR MARKETPLACE GRID -->
-    <div class="mb-16 fade-up delay-3">
-
-        <!-- Market -->
-        <div class="pillar-section">
-            <div class="pillar-header">
-                <span class="pillar-badge market">🛍️ Market</span>
-                <div class="pillar-divider"></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('market-shoppers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('market-shoppers')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">🛒</div>
-                        <div class="box-title">Shoppers</div>
-                        <div class="box-sub">Browse local deals, goods & items for sale.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-                <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('market-shops')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('market-shops')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">🏪</div>
-                        <div class="box-title">Shop Owners</div>
-                        <div class="box-sub">List your goods and sell to local buyers.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Services -->
-        <div class="pillar-section">
-            <div class="pillar-header">
-                <span class="pillar-badge services">🔧 Services</span>
-                <div class="pillar-divider"></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                <div class="action-box box-panelA" role="button" tabindex="0" onclick="App.openModule('services-buyer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('services-buyer')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">🙋</div>
-                        <div class="box-title">Customers</div>
-                        <div class="box-sub">Find local pros — cleaning, plumbing, lawn & more.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-                <div class="action-box box-panelB" role="button" tabindex="0" onclick="App.openModule('service-providers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('service-providers')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">🔧</div>
-                        <div class="box-title">Service Providers</div>
-                        <div class="box-sub">Offer your skills to local customers.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rentals -->
-        <div class="pillar-section">
-            <div class="pillar-header">
-                <span class="pillar-badge rentals">🏠 Rentals</span>
-                <div class="pillar-divider"></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                <div class="action-box box-rentals" role="button" tabindex="0" onclick="App.openModule('rentals-seek')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('rentals-seek')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">🔍</div>
-                        <div class="box-title">Rentees</div>
-                        <div class="box-sub">Find equipment, spaces & items to rent locally.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-                <div class="action-box box-rentals-offer" role="button" tabindex="0" onclick="App.openModule('rentals-offer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('rentals-offer')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">🔑</div>
-                        <div class="box-title">Renters</div>
-                        <div class="box-sub">List your space, gear or items for rent.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Transportation -->
-        <div class="pillar-section">
-            <div class="pillar-header">
-                <span class="pillar-badge transport">🚛 Transportation</span>
-                <div class="pillar-divider"></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                <div class="action-box box-transport" role="button" tabindex="0" onclick="App.openModule('drivers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('drivers')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">🚛</div>
-                        <div class="box-title">Drivers</div>
-                        <div class="box-sub">Browse hauls, delivery gigs & freight runs.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-                <div class="action-box box-transport-post" role="button" tabindex="0" onclick="App.openModule('load-board')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.openModule('load-board')}">
-                    <div class="action-box-inner">
-                        <div class="box-icon">📦</div>
-                        <div class="box-title">Post a Load</div>
-                        <div class="box-sub">Hire a driver for freight, hauling or delivery.</div>
-                    </div>
-                    <div class="box-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- TRENDING -->
-    <section class="mb-16 scroll-reveal delay-1">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="font-display font-semibold text-xl" style="color:#1A1917;">Trending in <span id="trending-city-name">Bakersfield</span></h2>
-            <span class="text-xs font-semibold px-3 py-1.5 rounded-full" style="background:#FFFFFF; color:#6B6560; border:1px solid rgba(0,0,0,0.08);">Coming soon</span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="trending-grid">
-            <div class="trend-card">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(34,160,107,0.08); color:#1A8A5B;">Service</span>
-                    <span class="text-xs" style="color:#9A9490;">12 posts today</span>
-                </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:#1A1917;">Moving & Hauling</p>
-                <p class="text-xs" style="color:#6B6560;">4 active providers near you</p>
-            </div>
-            <div class="trend-card">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(200,125,58,0.08); color:#C87D3A;">Load</span>
-                    <span class="text-xs" style="color:#9A9490;">8 posts today</span>
-                </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:#1A1917;">Furniture Delivery Runs</p>
-                <p class="text-xs" style="color:#6B6560;">3 drivers available now</p>
-            </div>
-            <div class="trend-card">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(217,91,63,0.08); color:#D95B3F;">Marketplace</span>
-                    <span class="text-xs" style="color:#9A9490;">5 posts today</span>
-                </div>
-                <p class="font-display font-semibold text-base mb-1" style="color:#1A1917;">Used Appliances</p>
-                <p class="text-xs" style="color:#6B6560;">New listings just added</p>
-            </div>
+    <!-- ROLE SECTIONS -->
+    <section class="scroll-reveal" style="margin-bottom:20px;">
+        <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
+            Market
+        </h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--rad-md);">
+            <button class="card card-interactive" onclick="App.openModule('services-buyer')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
+                <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Shoppers</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><path d="M6 7h12l1.5 12.5a2 2 0 0 1-2 2.5H6.5a2 2 0 0 1-2-2.5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+            </button>
+            <button class="card card-interactive" onclick="App.openModule('create')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
+                <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Shop owners</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M9 21v-6h6v6"/></svg>
+            </button>
         </div>
     </section>
 
-    <!-- ZERO-RESULT HINT -->
-    <section class="scroll-reveal delay-2">
-        <div class="rounded-2xl p-5 text-center" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.04);">
-            <p class="text-xs" style="color:#9A9490;">Can't find what you need? Searches with no results help us know what to add next.</p>
+    <section class="scroll-reveal" style="margin-bottom:20px;">
+        <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
+            Services
+        </h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--rad-md);">
+            <button class="card card-interactive" onclick="App.openModule('services-buyer')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
+                <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Customers</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8ab4d4" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </button>
+            <button class="card card-interactive" onclick="App.openModule('service-providers')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
+                <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Providers</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8ab4d4" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </button>
         </div>
+    </section>
+
+    <section class="scroll-reveal" style="margin-bottom:20px;">
+        <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
+            Transportation
+        </h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--rad-md);">
+            <button class="card card-interactive" onclick="App.openModule('drivers')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
+                <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Drivers</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </button>
+            <button class="card card-interactive" onclick="App.openModule('load-board')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
+                <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Post a load</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11v6M9 14h6"/></svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- TRENDING -->
+    <section class="scroll-reveal" style="margin:28px 0 10px;">
+        <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
+            Trending near you
+        </h2>
+        <div id="trending-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;"></div>
     </section>
 
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="status-announcer"></div>
-
 </main>
 
-<!-- ============ FOOTER ============ -->
-<footer class="site-footer py-12 px-5">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
-        <div class="flex items-center gap-3">
-            <div style="width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#C87D3A,#D95B3F);display:grid;place-items:center;">
-                <svg width="12" height="12" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-            </div>
-            <span class="font-display font-semibold text-sm" style="color:#9A9490;">Sourc'n</span>
-        </div>
-        <div class="flex items-center gap-8 text-xs font-medium" style="color:#9A9490;">
-            <a href="#" class="hover:text-warm transition-colors">About</a>
-            <a href="#" class="hover:text-warm transition-colors">Safety</a>
-            <a href="#" class="hover:text-warm transition-colors">Privacy</a>
-            <a href="#" class="hover:text-warm transition-colors">Terms</a>
-            <a href="#" class="hover:text-warm transition-colors">Contact</a>
-        </div>
-    </div>
+<footer style="border-top:1px solid var(--border);padding:14px 20px;text-align:center;background:rgba(10,10,15,0.6);position:relative;z-index:1;">
+    <a href="#" style="margin:0 10px;color:var(--muted);font-size:13px;text-decoration:none;">About</a>
+    <a href="#" style="margin:0 10px;color:var(--muted);font-size:13px;text-decoration:none;">Contact</a>
+    <a href="#" style="margin:0 10px;color:var(--muted);font-size:13px;text-decoration:none;">Terms</a>
+    <a href="#" onclick="App.openModule('share');return false;" style="margin:0 10px;color:var(--muted);font-size:13px;text-decoration:none;">Share sovr1n</a>
 </footer>
 
-<!-- ============ CHAT FAB ============ -->
+<!-- CHAT FAB -->
 <button class="chat-fab" id="chat-fab" onclick="App.toggleChat()" aria-label="Open messages">
-    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
 </button>
 
-<!-- ============ CHAT PANEL ============ -->
+<!-- CHAT PANEL -->
 <div class="chat-panel" id="chat-panel">
     <div class="chat-header">
         <div>
-            <div class="font-display font-semibold text-base" style="color:#1A1917;">Messages</div>
-            <div class="text-xs" style="color:#9A9490;">Local conversations</div>
+            <div class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">Messages</div>
+            <div style="font-size:11px;color:var(--dim);">Local conversations</div>
         </div>
-        <button class="module-back" onclick="App.toggleChat()">&times;</button>
+        <button class="back-btn" onclick="App.toggleChat()" aria-label="Close messages" style="width:32px;height:32px;font-size:14px;">&times;</button>
     </div>
     <div class="chat-messages" id="chat-messages">
         <div class="chat-msg received">Hey! Is the couch still available?</div>
-        <div class="chat-msg sent">Yes — can you pick up this weekend?</div>
+        <div class="chat-msg sent">Yes &mdash; can you pick up this weekend?</div>
         <div class="chat-msg received">Saturday works. What time?</div>
     </div>
     <div class="chat-input-row">
         <input type="text" class="chat-input" placeholder="Type a message..." id="chat-input" onkeydown="if(event.key==='Enter')App.sendChatMsg()">
         <button class="chat-send" onclick="App.sendChatMsg()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
         </button>
     </div>
 </div>
 
-<!-- ============ MODULE: SERVICES (BUYER) ============ -->
+<!-- MODULE: SERVICES BUYER -->
 <div class="module-view" id="mod-services-buyer">
     <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Services near <span class="module-city">Bakersfield</span></h2>
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Services near <span class="module-city">Bakersfield</span></span></h2>
         </div>
     </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <input type="text" class="search-bar mb-6" placeholder="Search services..." data-module="services-buyer" oninput="Search.handleSearch(this.value, 'services-buyer')">
-        <div id="search-results-services-buyer" class="mb-4"></div>
-        <div class="space-y-4" id="listings-services"></div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div class="input-icon" style="margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" class="input-base" placeholder="Search services..." data-module="services-buyer" oninput="Search.handleSearch(this.value,'services-buyer')">
+        </div>
+        <div id="search-results-services-buyer" style="margin-bottom:12px;"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;" id="listings-services"></div>
     </div>
 </div>
 
-<!-- ============ MODULE: DRIVERS ============ -->
+<!-- MODULE: DRIVERS -->
 <div class="module-view" id="mod-drivers">
     <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Driver Gigs near <span class="module-city">Bakersfield</span></h2>
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Driver Gigs near <span class="module-city">Bakersfield</span></span></h2>
         </div>
     </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <input type="text" class="search-bar mb-6" placeholder="Search gigs..." data-module="drivers" oninput="Search.handleSearch(this.value, 'drivers')">
-        <div id="search-results-drivers" class="mb-4"></div>
-        <div class="space-y-3" id="listings-drivers"></div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div class="input-icon" style="margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" class="input-base" placeholder="Search gigs..." data-module="drivers" oninput="Search.handleSearch(this.value,'drivers')">
+        </div>
+        <div id="search-results-drivers" style="margin-bottom:12px;"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="listings-drivers"></div>
     </div>
 </div>
 
-<!-- ============ MODULE: SERVICE PROVIDERS ============ -->
+<!-- MODULE: SERVICE PROVIDERS -->
 <div class="module-view" id="mod-service-providers">
     <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Service Providers</h2>
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Service Providers</span></h2>
         </div>
     </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(200,125,58,0.06),rgba(217,91,63,0.03)); border:1px solid rgba(200,125,58,0.10);">
-            <p class="font-display font-semibold text-lg mb-2" style="color:#C87D3A;">List your service on Sourc'n</p>
-            <p class="text-sm mb-5" style="color:#6B6560;">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees — 10% per completed job.</p>
-            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="App.openModule('create')">Get Started</button>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="text-align:center;padding:28px;border-radius:var(--rad-lg);background:linear-gradient(135deg,rgba(74,158,255,0.07),rgba(26,92,176,0.04));border:1px solid rgba(74,158,255,0.15);margin-bottom:20px;">
+            <p class="font-display" style="font-weight:600;font-size:16px;color:var(--warm);margin-bottom:6px;">List your service on sovr1n</p>
+            <p style="font-size:13px;color:var(--dim);margin-bottom:14px;">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees &mdash; 10% per completed job.</p>
+            <button class="btn-primary btn-sm" onclick="App.openModule('create')">Get Started</button>
         </div>
-        <input type="text" class="search-bar mb-6" placeholder="Browse providers..." data-module="service-providers" oninput="Search.handleSearch(this.value, 'service-providers')">
-        <div id="search-results-service-providers" class="mb-4"></div>
-        <div class="space-y-4" id="listings-providers"></div>
+        <div class="input-icon" style="margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" class="input-base" placeholder="Browse providers..." data-module="service-providers" oninput="Search.handleSearch(this.value,'service-providers')">
+        </div>
+        <div id="search-results-service-providers" style="margin-bottom:12px;"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;" id="listings-providers"></div>
     </div>
 </div>
 
-<!-- ============ MODULE: LOAD BOARD ============ -->
+<!-- MODULE: LOAD BOARD -->
 <div class="module-view" id="mod-load-board">
     <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Load Board</h2>
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);"><span class="breadcrumb"><a href="#" onclick="App.closeAllModules();return false">Home</a> / Load Board</span></h2>
         </div>
     </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <div class="flex gap-3 mb-6">
-            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:rgba(200,125,58,0.08); color:#C87D3A; border:1px solid rgba(200,125,58,0.12);">Browse Loads</button>
-            <button class="text-sm font-bold px-5 py-3 rounded-xl flex-1" style="background:#FFFFFF; color:#6B6560; border:1px solid rgba(0,0,0,0.08);" onclick="App.openModule('create')">Post a Load</button>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <button class="btn-primary btn-sm" style="flex:1;">Browse Loads</button>
+            <button class="btn-secondary btn-sm" style="flex:1;" onclick="App.openModule('post-load')">Post a Load</button>
         </div>
-        <input type="text" class="search-bar mb-6" placeholder="Search loads..." data-module="load-board" oninput="Search.handleSearch(this.value, 'load-board')">
-        <div id="search-results-load-board" class="mb-4"></div>
-        <div class="space-y-3" id="listings-load-board"></div>
+        <div class="input-icon" style="margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" class="input-base" placeholder="Search loads..." data-module="load-board" oninput="Search.handleSearch(this.value,'load-board')">
+        </div>
+        <div id="search-results-load-board" style="margin-bottom:12px;"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="listings-load-board"></div>
     </div>
 </div>
 
-<!-- ============ MODULE: CREATE ============ -->
-<div class="module-view" id="mod-create">
+<!-- MODULE: POST LOAD -->
+<div class="module-view" id="mod-post-load">
     <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Create a Listing</h2>
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">Post a Load</h2>
         </div>
     </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <form id="create-listing-form" class="space-y-5">
-            <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">TYPE</label>
-                <div class="grid grid-cols-2 gap-3">
-                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(34,160,107,0.04); border-color:rgba(34,160,107,0.12); color:#1A8A5B;">
-                        <input type="radio" name="type" value="market" class="hidden" checked> Item for Sale
-                    </label>
-                    <label class="create-cat-btn text-sm font-semibold py-4 rounded-xl border cursor-pointer" style="background:rgba(200,125,58,0.04); border-color:rgba(200,125,58,0.12); color:#C87D3A;">
-                        <input type="radio" name="type" value="service" class="hidden"> Service Offer
-                    </label>
-                </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <form id="post-load-form" style="display:flex;flex-direction:column;gap:16px;">
+            <div><label class="field-label">LOAD TITLE <span style="font-size:11px;color:var(--dim);">(brief summary)</span></label><input name="title" class="input-base" placeholder="e.g. Move sofa to Oildale" required></div>
+
+            <div><label class="field-label">DESCRIPTION <span style="font-size:11px;color:var(--dim);">(details about the load)</span></label><textarea name="description" class="input-base" rows="3" placeholder="What needs to be moved..."></textarea></div>
+
+            <div><label class="field-label">PRIOR DAMAGE? <span style="font-size:11px;color:var(--dim);">(note any existing damage to protect driver)</span></label><textarea name="priorDamage" class="input-base" rows="2" placeholder="e.g. Small scratch on top, bottom right corner dent..."></textarea></div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">PICKUP</label><input name="pickupAddress" class="input-base" required></div>
+                <div><label class="field-label">DROP-OFF</label><input name="dropoffAddress" class="input-base" required></div>
             </div>
-            <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">TITLE</label>
-                <input type="text" class="search-bar" placeholder="e.g. Moving help needed Saturday" name="title" required>
+
+            <div><label class="field-label">DELIVERY TIMEFRAME <span style="font-size:11px;color:var(--dim);">(when do you need this delivered?)</span></label><input name="timeframe" class="input-base" placeholder="e.g. Today before 3pm, Within 2 hours, This weekend" required></div>
+
+            <div><label class="field-label">VEHICLE TYPE NEEDED <span style="font-size:11px;color:var(--dim);">(what size vehicle for this load?)</span></label><select name="vehicleType" class="input-base" required>
+                <option value="">Select vehicle class...</option>
+                <option value="car-pickup">Car/Pickup (sedan, SUV, truck)</option>
+                <option value="hotshot">Hot Shot (F250/350 + flatbed)</option>
+                <option value="class-a">Class A (semi truck + trailer)</option>
+            </select></div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">CARGO SIZE</label><select name="cargoTier" class="input-base" required><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="heavy">Heavy/XL</option></select></div>
+                <div><label class="field-label">WEIGHT (KG)</label><input name="weightKg" type="number" min="0" step="0.1" class="input-base"></div>
             </div>
-            <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">DESCRIPTION</label>
-                <textarea class="search-bar" rows="4" placeholder="Details, location, timing..." name="description" style="resize:vertical;"></textarea>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">DIMENSIONS</label><input name="dimensions" class="input-base" placeholder="e.g. 2m x 1m x 0.5m"></div>
+                <div><label class="field-label">YOUR OFFER</label><input name="offeredPrice" type="number" min="0.01" step="0.01" class="input-base" required placeholder="0.00"></div>
             </div>
-            <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">PRICE</label>
-                <input type="number" class="search-bar" placeholder="$0.00" name="price" step="0.01" min="0">
+
+            <div style="padding:12px;background:rgba(74,158,255,0.07);border-radius:var(--rad-md);border-left:2px solid var(--warm);font-size:12px;color:var(--dim);">
+                <p><strong style="color:var(--warm);">How it works:</strong></p>
+                <p>1. You post your load with your offered price</p>
+                <p>2. Drivers can accept your price or make a counteroffer</p>
+                <p>3. Once you agree, a contract is generated automatically</p>
+                <p>4. Driver takes photos before pickup (protects everyone)</p>
+                <p>5. Upon delivery, buyer confirms condition</p>
+                <p style="margin-top:8px;"><strong style="color:var(--teal);">Pricing:</strong> 10% platform fee applies to completed transactions. Driver keeps all delivery earnings.</p>
             </div>
-            <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">TAGS (comma separated)</label>
-                <input type="text" class="search-bar" placeholder="e.g. furniture, moving, urgent" name="tags">
-            </div>
-            <div>
-                <label class="text-xs font-bold mb-2 block" style="color:#6B6560; letter-spacing:0.04em;">CATEGORY</label>
-                <select class="search-bar" name="category">
-                    <option value="">Select category...</option>
-                    <option value="Furniture">Furniture</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Appliances">Appliances</option>
-                    <option value="Vehicles">Vehicles</option>
-                    <option value="Produce">Produce</option>
-                    <option value="Livestock">Livestock</option>
-                    <option value="Tools">Tools</option>
-                    <option value="Building Materials">Building Materials</option>
-                    <option value="Household">Household</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <button type="submit" class="w-full text-sm font-bold py-4 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;">Post Listing</button>
-            <p class="text-xs text-center" style="color:#9A9490;">Platform fee: 10% on completed transactions.</p>
+
+            <button type="submit" class="btn-primary" id="post-load-submit" style="width:100%;padding:14px;">Post load</button>
         </form>
     </div>
 </div>
 
-<!-- ============ MODULE: DASHBOARD ============ -->
-<div class="module-view" id="mod-dashboard">
+<!-- MODULE: CREATE LISTING -->
+<div class="module-view" id="mod-create">
     <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">My Dashboard</h2>
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">Create a Listing</h2>
         </div>
     </div>
-    <div class="max-w-2xl mx-auto px-5 py-6">
-
-        <!-- Profile Card -->
-        <div class="dashboard-profile-card">
-            <div class="flex items-start gap-4 mb-3">
-                <div class="profile-avatar" id="dash-avatar">?</div>
-                <div class="flex-1 min-w-0">
-                    <div class="font-display font-semibold text-lg leading-tight mb-1 truncate" id="dash-display-name" style="color:#1A1917;">Loading…</div>
-                    <div class="text-sm mb-2 truncate" id="dash-company-name" style="color:#6B6560;display:none;"></div>
-                    <div class="flex items-center gap-3 flex-wrap">
-                        <div class="listing-rating" id="dash-rating"></div>
-                        <span class="profile-age-badge" id="dash-age">Member</span>
-                    </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <form id="create-listing-form" style="display:flex;flex-direction:column;gap:16px;">
+            <div>
+                <label class="field-label">TYPE</label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <label style="display:flex;align-items:center;gap:8px;padding:12px;border:1px solid var(--border);border-radius:var(--rad-md);cursor:pointer;background:var(--surface-1);">
+                        <input type="radio" name="type" value="market" checked> <span style="font-size:13px;font-weight:500;">Item for Sale</span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;padding:12px;border:1px solid var(--border);border-radius:var(--rad-md);cursor:pointer;background:var(--surface-1);">
+                        <input type="radio" name="type" value="service"> <span style="font-size:13px;font-weight:500;">Service Offer</span>
+                    </label>
                 </div>
             </div>
-        </div>
-
-        <!-- All Mail Inbox -->
-        <button class="inbox-btn" onclick="App.toggleChat()">
-            <div class="flex items-center gap-3">
-                <div style="width:38px;height:38px;border-radius:11px;background:rgba(200,125,58,0.08);display:grid;place-items:center;color:#C87D3A;">
-                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                </div>
-                <div>
-                    <div class="text-sm font-semibold" style="color:#1A1917;">All Mail</div>
-                    <div class="text-xs" style="color:#9A9490;">Messages &amp; notifications</div>
-                </div>
+            <div><label class="field-label">TITLE</label><input name="title" class="input-base" placeholder="e.g. Moving help needed" required></div>
+            <div><label class="field-label">DESCRIPTION</label><textarea name="description" class="input-base" rows="3" placeholder="Details, location, timing..."></textarea></div>
+            <div><label class="field-label">PRICE</label><input name="price" type="number" step="0.01" min="0" class="input-base" placeholder="$0.00"></div>
+            <div><label class="field-label">TAGS (comma separated)</label><input name="tags" class="input-base" placeholder="e.g. furniture, moving, urgent"></div>
+            <div><label class="field-label">CATEGORY</label>
+                <select name="category" class="input-base"><option value="">Select...</option><option>Furniture</option><option>Electronics</option><option>Appliances</option><option>Vehicles</option><option>Produce</option><option>Livestock</option><option>Tools</option><option>Building Materials</option><option>Household</option><option>Other</option></select>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="inbox-badge" id="dash-unread-count" style="display:none;">0</span>
-                <svg width="13" height="13" fill="none" stroke="#9A9490" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-        </button>
-
-        <!-- Provider Management Hub -->
-        <div class="mb-5">
-            <div class="section-title">Provider Hub</div>
-
-            <div class="accordion-item" id="acc-shop">
-                <div class="accordion-header" onclick="App.toggleAccordion('acc-shop')">
-                    <div class="accordion-title">
-                        <div style="width:34px;height:34px;border-radius:10px;background:rgba(34,160,107,0.08);display:grid;place-items:center;font-size:15px;">🏪</div>
-                        Your Shop
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="notif-badge" id="shop-badge" style="display:none;">0</span>
-                        <svg class="accordion-arrow" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-content">
-                        <div id="acc-shop-listings" class="space-y-2 text-sm" style="color:#6B6560;"></div>
-                        <button class="add-btn" onclick="App.openModule('market-shops')">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                            Add Item
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item" id="acc-services">
-                <div class="accordion-header" onclick="App.toggleAccordion('acc-services')">
-                    <div class="accordion-title">
-                        <div style="width:34px;height:34px;border-radius:10px;background:rgba(200,125,58,0.08);display:grid;place-items:center;font-size:15px;">🔧</div>
-                        Your Services
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="notif-badge" id="services-badge" style="display:none;">0</span>
-                        <svg class="accordion-arrow" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-content">
-                        <div id="acc-services-listings" class="space-y-2 text-sm" style="color:#6B6560;"></div>
-                        <button class="add-btn" onclick="App.openModule('service-providers')">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                            Add Service
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item" id="acc-rentals">
-                <div class="accordion-header" onclick="App.toggleAccordion('acc-rentals')">
-                    <div class="accordion-title">
-                        <div style="width:34px;height:34px;border-radius:10px;background:rgba(100,116,215,0.08);display:grid;place-items:center;font-size:15px;">🏠</div>
-                        Your Rentals
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="notif-badge" id="rentals-badge" style="display:none;">0</span>
-                        <svg class="accordion-arrow" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-content">
-                        <div id="acc-rentals-listings" class="space-y-2 text-sm" style="color:#6B6560;"></div>
-                        <button class="add-btn" onclick="App.openModule('rentals-offer')">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                            Add Rental
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Buyer Hub -->
-        <div class="mb-6">
-            <div class="section-title">Your Purchases</div>
-            <div class="order-tabs">
-                <button class="order-tab active" onclick="App.switchOrderTab('requesting')">Requesting</button>
-                <button class="order-tab" onclick="App.switchOrderTab('in_progress')">In Progress</button>
-                <button class="order-tab" onclick="App.switchOrderTab('completed')">Completed</button>
-            </div>
-            <div id="orders-list">
-                <div class="empty-state"><p>No orders yet — explore the marketplace to get started.</p></div>
-            </div>
-        </div>
+            <button type="submit" class="btn-primary" style="width:100%;padding:14px;">Post Listing</button>
+            <p style="font-size:11px;text-align:center;color:var(--dim);">Platform fee: 10% on completed transactions.</p>
+        </form>
     </div>
 </div>
 
-<!-- ============ MODULE: MARKET SHOPPERS ============ -->
-<div class="module-view" id="mod-market-shoppers">
-    <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Local Market — <span class="module-city">Bakersfield</span></h2>
-        </div>
-    </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <input type="text" class="search-bar mb-6" placeholder="Search items for sale..." oninput="Search.handleSearch(this.value, 'market-shoppers')">
-        <div id="search-results-market-shoppers" class="mb-4"></div>
-        <div class="space-y-4" id="listings-market"></div>
-    </div>
-</div>
-
-<!-- ============ MODULE: MARKET SHOPS (SELL) ============ -->
-<div class="module-view" id="mod-market-shops">
-    <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Sell on the Market</h2>
-        </div>
-    </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(34,160,107,0.06),rgba(34,160,107,0.02));border:1px solid rgba(34,160,107,0.10);">
-            <p class="font-display font-semibold text-lg mb-2" style="color:#22A06B;">List your items on Sourc'n</p>
-            <p class="text-sm mb-5" style="color:#6B6560;">Reach local buyers in <span class="module-city">Bakersfield</span>. 10% platform fee on completed sales.</p>
-            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#22A06B,#1A8A5B);color:#FFFFFF;" onclick="App.openModule('create')">Post an Item</button>
-        </div>
-        <div class="space-y-4" id="listings-my-market"></div>
-    </div>
-</div>
-
-<!-- ============ MODULE: RENTALS (SEEK) ============ -->
-<div class="module-view" id="mod-rentals-seek">
-    <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Rentals near <span class="module-city">Bakersfield</span></h2>
-        </div>
-    </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <input type="text" class="search-bar mb-6" placeholder="Search rentals — equipment, spaces, vehicles…" oninput="Search.handleSearch(this.value, 'rentals-seek')">
-        <div id="search-results-rentals-seek" class="mb-4"></div>
-        <div class="space-y-4" id="listings-rentals"></div>
-    </div>
-</div>
-
-<!-- ============ MODULE: RENTALS (OFFER) ============ -->
-<div class="module-view" id="mod-rentals-offer">
-    <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">List a Rental</h2>
-        </div>
-    </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <div class="rounded-2xl p-7 text-center mb-8" style="background:linear-gradient(135deg,rgba(100,116,215,0.06),rgba(100,116,215,0.02));border:1px solid rgba(100,116,215,0.10);">
-            <p class="font-display font-semibold text-lg mb-2" style="color:#4A5BC7;">Rent out your gear or space</p>
-            <p class="text-sm mb-5" style="color:#6B6560;">Earn from idle equipment, tools, vehicles, and spaces in <span class="module-city">Bakersfield</span>.</p>
-            <button class="text-sm font-bold px-6 py-3 rounded-xl transition-all" style="background:linear-gradient(135deg,#5B6AD4,#7C3AED);color:#FFFFFF;" onclick="App.openModule('create')">Post a Rental</button>
-        </div>
-        <div class="space-y-4" id="listings-my-rentals"></div>
-    </div>
-</div>
-
-<!-- ============ MODULE: SHARE ============ -->
+<!-- MODULE: SHARE -->
 <div class="module-view" id="mod-share">
     <div class="module-header">
-        <div class="max-w-2xl mx-auto px-5 h-16 flex items-center gap-4">
-            <button class="module-back" onclick="App.closeAllModules()">&larr;</button>
-            <h2 class="font-display font-semibold text-base" style="color:#1A1917;">Share Sourc'n</h2>
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">Share sovr1n</h2>
         </div>
     </div>
-    <div class="max-w-2xl mx-auto px-5 py-8">
-        <div class="rounded-2xl p-10 text-center" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.06);">
-            <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(200,125,58,0.08),rgba(217,91,63,0.08));display:grid;place-items:center;margin:0 auto 20px;font-size:28px;">🔗</div>
-            <p class="font-display font-semibold text-xl mb-2" style="color:#1A1917;">Spread the word</p>
-            <p class="text-sm mb-8" style="color:#6B6560; max-width:320px; margin:0 auto;">Tell your friends and neighbors about Sourc'n — the more people join, the better the local marketplace gets.</p>
-            <div class="flex flex-col gap-3" style="max-width:280px; margin:0 auto;">
-                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:linear-gradient(135deg,#C87D3A,#D95B3F); color:#FFFFFF;" onclick="shareCopy()">Copy Link</button>
-                <button class="text-sm font-bold py-3.5 rounded-xl transition-all" style="background:#FFFFFF; color:#1A1917; border:1px solid rgba(0,0,0,0.08);" onclick="shareNative()">Share via...</button>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="text-align:center;padding:32px 20px;" class="card">
+            <div style="width:56px;height:56px;border-radius:var(--rad-lg);background:linear-gradient(135deg,rgba(74,158,255,0.15),rgba(26,92,176,0.1));border:1px solid rgba(74,158,255,0.3);display:grid;place-items:center;margin:0 auto 16px;color:var(--warm);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </div>
+            <p class="font-display" style="font-weight:600;font-size:18px;color:var(--cream);margin-bottom:6px;">Spread the word</p>
+            <p style="font-size:13px;color:var(--dim);max-width:300px;margin:0 auto 20px;">Tell your friends and neighbors about sovr1n &mdash; the more people join, the better the local marketplace gets.</p>
+            <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;margin:0 auto;">
+                <button class="btn-primary" onclick="shareCopy()">Copy Link</button>
+                <button class="btn-secondary" onclick="shareNative()">Share via...</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ============ GSAP CDN ============ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- MODULE: ABOUT -->
+<div class="module-view" id="mod-about">
+    <div class="module-header">
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">About sovr1n</h2>
+        </div>
+    </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="display:flex;flex-direction:column;gap:20px;">
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:18px;color:var(--cream);margin-bottom:8px;">Our Mission</h3>
+                <p style="font-size:14px;color:var(--dim);line-height:1.6;">Sovr1n is a community-focused marketplace platform designed to strengthen local commerce in Kern County. We connect buyers, sellers, drivers, and service providers—keeping resources and revenue local instead of flowing to distant corporate platforms.</p>
+            </div>
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:16px;color:var(--cream);margin-bottom:8px;">Why Sovr1n?</h3>
+                <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--dim);">
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Fair Pricing</strong> — Transparent 10% platform fee (not 25-40%)</div>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Driver Income</strong> — Drivers keep ~90% of agreed prices</div>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Built-in Contracts</strong> — Every deal is documented and protected</div>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <div style="color:var(--warm);font-weight:600;flex-shrink:0;">✓</div>
+                        <div><strong style="color:var(--cream);">Community Trust</strong> — Mutual ratings, secure messaging, verified profiles</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:16px;color:var(--cream);margin-bottom:8px;">Who We Serve</h3>
+                <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--dim);">
+                    <p><strong style="color:var(--warm);">Buyers:</strong> Need items delivered? Browse local marketplace items with guaranteed delivery contracts.</p>
+                    <p><strong style="color:var(--warm);">Shop Owners:</strong> Sell produce, goods, and services. Set your own delivery options and pricing.</p>
+                    <p><strong style="color:var(--warm);">Drivers:</strong> Make money on your schedule. Accept loads that fit your vehicle and earn competitive rates.</p>
+                    <p><strong style="color:var(--warm);">Service Providers:</strong> Reach local customers without corporate middlemen taking half your earnings.</p>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-display" style="font-weight:600;font-size:16px;color:var(--cream);margin-bottom:8px;">Independent Resources, Local Confidence</h3>
+                <p style="font-size:14px;color:var(--dim);line-height:1.6;">Sovr1n is built for Bakersfield, by people who understand Kern County. We're not a VC-funded app chasing growth at any cost—we're a platform committed to sustainable, community-benefiting commerce.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- ============ GSAP SCROLLTRIGGER ANIMATIONS ============ -->
-<script>
-(function(){
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-    gsap.registerPlugin(ScrollTrigger);
+<!-- MODULE: TERMS -->
+<div class="module-view" id="mod-terms">
+    <div class="module-header">
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">Terms of Service</h2>
+        </div>
+    </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="display:flex;flex-direction:column;gap:16px;font-size:13px;color:var(--dim);line-height:1.7;">
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Connection Service</h3>
+                <p>Sovr1n is a marketplace platform that connects buyers, sellers, drivers, and service providers. We facilitate transactions but are not a party to individual deals.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">No Liability for Third-Party Actions</h3>
+                <p>Sovr1n is not responsible for lost items, damage, theft, injury, or any disputes between users. Each party assumes full responsibility for their actions and obligations under the generated contract.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Contracts & Disputes</h3>
+                <p>All transactions are governed by downloadable contracts generated by the platform. Both parties must review and accept terms before proceeding. Disputes should be resolved between parties or through legal channels.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Verification Requirements</h3>
+                <p>Drivers must provide valid driver's license and proof of insurance. Sovr1n performs basic validation but does not guarantee driver background or capability.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Prohibited Activities</h3>
+                <p>Users must not engage in illegal activities, fraud, harassment, or misrepresentation. Violating users may be suspended or banned.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Platform Fee</h3>
+                <p>Sovr1n charges a 10% platform fee on completed transactions (2% for Hot Shot/Class A loads). This fee funds platform operation and support.</p>
+            </div>
+            <div style="padding:12px;background:rgba(74,158,255,0.07);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+                <p style="font-size:12px;color:var(--muted);">By using sovr1n, you agree to these terms. For complete legal terms, contact support.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-    var heroH1 = document.querySelector('h1.font-display');
-    if (heroH1) {
-        gsap.fromTo(heroH1,
-            { opacity: 0.1 },
-            { opacity: 1, ease: 'none', scrollTrigger: { trigger: heroH1, start: 'top 90%', end: 'top 30%', scrub: 0.5 } }
-        );
-    }
+<!-- MODULE: FAQ -->
+<div class="module-view" id="mod-faq">
+    <div class="module-header">
+        <div style="max-width:600px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;">
+            <button class="back-btn" onclick="App.closeAllModules()" aria-label="Go back">&larr;</button>
+            <h2 class="font-display" style="font-weight:600;font-size:14px;color:var(--cream);">FAQ & Guidelines</h2>
+        </div>
+    </div>
+    <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+        <div style="display:flex;flex-direction:column;gap:14px;font-size:13px;">
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">How do contracts work?</h3>
+                <p style="color:var(--dim);">When a buyer and driver agree on a load, sovr1n generates a downloadable contract with both names, pricing, delivery timeframe, and item description. Both parties can review and accept. Contracts protect all parties legally.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">What are the vehicle classes?</h3>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Cars/Pickups:</strong> Sedans, SUVs, pickup trucks for small loads (fees: $2/mo or $20/yr subscription)</p>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Hot Shot:</strong> F250/350 with flatbed trailer, max ~15,000-20,000 lbs (fees: 2%)</p>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Class A:</strong> Full-size semi trucks with trailers (fees: 2%)</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">Weight limits by vehicle?</h3>
+                <p style="color:var(--dim);">Each vehicle class has legal weight limits. <strong>Drivers are responsible for knowing their vehicle's capacity and local DOT regulations.</strong> Exceeding limits is the driver's legal liability, not sovr1n's.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">Insurance requirement?</h3>
+                <p style="color:var(--dim);">All drivers must provide proof of insurance covering loads. Your insurance must be valid and current. Sovr1n validates proof at signup but does not guarantee coverage.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">Pictures required?</h3>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">Before pickup:</strong> Driver takes photos of load to document condition (protects both parties from damage claims).</p>
+                <p style="color:var(--dim);"><strong style="color:var(--cream);">At delivery:</strong> Buyer signs off confirming no damage received. This completes the contract.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">What area does sovr1n serve?</h3>
+                <p style="color:var(--dim);">Sovr1n focuses on Kern County, California—primarily Bakersfield, Shafter, and Lamont areas. Shop owners and drivers set their own delivery radius (e.g., "within 30 miles of Bakersfield").</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">How do ratings work?</h3>
+                <p style="color:var(--dim);">After each completed transaction, both parties can rate each other 1-5 stars with optional comments. Ratings build trust and reputation over time. All users see average ratings.</p>
+            </div>
+            <div>
+                <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">What if something goes wrong?</h3>
+                <p style="color:var(--dim);">Refer to your signed contract—it's legally binding. Disputes should be resolved between parties directly. Sovr1n can facilitate communication but is not responsible for resolving conflicts.</p>
+            </div>
+            <div style="padding:12px;background:rgba(74,158,255,0.07);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+                <p style="font-size:12px;color:var(--muted);"><strong style="color:var(--cream);">Driver Responsibility:</strong> You are responsible for knowing all local, state, and federal transportation laws. Any violations of regulations are your legal responsibility, not sovr1n's.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-    var actionBoxes = document.querySelectorAll('.action-box');
-    if (actionBoxes.length > 0) {
-        gsap.fromTo(actionBoxes,
-            { y: 40, opacity: 0, filter: 'blur(4px)' },
-            { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8, stagger: 0.1, ease: 'power3.out',
-              scrollTrigger: { trigger: actionBoxes[0].closest('.grid'), start: 'top 85%', toggleActions: 'play none none none' } }
-        );
-    }
+<!-- DETAIL OVERLAY + PANEL -->
+<div class="detail-overlay" id="detail-overlay" onclick="App.closeDetail()"></div>
+<div class="detail-panel" id="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title"></div>
 
-    var trendCards = document.querySelectorAll('.trend-card');
-    if (trendCards.length > 0) {
-        gsap.fromTo(trendCards,
-            { scale: 0.95, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.7, stagger: 0.12, ease: 'power2.out',
-              scrollTrigger: { trigger: trendCards[0].closest('.grid'), start: 'top 85%', toggleActions: 'play none none none' } }
-        );
-    }
-})();
-</script>
+<!-- TOAST CONTAINER -->
+<div id="toast-container" aria-live="polite"></div>
 
-<!-- ============ JAVASCRIPT ============ -->
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="#" onclick="App.closeAllModules();return false;" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Home
+    </a>
+    <a href="#" onclick="App.openModule('services-buyer');return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Search
+    </a>
+    <a href="#" onclick="App.openModule('create');return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Post
+    </a>
+    <a href="#" onclick="App.openModule('load-board');return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Loads
+    </a>
+    <a href="#" onclick="App.toggleChat();return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Chat
+    </a>
+</nav>
+
+<!-- SCRIPTS -->
+<script src="app/icons.js"></script>
 <script src="app/config.js"></script>
+<script src="app/cities-data.js"></script>
 <script src="app/utils.js"></script>
 <script src="app/auth.js"></script>
 <script src="app/listings.js"></script>
 <script src="app/search.js"></script>
 <script src="app.js"></script>
+<script src="app/home.js"></script>
 <script>
 (function(){
-    const CITIES = [
-        { name:'Bakersfield', region:'Kern County', nearby:['Oildale','Shafter','Arvin','Tehachapi'] },
-        { name:'Oildale', region:'Kern County', nearby:['Bakersfield','Wasco','Lost Hills'] },
-        { name:'Shafter', region:'Kern County', nearby:['Bakersfield','Wasco','McFarland'] },
-        { name:'Arvin', region:'Kern County', nearby:['Bakersfield','Lamont','Tehachapi'] },
-        { name:'Tehachapi', region:'Kern County', nearby:['Bakersfield','Arvin','California City'] },
-        { name:'Wasco', region:'Kern County', nearby:['Bakersfield','Shafter','Delano'] },
-        { name:'McFarland', region:'Kern County', nearby:['Bakersfield','Shafter','Delano'] },
-        { name:'Delano', region:'Kern County', nearby:['McFarland','Wasco','Bakersfield'] },
-        { name:'California City', region:'Kern County', nearby:['Tehachapi','Mojave','Bakersfield'] },
-        { name:'Mojave', region:'Kern County', nearby:['California City','Tehachapi','Ridgecrest'] },
-        { name:'Ridgecrest', region:'Kern County', nearby:['Mojave','California City','Trona'] },
-        { name:'Lamont', region:'Kern County', nearby:['Arvin','Bakersfield'] },
-        { name:'Lost Hills', region:'Kern County', nearby:['Wasco','Bakersfield','Kettleman City'] },
-        { name:'East Bakersfield', region:'Kern County', nearby:['Bakersfield','Arvin'] },
-        { name:'Oceanside', region:'San Diego County', nearby:['Vista','Carlsbad','San Marcos'] },
-        { name:'Vista', region:'San Diego County', nearby:['Oceanside','Carlsbad','Escondido'] },
-        { name:'Carlsbad', region:'San Diego County', nearby:['Oceanside','Vista','Encinitas'] },
-    ];
-
-    App.CITIES_DATA = CITIES;
-
-    const originalSetCity = App.setCity;
-    App.setCity = function(name) {
-        originalSetCity.call(App, name);
-        document.getElementById('trending-city-name').textContent = name;
-        document.querySelectorAll('.module-city').forEach(el => el.textContent = name);
-    };
-
-    App.openCityModal = function() {
-        document.getElementById('city-modal').classList.add('open');
-        document.getElementById('city-search').value = '';
-        document.getElementById('city-search').focus();
-        App.renderCityList(CITIES);
-    };
-
-    App.closeCityModal = function() {
-        document.getElementById('city-modal').classList.remove('open');
-    };
-
-    App.filterCities = function() {
-        const q = document.getElementById('city-search').value.toLowerCase().trim();
-        const filtered = CITIES.filter(c => c.name.toLowerCase().includes(q) || c.region.toLowerCase().includes(q));
-        App.renderCityList(filtered);
-    };
-
-    App.renderCityList = function(cities) {
-        const el = document.getElementById('city-list');
-        if (!cities.length) {
-            el.innerHTML = '<p class="text-sm text-center py-6" style="color:#9A9490;">No cities found</p>';
-            return;
-        }
-        el.innerHTML = cities.map(c =>
-            '<button class="w-full text-left px-5 py-4 rounded-2xl flex items-center justify-between transition-all mb-1.5" ' +
-            'style="background:' + (c.name === App.currentCity ? 'rgba(200,125,58,0.06)' : 'transparent') + '; border:1px solid ' + (c.name === App.currentCity ? 'rgba(200,125,58,0.15)' : 'rgba(0,0,0,0.04)') + '; border-radius:18px;" ' +
-            'onclick="App.setCity(\'' + c.name + '\')">' +
-            '<div><span class="font-display font-semibold text-sm" style="color:#1A1917;">' + c.name + '</span> <span class="text-xs ml-2" style="color:#9A9490;">' + c.region + '</span></div>' +
-            (c.name === App.currentCity ? '<span class="text-xs font-bold" style="color:#C87D3A;">Current</span>' : '') +
-            '</button>'
-        ).join('');
-    };
-
     App.toggleChat = function() {
-        const panel = document.getElementById('chat-panel');
+        var panel = document.getElementById('chat-panel');
         panel.classList.toggle('open');
-        if (panel.classList.contains('open')) {
-            document.getElementById('chat-input').focus();
-        }
+        if (panel.classList.contains('open')) document.getElementById('chat-input').focus();
     };
-
     App.sendChatMsg = function() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
+        var input = document.getElementById('chat-input');
+        var text = input.value.trim();
         if (!text) return;
-        const msgs = document.getElementById('chat-messages');
-        const div = document.createElement('div');
+        var msgs = document.getElementById('chat-messages');
+        var div = document.createElement('div');
         div.className = 'chat-msg sent';
         div.textContent = text;
         msgs.appendChild(div);
         input.value = '';
         msgs.scrollTop = msgs.scrollHeight;
         setTimeout(function() {
-            const r = document.createElement('div');
+            var r = document.createElement('div');
             r.className = 'chat-msg received';
             r.textContent = 'Got it — someone will respond soon.';
             msgs.appendChild(r);
             msgs.scrollTop = msgs.scrollHeight;
         }, 1200);
     };
-
     window.shareCopy = function() {
-        try { navigator.clipboard.writeText(window.location.href); alert('Link copied!'); } catch(e) { alert('Copy: ' + window.location.href); }
+        try { navigator.clipboard.writeText(window.location.href); Utils.showToast('Link copied!', 'success'); }
+        catch(e) { prompt('Copy this link:', window.location.href); }
     };
     window.shareNative = function() {
-        if (navigator.share) navigator.share({ title: "Sourc'n", text: "Check out Sourc'n — local markets & commerce.", url: window.location.href });
+        if (navigator.share) navigator.share({ title: 'sovr1n', text: 'Check out sovr1n — local markets & commerce.', url: window.location.href });
         else window.shareCopy();
     };
-
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             if (document.querySelector('.module-view.active')) App.closeAllModules();
-            if (document.getElementById('chat-panel').classList.contains('open')) App.toggleChat();
-            if (document.getElementById('city-modal').classList.contains('open')) App.closeCityModal();
+            if (document.getElementById('chat-panel')?.classList.contains('open')) App.toggleChat();
         }
     });
-
-    const scrollReveal = document.querySelectorAll('.scroll-reveal');
-    if (scrollReveal.length > 0 && 'IntersectionObserver' in window) {
-        const revealObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-        scrollReveal.forEach(function(el) { revealObserver.observe(el); });
-    }
 })();
 </script>
 </body>
