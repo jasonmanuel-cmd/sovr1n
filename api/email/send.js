@@ -14,7 +14,7 @@ We're excited to have you as a ${data.role} helping us shape the future of deliv
 
 WHAT'S NEXT:
 1. You'll receive your welcome pack with login credentials
-2. Platform access: https://sovr1n.vercel.app
+2. Platform access: https://sovr1n.com
 3. Testing starts: Sep 24, 2026
 4. We'll guide you through everything!
 
@@ -39,7 +39,7 @@ Hi ${data.name},
 
 Your platform access is ready! Here's everything you need to know.
 
-PLATFORM LINK: https://sovr1n.vercel.app
+PLATFORM LINK: https://sovr1n.com
 USERNAME: ${data.email}
 PASSWORD: Check your welcome email
 

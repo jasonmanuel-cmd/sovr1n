@@ -69,7 +69,7 @@ module.exports = async function handler(req, res) {
 
     // Send confirmation email
     try {
-      await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/email/send`, {
+      await fetch(`https://sovr1n.com/api/email/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

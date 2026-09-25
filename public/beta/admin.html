@@ -297,7 +297,7 @@
         // Load testers
         async function loadTesters() {
             try {
-                const response = await fetch('/api/beta/testers');
+                const response = await fetch('https://sovr1n.com/api/beta/testers');
                 const data = await response.json();
 
                 if (!data.success) throw new Error(data.error);
@@ -361,7 +361,7 @@
             const recipients = document.getElementById('survey-recipients').value;
 
             try {
-                const response = await fetch('/api/beta/send-survey', {
+                const response = await fetch('https://sovr1n.com/api/beta/send-survey', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ type, recipients })
@@ -381,7 +381,7 @@
 
         async function activateTester(testerId) {
             try {
-                const response = await fetch('/api/beta/testers/' + testerId, {
+                const response = await fetch('https://sovr1n.com/api/beta/testers/' + testerId, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: 'active' })
@@ -405,7 +405,7 @@
             if (!confirm('Remove this tester?')) return;
 
             try {
-                const response = await fetch('/api/beta/testers/' + testerId, {
+                const response = await fetch('https://sovr1n.com/api/beta/testers/' + testerId, {
                     method: 'DELETE'
                 });
 
