@@ -32,7 +32,7 @@
             extend: {
                 colors: {
                     surface: { 0: '#0a0a0f', 1: '#111118', 2: '#16161d', 3: '#1e1e28' },
-                    warm: { primary: '#e8a438', secondary: '#2dafa3' },
+                    warm: { primary: '#4a9eff', secondary: '#8ab4d4' },
                     ink: { primary: '#f5f5f7', secondary: '#9ca3af', tertiary: '#6b7280' },
                     line: { DEFAULT: '#2a2a35', hover: '#3a3a45' }
                 },
@@ -48,8 +48,8 @@
 
     <style>
         /* ============================================================
-           SOVR1N 2026 — Midnight Desert Design System
-           Warm amber on deep midnight. Refined glass. Desert utility.
+           SOVR1N 2026 — Chrome Design System
+           Metallic blue on deep midnight. Sovereign. Refined glass.
            ============================================================ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -59,12 +59,12 @@
             --surface-2: #16161d;
             --surface-3: #1e1e28;
             --surface-4: #25252f;
-            --warm: #e8a438;
-            --warm-dim: #b8842a;
-            --warm-glow: rgba(232, 164, 56, 0.15);
-            --teal: #2dafa3;
-            --teal-dim: #1f8a7f;
-            --teal-glow: rgba(45, 175, 163, 0.12);
+            --warm: #4a9eff;
+            --warm-dim: #1a5cb0;
+            --warm-glow: rgba(74, 158, 255, 0.15);
+            --teal: #8ab4d4;
+            --teal-dim: #5a7da0;
+            --teal-glow: rgba(138, 180, 212, 0.12);
             --cream: #f5f5f7;
             --muted: #9ca3af;
             --dim: #6b7280;
@@ -98,7 +98,7 @@
             line-height: 1.6;
         }
 
-        ::selection { background: rgba(232, 164, 56, 0.3); color: var(--cream); }
+        ::selection { background: rgba(74, 158, 255, 0.3); color: var(--cream); }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--rad-pill); }
@@ -108,9 +108,9 @@
         .mesh-bg {
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background:
-                radial-gradient(800px 500px at 8% -5%, rgba(232, 164, 56, 0.06), transparent 60%),
-                radial-gradient(700px 480px at 92% 12%, rgba(45, 175, 163, 0.04), transparent 58%),
-                radial-gradient(600px 420px at 78% 88%, rgba(232, 164, 56, 0.03), transparent 55%);
+                radial-gradient(800px 500px at 8% -5%, rgba(74, 158, 255, 0.09), transparent 60%),
+                radial-gradient(700px 480px at 92% 12%, rgba(26, 92, 176, 0.06), transparent 58%),
+                radial-gradient(600px 420px at 78% 88%, rgba(138, 180, 212, 0.04), transparent 55%);
         }
 
         .font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
@@ -119,11 +119,11 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             padding: 12px 24px; border: none; border-radius: var(--rad-md);
             background: linear-gradient(135deg, var(--warm), var(--warm-dim));
-            color: #0a0a0f; font-family: var(--font-body); font-size: 14px; font-weight: 600;
+            color: #f0f4ff; font-family: var(--font-body); font-size: 14px; font-weight: 600;
             cursor: pointer; transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
-            box-shadow: 0 4px 16px rgba(232, 164, 56, 0.25); letter-spacing: 0.01em;
+            box-shadow: 0 4px 16px rgba(74, 158, 255, 0.3); letter-spacing: 0.01em;
         }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(232, 164, 56, 0.35); filter: brightness(1.05); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(74, 158, 255, 0.45); filter: brightness(1.08); }
         .btn-primary:active { transform: translateY(0); filter: brightness(0.95); }
 
         .btn-secondary {
@@ -182,8 +182,8 @@
             padding: 4px 10px; border-radius: var(--rad-pill);
             font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
         }
-        .badge-amber { background: rgba(232, 164, 56, 0.14); color: var(--warm); border: 1px solid rgba(232, 164, 56, 0.3); }
-        .badge-teal { background: rgba(45, 175, 163, 0.12); color: var(--teal); border: 1px solid rgba(45, 175, 163, 0.25); }
+        .badge-amber { background: rgba(74, 158, 255, 0.12); color: var(--warm); border: 1px solid rgba(74, 158, 255, 0.3); }
+        .badge-teal { background: rgba(138, 180, 212, 0.1); color: var(--teal); border: 1px solid rgba(138, 180, 212, 0.25); }
         .badge-dim { background: var(--surface-3); color: var(--muted); border: 1px solid var(--border); }
 
         .modal-bg {
@@ -369,11 +369,11 @@
         .chat-fab {
             position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px; border-radius: 50%;
             background: linear-gradient(135deg, var(--warm), var(--warm-dim));
-            color: #0a0a0f; border: none; font-size: 22px; cursor: pointer;
-            z-index: 25; box-shadow: 0 6px 20px rgba(232, 164, 56, 0.3);
+            color: #f0f4ff; border: none; font-size: 22px; cursor: pointer;
+            z-index: 25; box-shadow: 0 6px 20px rgba(74, 158, 255, 0.35);
             display: grid; place-items: center; transition: transform var(--transition), box-shadow var(--transition);
         }
-        .chat-fab:hover { transform: scale(1.05); box-shadow: 0 8px 28px rgba(232, 164, 56, 0.4); }
+        .chat-fab:hover { transform: scale(1.05); box-shadow: 0 8px 28px rgba(74, 158, 255, 0.5); }
 
         .chat-panel {
             position: fixed; bottom: 0; right: 0; width: min(380px, 100vw); height: min(480px, 78vh);
@@ -453,7 +453,7 @@
     <!-- ============================================================
          LOCAL SEO / GEO / AEO — Structured Data & Voice Search
          ============================================================ -->
-    <link rel="canonical" href="https://harbisonstandard.com/">
+    <link rel="canonical" href="https://www.sovr1n.com/">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="geo.region" content="US-CA">
     <meta name="geo.placename" content="Bakersfield">
@@ -465,32 +465,29 @@
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "@id": "https://harbisonstandard.com/#organization",
+      "@id": "https://www.sovr1n.com/#organization",
       "name": "sovr1n",
-      "alternateName": "Harbison Standard",
-      "url": "https://harbisonstandard.com",
+      "alternateName": "Chaotically Organized AI",
+      "url": "https://www.sovr1n.com",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://harbisonstandard.com/sovr1n-logo.svg",
+        "url": "https://www.sovr1n.com/sovr1n-logo.svg",
         "width": 512,
         "height": 512
       },
       "description": "sovr1n is Bakersfield's local marketplace for services, drivers, load boards, and local deals in Kern County, California.",
-      "email": "nate85.realtor@gmail.com",
-      "telephone": "+1-661-472-7499",
+      "email": "hello@sovr1n.com",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "3304 Apollo St",
         "addressLocality": "Bakersfield",
         "addressRegion": "CA",
-        "postalCode": "93306",
+        "postalCode": "93301",
         "addressCountry": "US"
       },
       "founder": {
         "@type": "Person",
-        "name": "Nathanael Harbison",
-        "jobTitle": "Founder / Real Estate Agent",
-        "identifier": "DRE 02059393"
+        "name": "Jason Manuel",
+        "jobTitle": "Managing Partner & Architect"
       },
       "areaServed": {
         "@type": "AdministrativeArea",
@@ -505,22 +502,20 @@
     {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
-      "@id": "https://harbisonstandard.com/#localbusiness",
-      "name": "sovr1n — Harbison Standard",
-      "alternateName": "sovr1n",
-      "url": "https://harbisonstandard.com",
-      "logo": "https://harbisonstandard.com/sovr1n-logo.svg",
-      "image": "https://harbisonstandard.com/splash-logo.png",
+      "@id": "https://www.sovr1n.com/#localbusiness",
+      "name": "sovr1n",
+      "alternateName": "Chaotically Organized AI",
+      "url": "https://www.sovr1n.com",
+      "logo": "https://www.sovr1n.com/sovr1n-logo.svg",
+      "image": "https://www.sovr1n.com/splash-logo.png",
       "description": "sovr1n is Bakersfield's local marketplace for services, drivers, load boards, and local deals in Kern County, California.",
       "priceRange": "$$",
-      "telephone": "+1-661-472-7499",
-      "email": "nate85.realtor@gmail.com",
+      "email": "hello@sovr1n.com",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "3304 Apollo St",
         "addressLocality": "Bakersfield",
         "addressRegion": "CA",
-        "postalCode": "93306",
+        "postalCode": "93301",
         "addressCountry": "US"
       },
       "geo": {
@@ -563,7 +558,7 @@
       },
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://harbisonstandard.com/?search={search_term_string}",
+        "target": "https://www.sovr1n.com/?search={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     }
@@ -574,17 +569,17 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "@id": "https://harbisonstandard.com/#website",
+      "@id": "https://www.sovr1n.com/#website",
       "name": "sovr1n",
-      "alternateName": "Harbison Standard",
-      "url": "https://harbisonstandard.com",
+      "alternateName": "Chaotically Organized AI",
+      "url": "https://www.sovr1n.com",
       "description": "Bakersfield's local marketplace — shop, hire, rent & haul in Kern County, CA.",
-      "publisher": { "@id": "https://harbisonstandard.com/#organization" },
+      "publisher": { "@id": "https://www.sovr1n.com/#organization" },
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "https://harbisonstandard.com/?search={search_term_string}"
+          "urlTemplate": "https://www.sovr1n.com/?search={search_term_string}"
         },
         "query-input": "required name=search_term_string"
       }
@@ -601,13 +596,13 @@
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://harbisonstandard.com/"
+          "item": "https://www.sovr1n.com/"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Bakersfield, CA",
-          "item": "https://harbisonstandard.com/#bakersfield"
+          "item": "https://www.sovr1n.com/#bakersfield"
         }
       ]
     }
@@ -664,7 +659,7 @@
           "name": "Who runs sovr1n?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "sovr1n is founded and operated by Nathanael Harbison, a licensed real estate agent (DRE 02059393) based in Bakersfield, CA."
+            "text": "sovr1n is founded and operated by Jason Manuel, Managing Partner & Architect of Chaotically Organized AI, based in Bakersfield, CA."
           }
         },
         {
@@ -672,7 +667,7 @@
           "name": "How do I contact sovr1n?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "You can contact sovr1n by email at nate85.realtor@gmail.com or by phone at (661) 472-7499. The business is located at 3304 Apollo St, Bakersfield, CA 93306."
+            "text": "You can contact sovr1n by email at hello@sovr1n.com or through the website at www.sovr1n.com."
           }
         }
       ]
@@ -685,12 +680,12 @@
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "sovr1n | Local Markets & Commerce",
-      "url": "https://harbisonstandard.com/",
+      "url": "https://www.sovr1n.com/",
       "speakable": {
         "@type": "SpeakableSpecification",
         "cssSelector": [".hero-tagline", ".speakable-summary"]
       },
-      "mainEntity": { "@id": "https://harbisonstandard.com/#localbusiness" }
+      "mainEntity": { "@id": "https://www.sovr1n.com/#localbusiness" }
     }
     </script>
 
@@ -703,8 +698,8 @@
 <!-- HOMEPAGE HEADER -->
 <header style="position:relative;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:20px 24px;max-width:640px;margin:0 auto;width:100%;">
     <div style="display:flex;align-items:center;gap:10px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8a438" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-        <span class="font-display" style="font-weight:700;font-size:20px;letter-spacing:-0.03em;background:linear-gradient(120deg,#f5f5f7 10%,#e8a438 90%);-webkit-background-clip:text;background-clip:text;color:transparent;">sovr1n</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        <span class="font-display" style="font-weight:700;font-size:20px;letter-spacing:-0.03em;background:linear-gradient(120deg,#e8f4ff 0%,#4a9eff 40%,#c8e4ff 75%,#ffffff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">sovr1n</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
         <button class="btn-ghost btn-sm" id="hamburger-btn" onclick="App.openHamburgerDrawer()" aria-label="Open menu" style="width:38px;height:38px;padding:0;">
@@ -755,25 +750,25 @@
         <p style="font-size:13px;color:var(--dim);margin-bottom:20px;">Choose how you'd like to use sovr1n in <span id="role-modal-city">your city</span>.</p>
         <div style="display:flex;flex-direction:column;gap:10px;">
             <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('customer')">
-                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(232,164,56,0.12);border:1px solid rgba(232,164,56,0.3);color:var(--warm);">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </span>
                 <span style="font-weight:600;">Customer — Browse services & deals</span>
             </button>
             <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('service_provider')">
-                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(232,164,56,0.12);border:1px solid rgba(232,164,56,0.3);color:var(--warm);">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </span>
                 <span style="font-weight:600;">Service Provider — Offer your services</span>
             </button>
             <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('driver')">
-                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(232,164,56,0.12);border:1px solid rgba(232,164,56,0.3);color:var(--warm);">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 </span>
                 <span style="font-weight:600;">Driver — Find delivery gigs</span>
             </button>
             <button class="btn-secondary" style="justify-content:flex-start;padding:14px 18px;gap:12px;" onclick="App.selectRole('load_board')">
-                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(232,164,56,0.12);border:1px solid rgba(232,164,56,0.3);color:var(--warm);">
+                <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);color:var(--warm);">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>
                 </span>
                 <span style="font-weight:600;">Load Board — Post or find freight</span>
@@ -852,7 +847,7 @@
             </div>
 
             <!-- DRIVER VERIFICATION FIELDS -->
-            <div style="padding:12px;background:rgba(45,175,163,0.08);border-radius:var(--rad-md);border-left:2px solid var(--teal);">
+            <div style="padding:12px;background:rgba(138,180,212,0.07);border-radius:var(--rad-md);border-left:2px solid var(--teal);">
                 <p style="font-size:12px;font-weight:600;color:var(--cream);margin-bottom:8px;">Will you be a driver on sovr1n?</p>
                 <p style="font-size:11px;color:var(--dim);margin-bottom:10px;">Drivers must provide valid driver's license and proof of insurance. You'll upload these after account creation.</p>
                 <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;">
@@ -869,7 +864,7 @@
 
 <!-- MAIN HOMEPAGE -->
 <main id="main-content" style="position:relative;z-index:1;max-width:600px;margin:0 auto;padding:0 20px 40px;">
-    <h1 class="font-display fade-up" style="font-size:clamp(48px,9vw,72px);font-weight:700;letter-spacing:-4px;text-align:center;background:linear-gradient(120deg,#f5f5f7 0%,#e8a438 60%,#2dafa3 120%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(232,164,56,0.2));">
+    <h1 class="font-display fade-up" style="font-size:clamp(48px,9vw,72px);font-weight:700;letter-spacing:-4px;text-align:center;background:linear-gradient(120deg,#e8f4ff 0%,#4a9eff 30%,#c8e4ff 55%,#ffffff 75%,#4a9eff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 32px rgba(74,158,255,0.4));">
         sovr1n<span style="font-size:0.4em;vertical-align:top;letter-spacing:0;">&#10022;</span>
     </h1>
     <p class="hero-tagline fade-up delay-1" style="text-align:center;color:var(--dim);font-size:15px;line-height:1.6;max-width:420px;margin:8px auto 24px;">
@@ -901,51 +896,51 @@
     <!-- ROLE SECTIONS -->
     <section class="scroll-reveal" style="margin-bottom:20px;">
         <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(232,164,56,0.6);"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
             Market
         </h2>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--rad-md);">
             <button class="card card-interactive" onclick="App.openModule('services-buyer')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
                 <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Shoppers</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8a438" stroke-width="1.8"><path d="M6 7h12l1.5 12.5a2 2 0 0 1-2 2.5H6.5a2 2 0 0 1-2-2.5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><path d="M6 7h12l1.5 12.5a2 2 0 0 1-2 2.5H6.5a2 2 0 0 1-2-2.5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
             </button>
             <button class="card card-interactive" onclick="App.openModule('create')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
                 <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Shop owners</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8a438" stroke-width="1.8"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M9 21v-6h6v6"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><path d="M9 21v-6h6v6"/></svg>
             </button>
         </div>
     </section>
 
     <section class="scroll-reveal" style="margin-bottom:20px;">
         <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(232,164,56,0.6);"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
             Services
         </h2>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--rad-md);">
             <button class="card card-interactive" onclick="App.openModule('services-buyer')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
                 <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Customers</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2dafa3" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8ab4d4" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </button>
             <button class="card card-interactive" onclick="App.openModule('service-providers')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
                 <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Providers</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2dafa3" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8ab4d4" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </button>
         </div>
     </section>
 
     <section class="scroll-reveal" style="margin-bottom:20px;">
         <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(232,164,56,0.6);"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
             Transportation
         </h2>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:var(--surface-1);border:1px solid var(--border);border-radius:var(--rad-md);">
             <button class="card card-interactive" onclick="App.openModule('drivers')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
                 <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Drivers</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8a438" stroke-width="1.8"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
             </button>
             <button class="card card-interactive" onclick="App.openModule('load-board')" style="display:flex;align-items:center;gap:14px;padding:16px;min-height:64px;">
                 <span class="font-display" style="font-size:16px;font-weight:600;color:var(--cream);">Post a load</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8a438" stroke-width="1.8"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11v6M9 14h6"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11v6M9 14h6"/></svg>
             </button>
         </div>
     </section>
@@ -953,7 +948,7 @@
     <!-- TRENDING -->
     <section class="scroll-reveal" style="margin:28px 0 10px;">
         <h2 class="font-display" style="font-size:18px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(232,164,56,0.6);"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--warm),var(--teal));box-shadow:0 0 10px rgba(74,158,255,0.7);"></span>
             Trending near you
         </h2>
         <div id="trending-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;"></div>
@@ -1041,7 +1036,7 @@
         </div>
     </div>
     <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
-        <div style="text-align:center;padding:28px;border-radius:var(--rad-lg);background:linear-gradient(135deg,rgba(232,164,56,0.06),rgba(45,175,163,0.03));border:1px solid rgba(232,164,56,0.12);margin-bottom:20px;">
+        <div style="text-align:center;padding:28px;border-radius:var(--rad-lg);background:linear-gradient(135deg,rgba(74,158,255,0.07),rgba(26,92,176,0.04));border:1px solid rgba(74,158,255,0.15);margin-bottom:20px;">
             <p class="font-display" style="font-weight:600;font-size:16px;color:var(--warm);margin-bottom:6px;">List your service on sovr1n</p>
             <p style="font-size:13px;color:var(--dim);margin-bottom:14px;">Reach local buyers in <span class="module-city">Bakersfield</span>. No upfront fees &mdash; 10% per completed job.</p>
             <button class="btn-primary btn-sm" onclick="App.openModule('create')">Get Started</button>
@@ -1117,7 +1112,7 @@
                 <div><label class="field-label">YOUR OFFER</label><input name="offeredPrice" type="number" min="0.01" step="0.01" class="input-base" required placeholder="0.00"></div>
             </div>
 
-            <div style="padding:12px;background:rgba(232,164,56,0.08);border-radius:var(--rad-md);border-left:2px solid var(--warm);font-size:12px;color:var(--dim);">
+            <div style="padding:12px;background:rgba(74,158,255,0.07);border-radius:var(--rad-md);border-left:2px solid var(--warm);font-size:12px;color:var(--dim);">
                 <p><strong style="color:var(--warm);">How it works:</strong></p>
                 <p>1. You post your load with your offered price</p>
                 <p>2. Drivers can accept your price or make a counteroffer</p>
@@ -1176,7 +1171,7 @@
     </div>
     <div style="max-width:600px;margin:0 auto;padding:24px 16px;">
         <div style="text-align:center;padding:32px 20px;" class="card">
-            <div style="width:56px;height:56px;border-radius:var(--rad-lg);background:linear-gradient(135deg,rgba(232,164,56,0.15),rgba(45,175,163,0.1));border:1px solid rgba(232,164,56,0.3);display:grid;place-items:center;margin:0 auto 16px;color:var(--warm);">
+            <div style="width:56px;height:56px;border-radius:var(--rad-lg);background:linear-gradient(135deg,rgba(74,158,255,0.15),rgba(26,92,176,0.1));border:1px solid rgba(74,158,255,0.3);display:grid;place-items:center;margin:0 auto 16px;color:var(--warm);">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             </div>
             <p class="font-display" style="font-weight:600;font-size:18px;color:var(--cream);margin-bottom:6px;">Spread the word</p>
@@ -1275,7 +1270,7 @@
                 <h3 style="color:var(--cream);font-weight:600;margin-bottom:6px;">Platform Fee</h3>
                 <p>Sovr1n charges a 10% platform fee on completed transactions (2% for Hot Shot/Class A loads). This fee funds platform operation and support.</p>
             </div>
-            <div style="padding:12px;background:rgba(232,164,56,0.08);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+            <div style="padding:12px;background:rgba(74,158,255,0.07);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
                 <p style="font-size:12px;color:var(--muted);">By using sovr1n, you agree to these terms. For complete legal terms, contact support.</p>
             </div>
         </div>
@@ -1327,7 +1322,7 @@
                 <h3 style="color:var(--warm);font-weight:600;margin-bottom:6px;">What if something goes wrong?</h3>
                 <p style="color:var(--dim);">Refer to your signed contract—it's legally binding. Disputes should be resolved between parties directly. Sovr1n can facilitate communication but is not responsible for resolving conflicts.</p>
             </div>
-            <div style="padding:12px;background:rgba(232,164,56,0.08);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
+            <div style="padding:12px;background:rgba(74,158,255,0.07);border-radius:var(--rad-md);border-left:2px solid var(--warm);">
                 <p style="font-size:12px;color:var(--muted);"><strong style="color:var(--cream);">Driver Responsibility:</strong> You are responsible for knowing all local, state, and federal transportation laws. Any violations of regulations are your legal responsibility, not sovr1n's.</p>
             </div>
         </div>
