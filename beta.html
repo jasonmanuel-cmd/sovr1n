@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>sovr1n — Join the Beta</title>
+  <meta name="description" content="sovr1n is a local marketplace for Bakersfield and the Central Valley. Post loads, find drivers, hire services, and trade locally. Beta is open — join free.">
+  <meta property="og:title" content="sovr1n — The Valley moves on sovr1n">
+  <meta property="og:description" content="A marketplace built for real work in the Central Valley. Post loads, find drivers, hire services, and buy local. Beta is open now — free to join.">
+  <meta property="og:url" content="https://www.sovr1n.com/beta">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="sovr1n — Join the Beta">
+  <meta name="twitter:description" content="Bakersfield's marketplace for loads, services, and local commerce. Free to join in beta.">
+  <link rel="canonical" href="https://www.sovr1n.com/beta">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap">
+  <style>
+    :root {
+      --bg:         #08090e;
+      --surface:    #0f1219;
+      --surface-2:  #171d2c;
+      --accent:     #4a9eff;
+      --accent-lo:  rgba(74,158,255,.1);
+      --accent-mid: rgba(74,158,255,.22);
+      --text:       #dde6f8;
+      --text-dim:   #8a9bc2;
+      --text-muted: #475269;
+      --border:     #1e2538;
+      --border-hi:  #2c3550;
+      color-scheme: dark;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    img { max-width: 100%; }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(8,9,14,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: .06em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo .dot { color: var(--accent); }
+    .nav-back {
+      font-size: .85rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .nav-back:hover { color: var(--accent); }
+    .nav-cta {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .55rem 1.4rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background .15s;
+    }
+    .nav-cta:hover { background: #70bfff; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      padding: 5rem 2rem 4.5rem;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -8%; right: -4%;
+      width: 52vw; height: 52vw;
+      max-width: 640px; max-height: 640px;
+      background: radial-gradient(circle, rgba(74,158,255,.15) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: 10%;
+      width: 30vw; height: 30vw;
+      max-width: 360px; max-height: 360px;
+      background: radial-gradient(circle, rgba(74,158,255,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 860px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border: 1px solid var(--border-hi);
+      background: var(--accent-lo);
+      color: var(--accent);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .3rem .85rem;
+      border-radius: 20px;
+      margin-bottom: 1.75rem;
+    }
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 2.2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      line-height: .92;
+      letter-spacing: .025em;
+      color: var(--text);
+      margin: 0 0 1.5rem;
+      text-wrap: balance;
+    }
+    h1 .accent { color: var(--accent); }
+
+    .hero-tagline {
+      font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+      font-weight: 400;
+      color: var(--text-dim);
+      max-width: 500px;
+      margin: 0 0 2.5rem;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: .9rem 2.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .15s, box-shadow .2s;
+    }
+    .btn-primary:hover {
+      background: #70bfff;
+      box-shadow: 0 0 28px rgba(74,158,255,.45);
+    }
+    .btn-primary:disabled {
+      background: #2d7ad4;
+      cursor: default;
+      box-shadow: none;
+    }
+    .btn-ghost {
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .btn-ghost:hover { color: var(--text); }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: .04em;
+      color: var(--accent);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-label {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: .2rem;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-inner { max-width: 880px; }
+
+    .section-eyebrow {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .6rem;
+    }
+    h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: .01em;
+      line-height: 1.05;
+      color: var(--text);
+      margin: 0 0 .75rem;
+      text-wrap: balance;
+    }
+    .section-lead {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 540px;
+      margin: 0 0 2.75rem;
+      line-height: 1.7;
+    }
+
+    /* ── EXPLAINER ── */
+    .explainer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 640px) {
+      .explainer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    .explainer-body p {
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin: 0 0 1rem;
+    }
+    .explainer-body p:last-child { margin: 0; }
+    .explainer-body strong { color: var(--text); }
+
+    .callout-card {
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      border-left: 3px solid var(--accent);
+      padding: 1.75rem;
+      border-radius: 0 8px 8px 0;
+    }
+    .callout-card blockquote {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin: 0 0 1rem;
+    }
+    .callout-card cite {
+      font-size: .78rem;
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── PILLARS ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 680px) { .pillars { grid-template-columns: 1fr; } }
+    @media (min-width: 681px) and (max-width: 860px) { .pillars { grid-template-columns: 1fr 1fr; } }
+
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .pillar:hover { border-color: var(--border-hi); transform: translateY(-3px); }
+    .pillar-glyph { font-size: 2rem; display: block; line-height: 1; margin-bottom: 1rem; }
+    .pillar h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin: 0 0 .5rem;
+    }
+    .pillar p { font-size: .9rem; color: var(--text-muted); line-height: 1.6; margin: 0 0 1rem; }
+    .tag {
+      display: inline-block;
+      font-size: .73rem;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-lo);
+      border: 1px solid var(--accent-mid);
+      padding: .2rem .65rem;
+      border-radius: 3px;
+    }
+
+    /* ── STEPS ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    @media (max-width: 680px) { .steps { grid-template-columns: 1fr; gap: 1.5rem; } }
+    .step-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--border-hi);
+      letter-spacing: .04em;
+      margin-bottom: .5rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin: 0 0 .4rem; }
+    .step p { font-size: .9rem; color: var(--text-muted); line-height: 1.65; margin: 0; }
+
+    /* ── PERSONAS ── */
+    .personas {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 580px) { .personas { grid-template-columns: 1fr; } }
+    .persona {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+    }
+    .persona-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .persona-name { font-weight: 700; font-size: .95rem; color: var(--text); line-height: 1.2; }
+    .persona-desc { font-size: .82rem; color: var(--text-muted); margin-top: .15rem; }
+
+    /* ── BETA CTA ── */
+    .beta-wrap {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .beta-wrap::before {
+      content: '';
+      position: absolute;
+      bottom: -40%; left: 50%;
+      transform: translateX(-50%);
+      width: 80vw; height: 40vw;
+      max-width: 900px;
+      background: radial-gradient(ellipse, rgba(74,158,255,.12) 0%, transparent 68%);
+      pointer-events: none;
+    }
+    .beta-inner {
+      max-width: 580px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .beta-inner h2 { margin-bottom: .6rem; }
+    .beta-inner .section-lead { text-align: center; margin-bottom: 2rem; }
+
+    .beta-form {
+      display: flex;
+      gap: .75rem;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .beta-input {
+      flex: 1;
+      min-width: 220px;
+      background: var(--bg);
+      border: 1px solid var(--border-hi);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-size: .95rem;
+      padding: .875rem 1rem;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .beta-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-lo);
+    }
+    .beta-input::placeholder { color: var(--text-muted); }
+
+    .success-msg {
+      display: none;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: .95rem;
+      margin-top: 1rem;
+    }
+    .beta-note { font-size: .82rem; color: var(--text-muted); margin-top: 1.25rem; }
+    .beta-note strong { color: var(--text-dim); }
+    .beta-note a { color: var(--accent); text-decoration: none; }
+    .beta-note a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 2rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .footer-logo .dot { color: var(--accent); }
+    .footer p { font-size: .8rem; color: var(--text-muted); margin: 0; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      font-size: .8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: .04em;
+    }
+    .footer-links a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="/" class="nav-logo">sovr<span class="dot">1</span>n</a>
+    <div class="nav-right">
+      <a href="/" class="nav-back">← Back to site</a>
+      <a href="#beta" class="nav-cta">Join Beta</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>Beta Now Open · Bakersfield, CA</div>
+      <h1>The Valley<br><span class="accent">Moves</span><br>On Sovr1n</h1>
+      <p class="hero-tagline">A marketplace built for real work in the Central Valley. Post loads, find drivers, hire services, and buy local — all in one place.</p>
+      <div class="hero-actions">
+        <a href="#beta" class="btn-primary">Get Early Access — It's Free</a>
+        <a href="#what" class="btn-ghost">See how it works ↓</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">Free</div>
+          <div class="stat-label">To join beta</div>
+        </div>
+        <div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">Verticals live</div>
+        </div>
+        <div>
+          <div class="stat-num">BKF</div>
+          <div class="stat-label">&amp; Central Valley</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT IS SOVR1N -->
+  <section class="section" id="what">
+    <div class="section-inner">
+      <div class="section-eyebrow">What is sovr1n</div>
+      <h2>Built for the people who actually do the work</h2>
+      <div class="explainer-grid">
+        <div class="explainer-body">
+          <p><strong>sovr1n is a local marketplace platform</strong> connecting drivers, haulers, service providers, and buyers across Bakersfield and the Central Valley.</p>
+          <p>Whether you need to move freight, find a reliable local pro, or sell something to your neighbors — sovr1n puts you in front of the right people, fast.</p>
+          <p>No middlemen skimming your hustle. No platform built somewhere else for someone else. This is <strong>built for the Valley, by the Valley</strong>.</p>
+          <p>We're in beta right now. That means early access, a direct line to the team, and a chance to shape how it works before everyone else gets in.</p>
+        </div>
+        <div class="callout-card">
+          <blockquote>"The Valley runs on people who show up. sovr1n is where they find each other."</blockquote>
+          <cite>— Frank Hernandez, Founder</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE VERTICALS -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">What you can do</div>
+      <h2>Three ways to put sovr1n to work</h2>
+      <p class="section-lead">Post a job, pick up a load, hire a pro, or move your goods. sovr1n connects every part of the local economy.</p>
+      <div class="pillars">
+        <div class="pillar">
+          <span class="pillar-glyph">🚛</span>
+          <h3>Loads &amp; Hauling</h3>
+          <p>Post freight, find drivers, and move cargo across the Valley. From small pickups to heavy loads — the load board connects you to verified drivers fast.</p>
+          <span class="tag">Load Board</span>
+        </div>
+        <div class="pillar">
+          <span class="pillar-glyph">🔧</span>
+          <h3>Local Services</h3>
+          <p>Find licensed local service providers — or list your skills and get hired. Trades, repairs, labor, and professional services in one place.</p>
+          <span class="tag">Services</span>
+        </div>
+        <div class="pillar">
+          <span class="pillar-glyph">📦</span>
+          <h3>Local Commerce</h3>
+          <p>Buy and sell goods with people in your community. Equipment, vehicles, supplies — local listings for local buyers, no shipping required.</p>
+          <span class="tag">Marketplace</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">How it works</div>
+      <h2>Simple from day one</h2>
+      <p class="section-lead">sovr1n is designed to get out of the way and let you work.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Create a free account</h3>
+          <p>Sign up in under two minutes. No subscription required to get started during beta.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Post or browse</h3>
+          <p>List a load, post a service, or browse what's available in your area right now.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Connect and get paid</h3>
+          <p>Match with the right person, agree on terms, complete the job. Payments handled securely through the platform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT'S FOR -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">Who it's for</div>
+      <h2>If you work in the Valley, this is for you</h2>
+      <p class="section-lead">sovr1n is built around the people who keep the Central Valley moving.</p>
+      <div class="personas">
+        <div class="persona">
+          <span class="persona-icon">🚚</span>
+          <div>
+            <div class="persona-name">Drivers &amp; Haulers</div>
+            <div class="persona-desc">Find loads, pick up work, get paid</div>
+          </div>
+        </div>
+        <div class="persona">
+          <span class="persona-icon">🏗️</span>
+          <div>
+            <div class="persona-name">Contractors &amp; Trades</div>
+            <div class="persona-desc">List your services, get hired locally</div>
+          </div>
+        </div>
+        <div class="persona">
+          <span class="persona-icon">📦</span>
+          <div>
+            <div class="persona-name">Shippers &amp; Businesses</div>
+            <div class="persona-desc">Post freight, find reliable drivers</div>
+          </div>
+        </div>
+        <div class="persona">
+          <span class="persona-icon">🛒</span>
+          <div>
+            <div class="persona-name">Buyers &amp; Sellers</div>
+            <div class="persona-desc">Trade goods with your community</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BETA CTA -->
+  <div class="beta-wrap" id="beta">
+    <div class="beta-inner">
+      <div class="section-eyebrow">Beta Access</div>
+      <h2>Get in early</h2>
+      <p class="section-lead">sovr1n is free to join during beta. Be among the first in Bakersfield to build your profile, post listings, and shape the platform.</p>
+      <div class="beta-form">
+        <input type="email" class="beta-input" placeholder="your@email.com" id="betaEmail" autocomplete="email">
+        <button class="btn-primary" id="betaBtn" onclick="handleSignup()">Request Access</button>
+      </div>
+      <div class="success-msg" id="successMsg">✓ You're on the list — we'll be in touch shortly.</div>
+      <p class="beta-note">Or sign up directly at <a href="https://www.sovr1n.com" target="_blank" rel="noopener">www.sovr1n.com</a></p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <a href="/" class="footer-logo">sovr<span class="dot">1</span>n</a>
+    <p>© 2026 Chaotically Organized AI · Bakersfield, CA</p>
+    <div class="footer-links">
+      <a href="https://www.sovr1n.com" target="_blank" rel="noopener">sovr1n.com</a>
+      <a href="mailto:hello@sovr1n.com">hello@sovr1n.com</a>
+    </div>
+  </footer>
+
+  <script>
+    function handleSignup() {
+      var email = document.getElementById('betaEmail').value.trim();
+      if (!email || !email.includes('@')) {
+        document.getElementById('betaEmail').focus();
+        return;
+      }
+      var btn = document.getElementById('betaBtn');
+      btn.textContent = '✓ Done';
+      btn.disabled = true;
+      document.getElementById('successMsg').style.display = 'block';
+    }
+    document.getElementById('betaEmail').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleSignup();
+    });
+  </script>
+
+</body>
+</html>
