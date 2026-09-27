@@ -1,10 +1,10 @@
 # AI HANDOFF
 
-Last Updated: 2026-09-27
+Last Updated: 2026-09-27 (session 01RZPxhcvwBDp6fdieykWCmv check-in)
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
 Branch: claude/marketplace-schema-layout-0emf5a
-Commit: 3409ed7 (feature branch) / 1c399c2 (main)
+Commit: de669af (feature branch HEAD) / 2ddf1af (main HEAD)
 
 ## What I Was Asked To Do
 
@@ -62,16 +62,28 @@ Commit: 3409ed7 (feature branch) / 1c399c2 (main)
 - **Email provider not integrated** — confirmation emails silently fail
 - **PR #3 not resolved** — Vercel Web Analytics PR still open/draft
 
+## PR #10 Status (as of 2026-09-27 ~23:00 UTC)
+
+PR #10 (`claude/marketplace-schema-layout-0emf5a`) is open/draft, code-complete, all 37 tests pass locally. The only blocker is the GitHub Actions account-level issue:
+- All CI jobs complete in 2-4 seconds (impossible for real execution)
+- This pattern has been consistent across ALL 26+ CI runs in the repo's history
+- Root cause: GitHub Actions free tier minutes are exhausted for the `jasonmanuel-cmd` account
+- Fix: Go to https://github.com/settings/billing → check remaining Actions minutes → either wait for monthly reset or add payment method
+
+Once CI is green, PR #10 can be merged. The PR contains: AGENTS.md, CLAUDE.md, .ai/ files, security fixes, and workflow fixes.
+
 ## EXACT NEXT STEP
 
-1. Open the Supabase SQL editor for project `pebqmuumwygrpjofdwfy`
-2. Paste and run `supabase/schema.sql` (creates base tables)
-3. Paste and run `supabase/migrations/001_marketplace_v2.sql` (adds profiles, orders)
-4. Paste and run `migrations/001_create_beta_signups.sql` (adds beta testing tables)
-5. Confirm tables exist under Table Editor
-6. In Vercel dashboard → sovr1n → Settings → Environment Variables, confirm or add: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
-7. Replace the placeholder SUPABASE_ANON_KEY in `app/config.js` with the real value
-8. Wire the `/beta` form to POST `/api/beta/signup`
+0. **Fix GitHub Actions** — go to https://github.com/settings/billing and resolve the Actions minutes issue
+1. Once CI is green on PR #10, merge it to main
+2. Open the Supabase SQL editor for project `pebqmuumwygrpjofdwfy`
+3. Paste and run `supabase/schema.sql` (creates base tables)
+4. Paste and run `supabase/migrations/001_marketplace_v2.sql` (adds profiles, orders)
+5. Paste and run `migrations/001_create_beta_signups.sql` (adds beta testing tables)
+6. Confirm tables exist under Table Editor
+7. In Vercel dashboard → sovr1n → Settings → Environment Variables, confirm or add: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+8. Replace the placeholder SUPABASE_ANON_KEY in `app/config.js` with the real value
+9. Wire the `/beta` form to POST `/api/beta/signup`
 
 ## Warnings
 
