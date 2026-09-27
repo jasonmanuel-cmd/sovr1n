@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sovr1n - Local delivery network. Connect drivers, businesses, and customers for affordable, fast deliveries.">
+    <meta name="theme-color" content="#0066cc">
+    <title>Sovr1n - Local Delivery Network</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #0066cc;
+        }
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+        }
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #0066cc;
+            color: white;
+            margin-right: 15px;
+        }
+        .btn-primary:hover {
+            background: #0052a3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+        .btn-secondary {
+            background: white;
+            color: #0066cc;
+            border: 2px solid #0066cc;
+        }
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 80px 0;
+        }
+        .feature {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .feature h3 {
+            color: #0066cc;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+        .feature p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .roles {
+            background: white;
+            padding: 60px 20px;
+            margin: 60px 0;
+            border-radius: 12px;
+        }
+        .roles h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a1a2e;
+        }
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .role-card {
+            border: 2px solid #e0e0e0;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .role-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.15);
+        }
+        .role-card h4 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .role-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .cta-section {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+            padding: 60px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 60px 0;
+        }
+        .cta-section h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        footer {
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            padding: 40px 20px;
+            margin-top: 80px;
+            text-align: center;
+            color: #666;
+        }
+        .footer-links {
+            margin-bottom: 20px;
+        }
+        .footer-links a {
+            color: #0066cc;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 500;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        .status {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            nav {
+                display: none;
+            }
+            .btn-primary {
+                display: block;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🚀 Sovr1n</div>
+                <nav>
+                    <a href="#features">Features</a>
+                    <a href="#roles">How It Works</a>
+                    <a href="/beta-signup.html">Beta Signup</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="status">🎯 Beta Testing - Sep 24, 2026</div>
+                <h1>Local Delivery, Built Better</h1>
+                <p>Connect drivers, businesses, and customers for fast, affordable deliveries across Kern County</p>
+                <div>
+                    <a href="/beta-signup.html" class="btn btn-primary">Join Beta Program</a>
+                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <section id="features" class="features">
+                <div class="feature">
+                    <h3>💰 Better Economics</h3>
+                    <p>Drivers keep 90% of delivery fees. Businesses pay less than DoorDash. Everyone wins.</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ Real-Time Matching</h3>
+                    <p>Loads post instantly. Drivers accept in seconds. No middleman delays.</p>
+                </div>
+                <div class="feature">
+                    <h3>🔒 Verified & Safe</h3>
+                    <p>Verified drivers, secure payments, built-in contracts. Trust from day one.</p>
+                </div>
+                <div class="feature">
+                    <h3>📍 Hyper-Local</h3>
+                    <p>Focused on Kern County. Dense supply network. Fast delivery. Lower costs.</p>
+                </div>
+            </section>
+
+            <section id="roles" class="roles">
+                <h2>How Sovr1n Works</h2>
+                <div class="role-grid">
+                    <div class="role-card">
+                        <h4>👨‍💼 Shop Owners</h4>
+                        <p>Post products, set delivery radius, and let local drivers handle fulfillment. Expand reach without hiring staff.</p>
+                    </div>
+                    <div class="role-card">
+                        <h4>🚗 Drivers</h4>
+                        <p>Accept loads on your schedule. Earn $20-100+ per delivery. Keep 90%. Total control.</p>
+                    </div>
+                    <div class="role-card">
+                        <h4>👥 Customers</h4>
+                        <p>Get local deliveries cheaper than Amazon. Support local businesses. Track everything in real-time.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cta-section">
+                <h2>Ready to Get Started?</h2>
+                <p>We're launching beta testing Sep 24 across Kern County. Join drivers, businesses, and customers building the future of local delivery.</p>
+                <a href="/beta-signup.html" class="btn btn-primary" style="color: white;">Sign Up for Beta</a>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#features">Features</a>
+            <a href="/beta-signup.html">Beta Signup</a>
+            <a href="/terms">Terms</a>
+            <a href="/faq">FAQ</a>
+        </div>
+        <p>&copy; 2026 Sovr1n. Building the future of local delivery.</p>
+    </footer>
+</body>
+</html>
