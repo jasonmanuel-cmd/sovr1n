@@ -45,10 +45,13 @@
 
 - [ ] **Admin beta tester dashboard** — `public/beta/admin.html` and `api/beta/testers.js` exist. Needs auth gating and testing.
 
-- [ ] **Merge feature branch** — `claude/marketplace-schema-layout-0emf5a` is ahead of main with a sync commit (content already on main via direct push). Can merge or reset.
+- [ ] **Consolidate app/ duplication** — `app/` at root and `public/app/` are now duplicates. When editing JS scripts, update both. Long-term: delete root `app/` and use only `public/app/` as canonical. Update `.astro` page script src paths if needed.
+- [ ] **Merge feature branch** — `claude/marketplace-schema-layout-0emf5a` is ahead of main. Contains: Astro migration, beta-signup page, marketplace schema, .ai/ memory.
 
 ## Done
 
+- [x] Astro v7.3.5 migration — `src/pages/` pages, `@astrojs/vercel` static adapter, `npm run build` verified (3 pages, 0 errors)
+- [x] Beta-signup page Phase 1 — new hero copy, 5-field form, QR code, wired to `/api/beta/signup`
 - [x] Chrome Design System adopted (Decision 001)
 - [x] All Harbison/DRE references purged from main codebase (Decision 002)
 - [x] /beta page created and live at www.sovr1n.com/beta (PRs #8, #9)

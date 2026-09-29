@@ -1,6 +1,6 @@
 # PROJECT STATE
 
-Last Updated: 2026-09-27
+Last Updated: 2026-09-29
 Current Branch: claude/marketplace-schema-layout-0emf5a
 Last Known Good Commit (main): 1c399c2 — Merge PR #7 (dependabot)
 
@@ -19,17 +19,17 @@ Repository: https://github.com/jasonmanuel-cmd/sovr1n
 
 ## Technology
 
-Frontend: Vanilla HTML/CSS/JS — Chrome Design System (--surface-0: #0a0a0f, --warm: #4a9eff, Space Grotesk + Inter fonts)
+Frontend: Astro v7.3.5 static build — Chrome Design System (--surface-0: #0a0a0f, --warm: #4a9eff, Space Grotesk + Inter fonts)
 Backend: Vercel serverless functions (Node.js, CommonJS, /api/ directory)
 Database: Supabase (Postgres + Auth + RLS) — project ID: pebqmuumwygrpjofdwfy
-Hosting: Vercel — cleanUrls: true, framework: null, static + serverless
+Hosting: Vercel — cleanUrls: true, adapter: @astrojs/vercel (static), output: dist/ + .vercel/output/
 Authentication: Supabase Auth (JWT via supabase-js)
 Payments: Stripe (keys and schema columns present, not yet fully wired)
 Insights: Vercel Speed Insights (/_vercel/speed-insights/script.js)
 
 ## Current Architecture
 
-Static HTML/JS frontend served directly by Vercel. Vercel merges the project root and the `public/` directory into the web root. `cleanUrls: true` means `beta.html` serves at `/beta` without the extension.
+Astro v7.3.5 static build. Pages live in `src/pages/` as `.astro` files. `npm run build` runs `astro build`, which outputs to `dist/` and `.vercel/output/static/`. The `@astrojs/vercel` adapter handles Vercel deployment. Existing `api/` serverless functions are deployed by Vercel independently. `public/` directory assets (including `app/*.js` browser scripts) are copied to the build output at the same paths.
 
 API routes live in `/api/**/*.js` as Vercel serverless functions. All API handlers use `lib/security.js` for rate limiting and CSP headers, `lib/auth.js` for authentication middleware, and `lib/errors.js` for consistent error responses.
 
