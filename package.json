@@ -9,14 +9,14 @@
     "db:push": "supabase db push"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.117.0",
+    "@supabase/supabase-js": "^2.117.2",
     "@vercel/speed-insights": "^2.0.0",
     "playwright": "^1.63.0",
     "stripe": "^22.6.2"
   },
   "devDependencies": {
-    "@vercel/node": "^13.0.2",
-    "vercel": "^59.25.4"
+    "@vercel/node": "^16.0.2",
+    "vercel": "^61.0.0"
   },
   "main": "app.js",
   "directories": {
