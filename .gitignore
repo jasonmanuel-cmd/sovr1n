@@ -29,3 +29,7 @@ Thumbs.db
 
 .vercel
 .env*
+
+# admin secret - never commit
+ADMIN-SECRET.txt
+.admin-secret.tmp
