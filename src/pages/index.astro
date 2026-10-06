@@ -870,8 +870,32 @@
         sovr1n<span style="font-size:0.4em;vertical-align:top;letter-spacing:0;">&#10022;</span>
     </h1>
     <p class="hero-tagline fade-up delay-1" style="text-align:center;color:var(--dim);font-size:15px;line-height:1.6;max-width:420px;margin:8px auto 24px;">
-        Your local marketplace &mdash; shop, hire, rent &amp; haul, right in your city.
-    </p>
+            Your local marketplace &mdash; shop, hire, rent &amp; haul, right in your city.
+        </p>
+
+        <!-- LAUNCH BANNER -->
+        <section class="fade-up delay-2" style="margin:0 auto 22px;max-width:560px;border-radius:var(--rad-lg);overflow:hidden;border:1px solid var(--border);background:linear-gradient(160deg,rgba(74,158,255,0.16),rgba(10,10,15,0.6) 62%);box-shadow:var(--shadow-md);">
+            <div style="padding:18px 18px 16px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                    <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--rad-pill);background:var(--warm-glow);border:1px solid rgba(74,158,255,0.35);color:var(--warm);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">
+                        <span style="width:6px;height:6px;border-radius:50%;background:var(--warm);box-shadow:0 0 8px var(--warm);"></span>
+                        Public beta
+                    </span>
+                    <span style="color:var(--dim);font-size:12px;">Limited founding testers</span>
+                </div>
+                <h2 class="font-display" style="font-size:19px;font-weight:600;line-height:1.3;color:var(--cream);margin:0 0 6px;">
+                    We go public in <span id="launch-countdown" style="color:var(--warm);">2 days</span>.
+                </h2>
+                <p style="font-size:13px;line-height:1.55;color:var(--muted);margin:0 0 14px;">
+                    Bakersfield first. Get founding-tester pricing and a direct line to the build team.
+                </p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <a href="/beta-signup" class="btn-primary btn-sm" style="text-decoration:none;">Join the beta</a>
+                    <a href="/beta" class="btn-secondary btn-sm" style="text-decoration:none;">See what's launching</a>
+                </div>
+            </div>
+            <div id="launch-countdown-timer" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);"></div>
+        </section>
 
     <select id="city-select" class="input-base fade-up delay-2" style="width:min(280px,100%);margin:0 auto 16px;display:block;">
         <option value="" disabled>City / Area</option>
@@ -1407,12 +1431,53 @@
         else window.shareCopy();
     };
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            if (document.querySelector('.module-view.active')) App.closeAllModules();
-            if (document.getElementById('chat-panel')?.classList.contains('open')) App.toggleChat();
+            if (e.key === 'Escape') {
+                if (document.querySelector('.module-view.active')) App.closeAllModules();
+                if (document.getElementById('chat-panel')?.classList.contains('open')) App.toggleChat();
+            }
+        });
+    })();
+    </script>
+
+    <!-- LAUNCH COUNTDOWN — Oct 8 2026 public launch -->
+    <script is:inline>
+    (function(){
+        var LAUNCH = new Date('2026-10-08T09:00:00-07:00').getTime();
+        var timerEl = document.getElementById('launch-countdown-timer');
+        var inlineEl = document.getElementById('launch-countdown');
+        if (!timerEl) return;
+
+        function plural(n, unit) { return n + ' ' + unit + (n === 1 ? '' : 's'); }
+
+        function render() {
+            var diff = LAUNCH - Date.now();
+            if (diff <= 0) {
+                if (inlineEl) inlineEl.textContent = 'moments';
+                timerEl.innerHTML = '<div style="grid-column:1/-1;padding:14px 18px;background:rgba(52,211,153,0.12);color:var(--success);font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">We are live — welcome in</div>';
+                clearInterval(tick);
+                return;
+            }
+            var s = Math.floor(diff / 1000);
+            var d = Math.floor(s / 86400);
+            var h = Math.floor((s % 86400) / 3600);
+            var m = Math.floor((s % 3600) / 60);
+            var sec = s % 60;
+            if (inlineEl) inlineEl.textContent = d > 0 ? plural(d, 'day') : (h > 0 ? plural(h, 'hour') : plural(m, 'minute'));
+
+            var cells = [
+                [d, 'days'], [h, 'hours'], [m, 'minutes'], [sec, 'seconds']
+            ];
+            timerEl.innerHTML = cells.map(function(c) {
+                return '<div style="padding:12px 6px;background:var(--surface-1);text-align:center;">' +
+                       '<div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--cream);line-height:1;">' +
+                       (c[0] < 10 ? '0' + c[0] : c[0]) + '</div>' +
+                       '<div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:0.09em;margin-top:5px;">' + c[1] + '</div>' +
+                       '</div>';
+            }).join('');
         }
-    });
-})();
-</script>
-</body>
-</html>
+        var tick = setInterval(render, 1000);
+        render();
+    })();
+    </script>
+    </body>
+    </html>

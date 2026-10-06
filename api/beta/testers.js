@@ -1,9 +1,16 @@
 const { supabaseAdmin } = require('../../lib/supabase-admin');
-const { badRequest, serverError, created } = require('../../lib/errors');
+const { badRequest, serverError } = require('../../lib/errors');
 const { applySecurityHeaders, rateLimit } = require('../../lib/security');
+const { requireAdmin } = require('../../lib/admin-auth');
 
 module.exports = async function handler(req, res) {
   applySecurityHeaders(res);
+
+  // This endpoint lists tester names, emails, phones and notes, and can edit or
+  // delete those records. It was reachable by anonymous GET/PATCH/DELETE, which
+  // exposed every beta sign-up to anyone who guessed the URL.
+  if (requireAdmin(req, res)) return;
+
   if (!rateLimit(req, res, { limit: 30 })) return;
 
   // GET /api/beta/testers - list all testers
