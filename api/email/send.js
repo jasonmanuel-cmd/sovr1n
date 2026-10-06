@@ -151,7 +151,9 @@ module.exports = async function handler(req, res) {
     const emailContent = getTemplate(data);
 
     // Send email (using Resend, SendGrid, or your email service)
-    // For now, just log it (implement your email service here)
+    // NOT YET INTEGRATED — this only logs. It used to answer
+    // { success: true, message: 'Email sent' }, which told beta signups their
+    // welcome email was on its way when nothing was ever delivered.
     console.log(`[EMAIL] To: ${to}`, emailContent);
 
     // TODO: Integrate with email service
@@ -169,9 +171,10 @@ module.exports = async function handler(req, res) {
     //   })
     // });
 
-    return res.status(200).json({
-      success: true,
-      message: 'Email sent',
+    return res.status(501).json({
+      success: false,
+      delivered: false,
+      error: 'Email delivery is not configured yet',
       template
     });
   } catch (error) {

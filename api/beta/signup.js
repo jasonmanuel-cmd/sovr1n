@@ -67,10 +67,14 @@ module.exports = async function handler(req, res) {
 
     if (error) throw error;
 
-    // Send confirmation email
+    // Send confirmation email.
+    // /api/email/send is currently a stub: it logs the message and returns
+    // success without delivering anything. Check its real answer so the message
+    // we return to the tester does not promise an email that never arrives.
+    let emailDelivered = false;
     try {
       const baseUrl = `https://${req.headers.host}`;
-      await fetch(`${baseUrl}/api/email/send`, {
+      const emailRes = await fetch(`${baseUrl}/api/email/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -84,6 +88,8 @@ module.exports = async function handler(req, res) {
           }
         })
       });
+      const emailBody = await emailRes.json().catch(() => ({}));
+      emailDelivered = emailRes.ok && emailBody.delivered === true;
     } catch (emailError) {
       console.error('Email send failed:', emailError);
       // Don't fail signup if email fails
@@ -91,7 +97,10 @@ module.exports = async function handler(req, res) {
 
     return created(res, {
       success: true,
-      message: 'Thank you for signing up! Check your email for next steps.',
+      message: emailDelivered
+        ? 'Thank you for signing up! Check your email for next steps.'
+        : "Thank you for signing up! We're in touch shortly with your beta details.",
+      emailSent: emailDelivered,
       signupId: data.id,
       status: 'pending'
     });
