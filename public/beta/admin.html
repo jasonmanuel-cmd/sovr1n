@@ -14,10 +14,10 @@
     <style>
         /* Gate the whole dashboard. /api/beta/testers now requires the admin
            secret, so without this the page just renders an empty shell. */
-        body.admin-locked > * { display: none !important; }
-        #admin-unlock {
-            display: none; max-width: 420px; margin: 18vh auto 0; padding: 28px;
-            background: #fff; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.12);
+        body.admin-locked > *:not(#admin-unlock) { display: none !important; }
+                #admin-unlock {
+                            max-width: 420px; margin: 18vh auto 0; padding: 28px;
+                            background: #fff; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.12);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         #admin-unlock h1 { font-size: 20px; margin: 0 0 6px; }
@@ -355,10 +355,9 @@
                     return r.json();
                 })
                 .then((data) => {
-                    setAdminSecret(secret);
-                    document.body.classList.remove('admin-locked');
-                    document.getElementById('admin-unlock').style.display = 'none';
-                    err.textContent = '';
+                                    setAdminSecret(secret);
+                                    document.body.classList.remove('admin-locked');
+                                    err.textContent = '';
                     displayTesters(data.testers || []);
                     updateStats(data.testers || []);
                     return true;
