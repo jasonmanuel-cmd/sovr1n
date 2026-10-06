@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
     return badRequest(res, 'Invalid email format');
   }
 
-  const validRoles = ['customer', 'driver', 'service_provider', 'load_board', 'seller', 'other'];
+  const validRoles = ['customer', 'driver', 'service_provider', 'load_board', 'seller', 'shop-owner', 'other'];
   if (!validRoles.includes(role)) {
     return badRequest(res, 'Invalid role');
   }

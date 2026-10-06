@@ -13,10 +13,10 @@ Status: Active — do not revert or introduce a competing palette
 ## Decision 002
 
 Date: 2026-09-26
-Decision: Permanently remove all Nathanael Harbison / DRE 02059393 references
-Reason: Explicit and permanent instruction from the project owner: "this should have nothing to do with Nathanael Harbison (DRE 02059393). only me and frank." The project belongs to Frank Hernandez (founder) and Jason Manuel (developer) under Chaotically Organized AI.
-Files affected: index.html (purged), .well-known/llms.txt (sanitized), robots.txt (sanitized). Any future file must never contain the name Nathanael Harbison, DRE 02059393, nate85.realtor@gmail.com, (661) 472-7499, 3304 Apollo St, or "Harbison Standard".
-Status: Active — permanent constraint, no exceptions
+Decision: Permanently remove all references to the former real-estate third party (see AGENTS.md for the explicit list of prohibited values)
+Reason: Explicit and permanent instruction from the project owner: this project has no affiliation with that party. The project belongs to Frank Hernandez (founder) and Jason Manuel (developer) under Chaotically Organized AI.
+Files affected: index.html (purged), .well-known/llms.txt (sanitized), robots.txt (sanitized).
+Status: Active — permanent constraint, no exceptions. Full prohibition list is in AGENTS.md.
 
 ---
 
