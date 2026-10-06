@@ -1,10 +1,10 @@
 # AI HANDOFF
 
-Last Updated: 2026-09-29
+Last Updated: 2026-10-06
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
 Branch: claude/marketplace-schema-layout-0emf5a
-Commit: 9152357 (branch HEAD) / 2ddf1af (main HEAD)
+Commit: f552326 (branch HEAD before this session) / 2ddf1af (main HEAD)
 
 ## What Was Done This Session
 
@@ -43,11 +43,18 @@ The project now has a dual layout:
 3. Vercel deploys static files from `.vercel/output/static/`
 4. `api/` serverless functions are deployed by Vercel independently
 
+## What Was Done This Session (Oct 6)
+
+- **Wired /beta form to API** — `beta.html`, `public/beta.html`, `src/pages/beta.astro` submit handler now POSTs JSON to `/api/beta/signup` (loading state, error handling, success state preserved)
+- **API role validation fix** — `api/beta/signup.js` `validRoles` updated from `['customer','driver','shop-owner']` to `['customer','driver','service_provider','load_board','seller','other']` to match the form's `<select>` values
+- **API problem field made optional** — `problem` removed from required-field check (form's note field maps to it; defaults to 'N/A' when empty)
+- **Email URL fix** — `api/beta/signup.js` now uses `req.headers.host` to build base URL (was hardcoded to `https://sovr1n.com`; now works on preview deployments)
+- **is:inline added** to `<script>` tag in `src/pages/beta.astro`
+
 ## What Is Not Finished
 
-- **Schema not applied** (highest priority) — see next steps
+- **Schema not applied** (highest priority) — see next steps. Supabase MCP returned "Unauthorized" — the MCP connector needs to be linked. Must be done manually.
 - **app/config.js anon key placeholder** — real key needed from Supabase dashboard
-- **Beta form not wired** — `/beta` page form is client-side only (does not POST to `/api/beta/signup`)
 - **GitHub Actions billing** — free tier minutes exhausted; CI completes in 2–4 s (impossible). Fix at https://github.com/settings/billing
 - **app/ duplication** — `app/` at root and `public/app/` are duplicates; should consolidate to `public/app/` only (low priority once Astro migration confirmed working)
 - **Vercel build command** — may need to be set in Vercel dashboard to `npm run build`
@@ -62,8 +69,7 @@ The project now has a dual layout:
    c. Run `migrations/001_create_beta_signups.sql`
 4. **Fix app/config.js anon key** — get real key from Supabase dashboard → Settings → API; update BOTH `app/config.js` AND `public/app/config.js`
 5. **Set Vercel env vars** — in Vercel dashboard → Settings → Environment Variables: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (extend to preview + development targets)
-6. **Wire /beta form to API** — update `beta.html` + `public/beta.html` + `src/pages/beta.astro` to POST to `/api/beta/signup`
-7. **Once CI is green**, merge PR #10 to main
+6. **Once CI is green**, merge PR #10 to main
 
 ## Warnings
 

@@ -610,15 +610,43 @@
 </footer>
 
 <script>
-    document.getElementById('beta-form').addEventListener('submit', function(e) {
+    document.getElementById('beta-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const name = document.getElementById('f-name').value.trim();
+        const firstName = document.getElementById('f-name').value.trim();
+        const lastName = document.getElementById('f-last').value.trim();
+        const name = [firstName, lastName].filter(Boolean).join(' ');
         const email = document.getElementById('f-email').value.trim();
         const city = document.getElementById('f-city').value;
         const role = document.getElementById('f-role').value;
+        const note = document.getElementById('f-note').value.trim();
         if (!name || !email || !city || !role) return;
-        this.style.display = 'none';
-        document.getElementById('success-state').style.display = 'block';
+
+        const btn = this.querySelector('button[type="submit"]');
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+
+        try {
+            const res = await fetch('/api/beta/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, role, problem: note || 'N/A', areas: [city] })
+            });
+            const json = await res.json().catch(() => ({}));
+            if (res.ok || json.success) {
+                this.style.display = 'none';
+                document.getElementById('success-state').style.display = 'block';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                const msg = json.error || 'Something went wrong. Please try again.';
+                alert(msg);
+            }
+        } catch (_err) {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+            alert('Network error. Please check your connection and try again.');
+        }
     });
 
     document.querySelectorAll('a[href^="#"]').forEach(a => {

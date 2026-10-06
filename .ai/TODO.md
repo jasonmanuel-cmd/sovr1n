@@ -17,7 +17,7 @@
 
 - [ ] **Fix app/config.js anon key** — Replace the placeholder SUPABASE_ANON_KEY value with the real key from Supabase dashboard → Settings → API
 
-- [ ] **Wire /beta form to API** — The beta access form in `beta.html` and `public/beta.html` currently shows success client-side only. It must POST to `/api/beta/signup` with fields: name, email, role, and map `note` to `problem`.
+- [x] **Wire /beta form to API** — Done. `beta.html`, `public/beta.html`, and `src/pages/beta.astro` now POST to `/api/beta/signup`. API updated: broader `validRoles`, `problem` optional, email URL uses `req.headers.host`.
 
 ## High Priority
 
@@ -31,7 +31,7 @@
 
 - [ ] **Remove or archive Flutter/Dart files** — `lib/main.dart`, `lib/app_test.dart`, `lib/core/`, `lib/data/`, `lib/domain/`, `lib/ui/`, `pubspec.yaml` are leftover from an abandoned mobile prototype. They clutter the repo and are not used.
 
-- [ ] **Fix email/send.js absolute URL** — `api/beta/signup.js` calls `https://sovr1n.com/api/email/send` with a hardcoded production URL. Use a relative path or environment variable so it works in preview deployments.
+- [x] **Fix email/send.js absolute URL** — `api/beta/signup.js` now uses `req.headers.host` to construct the base URL dynamically (works in both production and preview).
 
 - [ ] **Supabase MCP verification** — The Supabase MCP (mcp__Supabase__*) could not access project pebqmuumwygrpjofdwfy in the last session. Verify the MCP connection has the correct project selected before attempting schema changes through it.
 

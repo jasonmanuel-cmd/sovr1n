@@ -19,15 +19,15 @@ module.exports = async function handler(req, res) {
   const frequency = sanitizeText(req.body?.frequency, 20);
   const areas = Array.isArray(req.body?.areas) ? req.body.areas.map(a => sanitizeText(a, 50)) : [];
 
-  if (!name || !email || !role || !problem) {
-    return badRequest(res, 'Name, email, role, and problem are required');
+  if (!name || !email || !role) {
+    return badRequest(res, 'Name, email, and role are required');
   }
 
   if (!email.includes('@')) {
     return badRequest(res, 'Invalid email format');
   }
 
-  const validRoles = ['customer', 'driver', 'shop-owner'];
+  const validRoles = ['customer', 'driver', 'service_provider', 'load_board', 'seller', 'other'];
   if (!validRoles.includes(role)) {
     return badRequest(res, 'Invalid role');
   }
@@ -69,7 +69,8 @@ module.exports = async function handler(req, res) {
 
     // Send confirmation email
     try {
-      await fetch(`https://sovr1n.com/api/email/send`, {
+      const baseUrl = `https://${req.headers.host}`;
+      await fetch(`${baseUrl}/api/email/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
