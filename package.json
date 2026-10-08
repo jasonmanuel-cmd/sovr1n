@@ -16,11 +16,9 @@
     "@supabase/supabase-js": "^2.117.2",
     "@vercel/speed-insights": "^2.0.0",
     "astro": "^7.3.5",
-    "playwright": "^1.63.0",
     "stripe": "^23.0.0"
   },
   "devDependencies": {
-    "@vercel/node": "^20.0.0",
     "vercel": "^62.2.0"
   },
   "main": "app.js",
