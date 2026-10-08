@@ -3,8 +3,8 @@
 Last Updated: 2026-10-06
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
-Branch: claude/marketplace-schema-layout-0emf5a
-Commit: f552326 (branch HEAD before this session) / 2ddf1af (main HEAD)
+Branch: main (PR #10 merged 2026-10-06)
+Commit: 88d8d8f (merge commit on main)
 
 ## What Was Done This Session
 
@@ -53,23 +53,24 @@ The project now has a dual layout:
 
 ## What Is Not Finished
 
-- **Schema not applied** (highest priority) — see next steps. Supabase MCP returned "Unauthorized" — the MCP connector needs to be linked. Must be done manually.
+- **Schema not applied** (highest priority) — Supabase MCP returned "Unauthorized". Must be done manually via Supabase SQL Editor.
 - **app/config.js anon key placeholder** — real key needed from Supabase dashboard
-- **GitHub Actions billing** — free tier minutes exhausted; CI completes in 2–4 s (impossible). Fix at https://github.com/settings/billing
-- **app/ duplication** — `app/` at root and `public/app/` are duplicates; should consolidate to `public/app/` only (low priority once Astro migration confirmed working)
-- **Vercel build command** — may need to be set in Vercel dashboard to `npm run build`
+- **GitHub Actions billing** — free tier minutes exhausted. Fix at https://github.com/settings/billing
+- **Email provider** — `api/email/send.js` is a stub. Resend MCP is available to integrate.
+- **RLS policies** — needed after schema is applied
+- **app/ duplication** — `app/` at root and `public/app/` are duplicates (low priority)
 
 ## EXACT NEXT STEPS
 
 1. **Fix GitHub Actions** — go to https://github.com/settings/billing (minutes exhausted)
-2. **Configure Vercel build** — in Vercel dashboard → sovr1n project → Settings → General: set Build Command to `npm run build`, Output Directory to `.vercel/output` (the @astrojs/vercel adapter handles this automatically if you leave it blank)
+2. **Configure Vercel build** — in Vercel dashboard → sovr1n project → Settings → General: Build Command `npm run build`, Output Directory blank (adapter handles it)
 3. **Apply Supabase schema** — in Supabase SQL Editor for project `pebqmuumwygrpjofdwfy`:
    a. Run `supabase/schema.sql`
    b. Run `supabase/migrations/001_marketplace_v2.sql`
    c. Run `migrations/001_create_beta_signups.sql`
 4. **Fix app/config.js anon key** — get real key from Supabase dashboard → Settings → API; update BOTH `app/config.js` AND `public/app/config.js`
-5. **Set Vercel env vars** — in Vercel dashboard → Settings → Environment Variables: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (extend to preview + development targets)
-6. **Once CI is green**, merge PR #10 to main
+5. **Set Vercel env vars** — SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY
+6. **Integrate Resend email** — `api/email/send.js` is a stub; Resend MCP available
 
 ## Warnings
 

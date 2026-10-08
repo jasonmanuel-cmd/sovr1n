@@ -46,7 +46,7 @@
 - [ ] **Admin beta tester dashboard** — `public/beta/admin.html` and `api/beta/testers.js` exist. Needs auth gating and testing.
 
 - [ ] **Consolidate app/ duplication** — `app/` at root and `public/app/` are now duplicates. When editing JS scripts, update both. Long-term: delete root `app/` and use only `public/app/` as canonical. Update `.astro` page script src paths if needed.
-- [ ] **Merge feature branch** — `claude/marketplace-schema-layout-0emf5a` is ahead of main. Contains: Astro migration, beta-signup page, marketplace schema, .ai/ memory.
+- [x] **Merge feature branch** — PR #10 merged 2026-10-06. Astro migration, beta-signup page, marketplace schema, .ai/ memory, launch countdown all on main.
 
 ## Done
 
