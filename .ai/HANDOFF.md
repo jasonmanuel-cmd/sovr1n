@@ -74,7 +74,7 @@ The project now has a dual layout:
 
 ## Warnings
 
-- **NEVER** add Nathanael Harbison, DRE 02059393, nate85.realtor@gmail.com, (661) 472-7499, 3304 Apollo St, or "Harbison Standard" to any file.
+- **NEVER** add the former real-estate third party's identity or brand to any file — see AGENTS.md for the explicit prohibited values list.
 - **NEVER** apply a service role key or any secret value to `app/config.js` or `public/app/config.js` — they are loaded client-side. Only the anon/public key goes there.
 - `public/beta.html` and `beta.html` must always be kept in sync.
 - `app/config.js` and `public/app/config.js` must always be kept in sync (or consolidate to `public/app/` only).

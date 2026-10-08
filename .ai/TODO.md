@@ -55,7 +55,7 @@
 - [x] Astro v7.3.5 migration — `src/pages/` pages, `@astrojs/vercel` static adapter, `npm run build` verified (3 pages, 0 errors)
 - [x] Beta-signup page Phase 1 — new hero copy, 5-field form, QR code, wired to `/api/beta/signup`
 - [x] Chrome Design System adopted (Decision 001)
-- [x] All Harbison/DRE references purged from main codebase (Decision 002)
+- [x] Third-party identity references purged from main codebase (Decision 002)
 - [x] /beta page created and live at www.sovr1n.com/beta (PRs #8, #9)
 - [x] public/index.html (old design) deleted (routing fix)
 - [x] public/beta.html added (routing fix, Decision 003)
