@@ -1,126 +1,109 @@
 const { badRequest, serverError } = require('../../lib/errors');
 const { applySecurityHeaders, rateLimit, sanitizeText } = require('../../lib/security');
 
+const FROM_ADDRESS = process.env.EMAIL_FROM || 'noreply@sovr1n.com';
+
 // Email templates
 const templates = {
   beta_welcome: (data) => ({
-    subject: '🚀 Welcome to Sovr1n Beta Testing!',
+    subject: 'Welcome to Sovr1n Beta!',
     text: `
 Hi ${data.name},
 
-Thank you for joining the Sovr1n beta testing program!
+Thank you for joining the Sovr1n beta program!
 
-We're excited to have you as a ${data.role} helping us shape the future of delivery logistics.
+We're excited to have you helping shape the future of local commerce in Kern County.
 
-WHAT'S NEXT:
-1. You'll receive your welcome pack with login credentials
-2. Platform access: https://sovr1n.com
-3. Testing starts: Sep 24, 2026
-4. We'll guide you through everything!
+WHAT HAPPENS NEXT:
+1. Our team reviews your application (usually within 24 hours)
+2. You'll receive your access details by email once approved
+3. Platform: https://www.sovr1n.com
 
 YOUR ROLE: ${data.role}
-As a ${data.role}, you'll help us test:
-- ${data.role === 'customer' ? 'Load posting, browsing drivers, ratings' : data.role === 'driver' ? 'License verification, browsing loads, contracts' : 'Product listings, delivery options, customer management'}
 
-SUPPORT:
-Questions? Reply to this email or check #sovr1n-beta on our communication channel.
+QUESTIONS?
+Reply to this email — we read every message.
 
-Let's build something amazing together!
-—The Sovr1n Team
-
-P.S. Keep an eye on your email for daily updates and feedback surveys!
+Thanks for being part of this,
+— The Sovr1n Team
+    `.trim(),
+    html: `
+<p>Hi ${data.name},</p>
+<p>Thank you for joining the Sovr1n beta program!</p>
+<p>We're excited to have you helping shape the future of local commerce in Kern County.</p>
+<p><strong>What happens next:</strong></p>
+<ol>
+  <li>Our team reviews your application (usually within 24 hours)</li>
+  <li>You'll receive your access details by email once approved</li>
+  <li>Platform: <a href="https://www.sovr1n.com">sovr1n.com</a></li>
+</ol>
+<p><strong>Your role:</strong> ${data.role}</p>
+<p><strong>Questions?</strong> Reply to this email — we read every message.</p>
+<p>Thanks for being part of this,<br>— The Sovr1n Team</p>
     `.trim()
   }),
 
   onboarding: (data) => ({
-    subject: 'Your Sovr1n Beta Testing Guide',
+    subject: 'Your Sovr1n Beta Access Is Ready',
     text: `
 Hi ${data.name},
 
-Your platform access is ready! Here's everything you need to know.
+Your platform access is ready!
 
-PLATFORM LINK: https://sovr1n.com
+PLATFORM LINK: https://www.sovr1n.com
 USERNAME: ${data.email}
-PASSWORD: Check your welcome email
 
 GETTING STARTED:
-1. Log in with your credentials
+1. Log in at sovr1n.com
 2. Complete your profile
-3. ${data.role === 'driver' ? 'Submit driver verification (license + insurance)' : 'Browse available loads'}
-4. Start testing!
-
-WEEK 1 (Sep 24-30):
-- Explore the platform
-- Complete your profile
-- Take daily 1-minute surveys (at 5pm)
-
-WEEK 2 (Oct 1-7):
-- Complete real transactions
-- Test contracts
-- Rate experiences
-
-DAILY SURVEY:
-Every day at 5pm, you'll get a quick 1-minute survey about your experience.
-
-WEEKLY SURVEY:
-Every Friday at 4pm, a 10-minute survey for detailed feedback.
+3. ${data.role === 'driver' ? 'Submit driver verification (license + insurance)' : 'Browse the marketplace'}
+4. Start testing and share feedback!
 
 NEED HELP?
-Email: support@sovr1n.local
-Slack: #sovr1n-beta
+Reply to this email any time.
 
 Thanks for being part of our journey!
-—Jason
+— Jason
     `.trim()
   }),
 
   daily_survey: (data) => ({
-    subject: `🎯 Quick Check-in - How's Sovr1n?`,
+    subject: `Quick check-in — how's Sovr1n today?`,
     text: `
 Hi ${data.name},
 
-Quick question about your Sovr1n experience today:
+How was your Sovr1n experience today? Reply with:
+- 1 = Great
+- 2 = OK
+- 3 = Frustrated
 
-Rate your experience: [😀 Great] [😐 OK] [😞 Frustrated]
-
-What worked well? (optional)
-[Text response]
-
-What didn't work? (optional)
-[Text response]
-
-Reply to this email with your response, or click below:
-[Survey Link]
-
-Takes 1 minute. Your feedback helps us improve!
+And anything you want to share — takes 1 minute.
 
 Thanks!
-—Jason
+— Jason
     `.trim()
   }),
 
   weekly_survey: (data) => ({
-    subject: `📊 Weekly Feedback - Sovr1n Beta`,
+    subject: `Weekly feedback — Sovr1n Beta week ${data.weekNumber}`,
     text: `
 Hi ${data.name},
 
-Thank you for being part of week ${data.weekNumber} of Sovr1n beta testing!
+Thanks for being part of week ${data.weekNumber} of the Sovr1n beta!
 
-Your feedback helps us ship a better product. This survey takes ~10 minutes.
+Your feedback is the most important thing we can get right now. When you have 10 minutes:
 
-Complete survey: [Link]
+${data.surveyLink || 'Reply to this email with your thoughts'}
 
-Key topics:
-1. Overall experience (1-10 rating)
+Key questions:
+1. Overall experience (1–10)
 2. What worked best
 3. What confused you
 4. Feature requests
-5. Would you use regularly?
-
-Due: Sunday 11:59pm
+5. Would you use this regularly?
 
 Thanks!
-—Jason
+— Jason
     `.trim()
   })
 };
@@ -141,44 +124,51 @@ module.exports = async function handler(req, res) {
     return badRequest(res, 'Email and template are required');
   }
 
-  try {
-    // Get template
-    const getTemplate = templates[template];
-    if (!getTemplate) {
-      return badRequest(res, 'Template not found');
-    }
+  const getTemplate = templates[template];
+  if (!getTemplate) {
+    return badRequest(res, 'Template not found');
+  }
 
-    const emailContent = getTemplate(data);
-
-    // Send email (using Resend, SendGrid, or your email service)
-    // NOT YET INTEGRATED — this only logs. It used to answer
-    // { success: true, message: 'Email sent' }, which told beta signups their
-    // welcome email was on its way when nothing was ever delivered.
-    console.log(`[EMAIL] To: ${to}`, emailContent);
-
-    // TODO: Integrate with email service
-    // const response = await fetch('https://api.resend.com/emails', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     from: 'support@sovr1n.local',
-    //     to,
-    //     subject: emailContent.subject,
-    //     text: emailContent.text
-    //   })
-    // });
-
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[EMAIL] RESEND_API_KEY not set — email not delivered');
     return res.status(501).json({
       success: false,
       delivered: false,
-      error: 'Email delivery is not configured yet',
-      template
+      error: 'Email delivery not configured'
     });
+  }
+
+  try {
+    const emailContent = getTemplate(data);
+
+    const payload = {
+      from: FROM_ADDRESS,
+      to: [to],
+      subject: emailContent.subject,
+      text: emailContent.text
+    };
+    if (emailContent.html) payload.html = emailContent.html;
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      console.error('[EMAIL] Resend error:', response.status, err);
+      return serverError(res);
+    }
+
+    const result = await response.json();
+    return res.status(200).json({ success: true, delivered: true, id: result.id, template });
   } catch (error) {
-    console.error('[Email Send]', error);
+    console.error('[EMAIL] Send error:', error);
     return serverError(res);
   }
 };
