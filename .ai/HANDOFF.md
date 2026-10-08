@@ -1,10 +1,10 @@
 # AI HANDOFF
 
-Last Updated: 2026-10-06
+Last Updated: 2026-10-08
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
-Branch: main (PR #10 merged 2026-10-06)
-Commit: 88d8d8f (merge commit on main)
+Branch: main (PR #17 merged 2026-10-08; squash SHA 077f305)
+Active feature branch: claude/marketplace-schema-layout-0emf5a
 
 ## What Was Done This Session
 
@@ -81,10 +81,26 @@ The project now has a dual layout:
 - Do not change the Chrome Design System (--surface-0: #0a0a0f, --warm: #4a9eff, Space Grotesk + Inter) without explicit instruction.
 - `is:inline` is required on all local `<script>` tags in `.astro` files — Astro/Vite will try to bundle them otherwise.
 
+## What Was Done This Session (Oct 8)
+
+### SOVR1N Metallic Logo (PR #17, merged squash SHA 077f305)
+
+User provided the official metallic chrome-blue SOVR1N serif logo as an image file.
+
+- `public/logo-dark.png` — metallic SOVR1N text on black background (used for dark site theme)
+- `public/logo-light.png` — metallic SOVR1N text on white background (available for light contexts)
+- `src/pages/index.astro` — nav header logo changed to `<img src="/logo-dark.png" style="height:32px">`, hero H1 changed to `<img src="/logo-dark.png" style="height:clamp(56px,12vw,88px);filter:drop-shadow(0 0 32px rgba(74,158,255,0.35))">` 
+- `src/pages/beta.astro` — nav header and footer logos changed to `<img src="/logo-dark.png">`
+- `beta.html` — nav header and footer logos changed to `<img src="/logo-dark.png">`
+- `public/beta.html` — synced with `beta.html` (identical)
+
+Horizontal role box wording (Market: Shoppers/Shop owners, Services: Customers/Providers, Transportation: Drivers/Loads) was confirmed already correct in `src/pages/index.astro` — no changes needed.
+
+CI failures on PR #17 were pre-existing GitHub Actions billing exhaustion (all jobs complete in 2–4 seconds impossibly fast). User requested merge-skip-CI; PR was converted from draft to ready and squash-merged.
+
 ## Key Commits on Branch
 
+- `0171ee5` — feat: add SOVR1N metallic logo; replace text logos across all pages
+- `ef72f51` — chore: update .ai docs — PR #10 merged, next steps updated
 - `9152357` — feat: migrate frontend to Astro static build
 - `cfade75` — feat: update beta-signup page — streamlined form, new hero copy, QR code
-- `0ff3b6e` — chore: update HANDOFF.md with PR #10 status
-- `de669af` — fix: repair CI and CodeQL workflow definitions
-- `c8093a9` — chore: merge origin/main into feature branch

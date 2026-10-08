@@ -50,6 +50,8 @@
 
 ## Done
 
+- [x] **SOVR1N metallic logo** — `public/logo-dark.png` and `public/logo-light.png` added. All pages use `/logo-dark.png` in nav header and hero. PR #17 merged 2026-10-08.
+- [x] **Horizontal role box wording confirmed** — Market (Shoppers/Shop owners), Services (Customers/Providers), Transportation (Drivers/Loads) already correct; no changes needed.
 - [x] Astro v7.3.5 migration — `src/pages/` pages, `@astrojs/vercel` static adapter, `npm run build` verified (3 pages, 0 errors)
 - [x] Beta-signup page Phase 1 — new hero copy, 5-field form, QR code, wired to `/api/beta/signup`
 - [x] Chrome Design System adopted (Decision 001)
