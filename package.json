@@ -12,10 +12,10 @@
     "db:push": "supabase db push"
   },
   "dependencies": {
-    "@astrojs/vercel": "^11.0.11",
+    "@astrojs/vercel": "^11.0.12",
     "@supabase/supabase-js": "^2.117.2",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "^7.3.5",
+    "astro": "^7.3.6",
     "stripe": "^23.0.0"
   },
   "devDependencies": {
