@@ -116,6 +116,6 @@ npm ci, production dependency auditing, build and tests without suppressing fail
 Removed nonexistent lint/typecheck commands; repaired the CodeQL language matrix
 and updated CodeQL actions. Refreshed the lockfile and pinned the routing utility's
 path-to-regexp dependency to 6.3.0 via a scoped override; no forced adapter downgrade.
-Added SECURITY.md. No database migrations, production credentials, or deployment
+Preserved the existing SECURITY.md policy. No database migrations, production credentials, or deployment
 settings changed. Check the PR and GitHub checks before merging. Provider credential
 rotation and existing deployment/schema TODOs remain separate work.
