@@ -70,3 +70,10 @@ Decision: Replace SVG/text logo with the official SOVR1N metallic chrome-blue im
 Reason: Founder-approved metallic serif logo image provided explicitly by the user. The old logo was an inline SVG lightning bolt + gradient CSS text. The image (`/logo-dark.png`, black background) matches the site's dark `#0a0a0f` background — the background blends seamlessly. A `filter:drop-shadow(0 0 32px rgba(74,158,255,0.35))` was added to the hero logo to preserve the blue-glow aesthetic previously achieved via CSS gradient text.
 Files affected: public/logo-dark.png (new), public/logo-light.png (new, white background variant), src/pages/index.astro, src/pages/beta.astro, beta.html, public/beta.html
 Status: Active — use /logo-dark.png for the site logo on all dark-background pages. Do not revert to SVG/text logo.
+
+
+## Decision 008 — 2026-10-17
+
+Admin credentials must be transported through headers, never URL query strings.
+Required CI checks must propagate errors. Scope dependency overrides to the
+affected routing utility instead of forcing a deployment-adapter downgrade.

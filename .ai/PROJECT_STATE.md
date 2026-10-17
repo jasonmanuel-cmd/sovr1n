@@ -104,3 +104,18 @@ Get the beta pipeline fully functional:
 2. Confirm Vercel env vars are set
 3. Fix `app/config.js` anon key placeholder
 4. Wire the `/beta` form to POST `/api/beta/signup`
+
+
+## Security remediation — 2026-10-17
+
+Branch: codex/security-audit-2026-10-17.
+Changed lib/admin-auth.js to require x-admin-secret or Bearer headers; query.key
+no longer authenticates. The existing admin dashboard already uses headers.
+Added a URL-credential regression test; all 45 tests pass. CI now uses Node 24,
+npm ci, production dependency auditing, build and tests without suppressing failures.
+Removed nonexistent lint/typecheck commands; repaired the CodeQL language matrix
+and updated CodeQL actions. Refreshed the lockfile and pinned the routing utility's
+path-to-regexp dependency to 6.3.0 via a scoped override; no forced adapter downgrade.
+Added SECURITY.md. No database migrations, production credentials, or deployment
+settings changed. Check the PR and GitHub checks before merging. Provider credential
+rotation and existing deployment/schema TODOs remain separate work.
