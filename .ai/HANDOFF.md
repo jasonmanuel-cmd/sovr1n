@@ -1,6 +1,6 @@
 # AI HANDOFF
 
-Last Updated: 2026-10-08
+Last Updated: 2026-10-10
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
 Branch: main (PR #17 merged 2026-10-08; squash SHA 077f305)
@@ -51,13 +51,25 @@ The project now has a dual layout:
 - **Email URL fix** — `api/beta/signup.js` now uses `req.headers.host` to build base URL (was hardcoded to `https://sovr1n.com`; now works on preview deployments)
 - **is:inline added** to `<script>` tag in `src/pages/beta.astro`
 
+## What Was Done This Session (Oct 10)
+
+- **Supabase schema applied** — User ran all three SQL files manually in Supabase SQL Editor:
+  1. `supabase/schema.sql` (base tables + RLS + triggers)
+  2. `supabase/migrations/001_marketplace_v2.sql` (profiles, orders, extended listings)
+  3. `migrations/001_create_beta_signups.sql` (beta testing tables; `problem` column made nullable)
+- **Vercel env vars (partial)** — Set via Vercel MCP for production + preview + development:
+  - `SUPABASE_URL` = `https://pebqmuumwygrpjofdwfy.supabase.co`
+  - `RESEND_API_KEY` = new `sovr1n-production` key (sending_access only) created in Resend
+  - `EMAIL_FROM` = `noreply@sovr1n.com`
+- **Resend integration** — `api/email/send.js` already wired to Resend API (done prior session, PR #19)
+
 ## What Is Not Finished
 
-- **Schema not applied** (highest priority) — Supabase MCP returned "Unauthorized". Must be done manually via Supabase SQL Editor.
-- **app/config.js anon key placeholder** — real key needed from Supabase dashboard
+- **Supabase keys** — Anon key + service role key not yet retrieved; Supabase MCP has no access to project pebqmuumwygrpjofdwfy. User must go to https://app.supabase.com/project/pebqmuumwygrpjofdwfy/settings/api and paste both keys.
+- **Vercel env vars** — SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY still need to be set.
+- **app/config.js anon key** — placeholder in `app/config.js` + `public/app/config.js` must be replaced once anon key is available.
+- **Resend domain verification** — `sovr1n.com` must be verified in Resend before beta emails deliver. Blocked on user getting DNS access from domain registrant.
 - **GitHub Actions billing** — free tier minutes exhausted. Fix at https://github.com/settings/billing
-- **Email provider** — `api/email/send.js` is a stub. Resend MCP is available to integrate.
-- **RLS policies** — needed after schema is applied
 - **app/ duplication** — `app/` at root and `public/app/` are duplicates (low priority)
 
 ## EXACT NEXT STEPS

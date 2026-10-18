@@ -2,20 +2,14 @@
 
 ## Critical — Blocking Beta Launch
 
-- [ ] **Apply schema to Supabase** — Run the three SQL files in the Supabase SQL editor in order:
-  1. `supabase/schema.sql`
-  2. `supabase/migrations/001_marketplace_v2.sql`
-  3. `migrations/001_create_beta_signups.sql`
-  Project: pebqmuumwygrpjofdwfy (https://app.supabase.com/project/pebqmuumwygrpjofdwfy)
+- [x] **Apply schema to Supabase** — All three SQL files run manually in Supabase SQL Editor (2026-10-10)
+- [x] **Partial Vercel env vars** — SUPABASE_URL, RESEND_API_KEY, EMAIL_FROM set via Vercel MCP (2026-10-10)
 
-- [ ] **Set Vercel environment variables** — In Vercel dashboard → sovr1n project → Settings → Environment Variables:
-  - SUPABASE_URL
-  - SUPABASE_ANON_KEY
-  - SUPABASE_SERVICE_ROLE_KEY
-  - STRIPE_SECRET_KEY
-  - STRIPE_PUBLISHABLE_KEY
+- [ ] **Get Supabase keys + finish Vercel env vars** — Go to https://app.supabase.com/project/pebqmuumwygrpjofdwfy/settings/api; copy anon key and service_role key; paste to Claude to set SUPABASE_ANON_KEY + SUPABASE_SERVICE_ROLE_KEY in Vercel and update app/config.js
 
-- [ ] **Fix app/config.js anon key** — Replace the placeholder SUPABASE_ANON_KEY value with the real key from Supabase dashboard → Settings → API
+- [ ] **Fix app/config.js anon key** — Replace placeholder in BOTH `app/config.js` AND `public/app/config.js` once anon key is available
+
+- [ ] **Verify sovr1n.com in Resend** — Resend dashboard → Domains → Add Domain → sovr1n.com; add DNS TXT records. Blocked on DNS access from domain registrant.
 
 - [x] **Wire /beta form to API** — Done. `beta.html`, `public/beta.html`, and `src/pages/beta.astro` now POST to `/api/beta/signup`. API updated: broader `validRoles`, `problem` optional, email URL uses `req.headers.host`.
 

@@ -125,13 +125,6 @@
     App.renderCityList(window.CRAIGSLIST_CITIES || [], 'home-city-list');
     App.renderCityList(window.CRAIGSLIST_CITIES || [], 'drawer-city-list');
 
-    if (!Auth.isLoggedIn()) {
-      App.pendingCityForRouting = name;
-      Utils.showToast(`Sign in to continue exploring ${name}`, 'info');
-      Auth.openModal('login-modal');
-      return;
-    }
-
     App.pendingCityForRouting = name;
     App.openRoleModal();
   };
@@ -149,17 +142,15 @@
   App.selectRole = async function (role) {
     if (!ROLE_MODULE_MAP[role]) return;
 
-    try {
-      await Utils.api('PUT', '/auth/profile', { addRole: role });
-    } catch (err) {
-      console.warn('Failed to save role to profile:', err.message);
-    }
-
     App.currentRole = role;
     App.pendingCityForRouting = null;
     App.closeRoleModal();
-    Utils.showToast(`Welcome, ${ROLE_LABELS[role]}!`, 'success');
     App.openModule(ROLE_MODULE_MAP[role]);
+
+    // Save role to profile only when logged in — browsing works without account
+    if (Auth.isLoggedIn()) {
+      Utils.api('PUT', '/auth/profile', { addRole: role }).catch(() => {});
+    }
   };
 
   Auth.onAuthSuccess = function () {
