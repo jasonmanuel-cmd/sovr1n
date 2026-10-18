@@ -1,8 +1,8 @@
 # PROJECT STATE
 
-Last Updated: 2026-10-10
-Current Branch: claude/marketplace-schema-layout-0emf5a
-Last Known Good Commit (main): 077f305 — feat: add SOVR1N metallic logo (PR #17 squash merge)
+Last Updated: 2026-10-18
+Current Branch: main
+Last Known Good Commit (main): e93a01e — feat: open browsing, remove header logo, hero transparency, security CI (PR #25 squash merge)
 
 ## Project
 

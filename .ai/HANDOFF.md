@@ -1,10 +1,10 @@
 # AI HANDOFF
 
-Last Updated: 2026-10-10
+Last Updated: 2026-10-18
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
-Branch: main (PR #17 merged 2026-10-08; squash SHA 077f305)
-Active feature branch: claude/marketplace-schema-layout-0emf5a
+Branch: main (PR #25 merged 2026-10-18; squash SHA e93a01e)
+Active feature branch: none
 
 ## What Was Done This Session
 
