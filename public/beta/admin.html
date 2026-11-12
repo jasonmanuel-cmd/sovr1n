@@ -446,6 +446,7 @@
 
             // No survey endpoint exists yet (/api/beta/send-survey was never built),
             // so say so plainly instead of failing on a 404.
+            closeSurveyModal();
             showMessage('Surveys are not set up yet. Email testers from the list for now.', 'error');
             return;
 
