@@ -444,6 +444,12 @@
             const type = document.getElementById('survey-type').value;
             const recipients = document.getElementById('survey-recipients').value;
 
+            // No survey endpoint exists yet (/api/beta/send-survey was never built),
+            // so say so plainly instead of failing on a 404.
+            closeSurveyModal();
+            showMessage('Surveys are not set up yet. Email testers from the list for now.', 'error');
+            return;
+
             try {
                 const response = await fetch('/api/beta/send-survey', {
                     method: 'POST',
@@ -465,7 +471,7 @@
 
         async function activateTester(testerId) {
             try {
-                const response = await fetch('/api/beta/testers/' + testerId, {
+                const response = await fetch('/api/beta/testers?id=' + encodeURIComponent(testerId), {
                     method: 'PATCH',
                     headers: adminHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({ status: 'active' })
@@ -489,7 +495,7 @@
             if (!confirm('Remove this tester?')) return;
 
             try {
-                const response = await fetch('/api/beta/testers/' + testerId, {
+                const response = await fetch('/api/beta/testers?id=' + encodeURIComponent(testerId), {
                     method: 'DELETE',
                     headers: adminHeaders()
                 });

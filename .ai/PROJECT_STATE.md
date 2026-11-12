@@ -1,5 +1,14 @@
 # PROJECT STATE
 
+## Status 2026-11-12
+
+- Live at www.sovr1n.com, Astro static build on Vercel; public beta, Bakersfield first.
+- Client: Frank Hernandez, under the Aug 28 development agreement. Paid through the beta phase; next milestones are launch and post-launch.
+- Beta fixes in draft PR from claude/project-thread-se0edh (stale countdown banner, admin activate/remove 404s, sitemap/robots, driver-pay text, lockfile sync).
+- No checkout exists yet; pricing is displayed only. Rentals, Community Calendar and profile pages from Frank's Oct 25 wireframes are not built.
+- Notes below this section date from Oct 10 and are partly stale (the Astro migration happened despite Decision 004).
+
+
 Last Updated: 2026-10-10
 Current Branch: claude/marketplace-schema-layout-0emf5a
 Last Known Good Commit (main): 077f305 — feat: add SOVR1N metallic logo (PR #17 squash merge)

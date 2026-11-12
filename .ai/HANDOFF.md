@@ -1,5 +1,20 @@
 # AI HANDOFF
 
+## Session 2026-11-12 (Claude, branch claude/project-thread-se0edh)
+
+Beta-readiness audit and fixes, delivered as a draft PR. Nothing merged or deployed.
+
+- Homepage launch banner said "We go public in 2 days" counting down to Oct 8; past that date it showed "go public in moments" next to "We are live". Replaced with static public-beta copy and removed the countdown script and timer.
+- Beta admin page called /api/beta/testers/<id> for activate/remove. No such Vercel route exists (only api/beta/testers.js), so both 404'd. Now calls /api/beta/testers?id=<id>, which testers.js already reads.
+- Beta admin "Send survey" posted to /api/beta/send-survey, which was never built. It now shows a plain "not set up yet" message instead of failing.
+- Sitemap listed pages that don't exist (/about, /terms, /faq, /signin, /signup, /api, /app) and the admin page. Now lists only /, /beta, /beta-signup on www. robots.txt trimmed the same way; Sitemap line points to www.
+- Contract text said "Driver receives 100% of delivery fee" while the math pays 90%. Text now matches the math (app.js and public/app.js, still identical).
+- package-lock.json was out of sync with package.json (npm ci failed). Added only the two missing entries (astro's nested @types/node and undici-types); npm ci --dry-run passes.
+- Separate flagged commit: /beta quote changed from "Founder — Chaotically Organized AI" to "Founder — sovr1n" in all three copies. Owner decision.
+
+Open for the owner (see TODO): founder lines and COAI alternateName in homepage JSON-LD/FAQ, /beta footer copyright, no privacy policy, "legally binding" contract claims, check /api/health env flags, PR #22 (admin-auth hardening + stricter CI) still open.
+
+
 Last Updated: 2026-10-10
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
