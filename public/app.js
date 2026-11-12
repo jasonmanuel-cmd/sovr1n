@@ -500,7 +500,7 @@ const App = {
         agreedPrice: agreedfPrice,
         platformFee: (agreedfPrice * 0.10).toFixed(2),
         driverEarnings: (agreedfPrice * 0.90).toFixed(2),
-        note: 'Driver receives 100% of delivery fee. Platform fee is 10% of transaction.'
+        note: 'Driver receives 90% of the agreed price. Platform fee is 10% of the transaction.'
       },
       terms: [
         '1. Driver will inspect load and take photographic documentation before pickup.',

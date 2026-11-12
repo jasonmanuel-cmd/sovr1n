@@ -1,5 +1,16 @@
 # TODO
 
+## Added 2026-11-12 (beta audit)
+
+- [ ] **Owner decision: founder/brand lines** — homepage JSON-LD and FAQ name Jason Manuel / Chaotically Organized AI as founder and alternateName; /beta footer says "© 2026 Chaotically Organized AI". Should match the Aug 28 agreement (Frank as sovr1n founder, no COAI brand).
+- [ ] **Privacy policy** — site collects name, email, phone, license and insurance details with no privacy policy (CalOPPA). Needs the owning entity and a lawyer's look.
+- [ ] **Attorney check** — contract text "This contract is legally binding" and Terms "Contracts protect all parties legally".
+- [ ] **Check /api/health on production** — confirm hasSupabaseAnonKey and hasServiceRoleKey are true; without the service key every API route returns 500.
+- [ ] **Merge or fold PR #22** — removes ?key= admin auth, stricter CI.
+- [ ] **Build /api/beta/send-survey** or remove the survey button from the admin page.
+- [ ] **New scope, not beta** — payments checkout, Rentals, Community Calendar, profile page per Frank's Oct 25 wireframes.
+
+
 ## Critical — Blocking Beta Launch
 
 - [x] **Apply schema to Supabase** — All three SQL files run manually in Supabase SQL Editor (2026-10-10)

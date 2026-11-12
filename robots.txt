@@ -1,9 +1,12 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://www.sovr1n.com/sitemap.xml
-Sitemap: https://www.sovr1n.com/image-sitemap.xml
+Disallow: /api/
+Disallow: /admin/
+Disallow: /beta/admin
 
-# Crawl-delay
+# Crawl delay
 Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://www.sovr1n.com/sitemap.xml
