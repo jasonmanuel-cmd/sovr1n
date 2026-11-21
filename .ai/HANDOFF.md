@@ -1,5 +1,9 @@
 # AI HANDOFF
 
+## Nov 11 meeting follow-up
+
+The transcript asked for visual polish and did not specify a redesign or checkout requirements. The homepage changes are in `src/pages/index.astro`, the deployed Astro source. Existing marketplace buttons and city selector retain their handlers. Verify the homepage and beta links on mobile and desktop before promoting a preview. Stripe onboarding remains with the owner. Use Vercel logs to investigate the three failing production browse APIs separately.
+
 ## Session 2026-11-12 (Claude, branch claude/project-thread-se0edh)
 
 Beta-readiness audit and fixes, delivered as a draft PR. Nothing merged or deployed.

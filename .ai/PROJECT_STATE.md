@@ -1,5 +1,9 @@
 # PROJECT STATE
 
+## Homepage polish
+
+The Astro homepage puts the beta and marketplace actions ahead of the map, uses the existing Chrome palette, and styles the page without the Tailwind CDN. Stripe onboarding and checkout are still pending. The production browse API failures identified in the audit remain open.
+
 ## Status 2026-11-12
 
 - Live at www.sovr1n.com, Astro static build on Vercel; public beta, Bakersfield first.
