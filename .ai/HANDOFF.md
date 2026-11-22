@@ -1,5 +1,9 @@
 # AI HANDOFF
 
+## Profile and transportation wireframes
+
+The three wireframes are implemented in `src/pages/index.astro`, `public/marketplace.css`, and `public/app/marketplace.js` (mirrored in `app/`). The PDF-embedded wordmark is `public/sovr1n-wordmark.png`. The board uses an optional cargo-tier filter on the existing loads API. The profile dashboard is an opt-in view of the authenticated profile API and queries records by the authenticated user. Existing load records retain their stored tiers. Production API health and the four-class mapping need confirmation in preview.
+
 ## Nov 11 meeting follow-up
 
 The transcript asked for visual polish and did not specify a redesign or checkout requirements. The homepage changes are in `src/pages/index.astro`, the deployed Astro source. Existing marketplace buttons and city selector retain their handlers. Verify the homepage and beta links on mobile and desktop before promoting a preview. Stripe onboarding remains with the owner. Use Vercel logs to investigate the three failing production browse APIs separately.

@@ -24,6 +24,8 @@ module.exports = async function handler(req, res) {
     const limit = parsePage(req.query.limit, 20, 100);
     const city = sanitizeText(req.query.city, 100);
     const status = sanitizeText(req.query.status, 30);
+    const cargoTier = sanitizeText(req.query.cargoTier, 20);
+    if (cargoTier && !CARGO_TIERS.has(cargoTier)) return badRequest(res, 'Invalid cargo tier');
 
     try {
       let query = supabaseAdmin
@@ -33,6 +35,7 @@ module.exports = async function handler(req, res) {
         .range((page - 1) * limit, page * limit - 1);
       if (city) query = query.eq('city', city);
       if (status) query = query.eq('status', status);
+      if (cargoTier) query = query.eq('cargo_tier', cargoTier);
 
       const { data, error, count } = await query;
       if (error) throw error;

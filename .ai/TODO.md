@@ -1,5 +1,10 @@
 # TODO
 
+## Profile and transportation wireframes
+
+- [ ] Confirm the Class A–D mapping for existing loads before deploying. The preview maps the four classes to small, medium, large, and heavy in that order.
+- [ ] Define and persist load scheduling, notes and mileage, market stock, rentals, calendar applications, reservations, and messaging.
+
 ## Nov 11 meeting follow-up
 
 - [x] Improve the homepage hierarchy, beta invitation, and footer navigation.

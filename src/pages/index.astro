@@ -26,6 +26,7 @@
     </script>
     <script is:inline defer src="/_vercel/speed-insights/script.js"></script>
 
+    <link rel="stylesheet" href="/marketplace.css">
     <style>
         /* ============================================================
            SOVR1N 2026 — Chrome Design System
@@ -136,7 +137,7 @@
         }
         .marketplace-hero img {
             display: block; height: clamp(56px, 12vw, 88px); width: auto; max-width: 100%;
-            margin: 0 auto 14px; filter: drop-shadow(0 0 28px rgba(74, 158, 255, 0.35));
+            margin: 0 auto 14px; border-radius: var(--rad-md); filter: drop-shadow(0 0 28px rgba(74, 158, 255, 0.35));
         }
         .marketplace-hero h1 {
             font: 700 clamp(24px, 5vw, 38px)/1.15 var(--font-display);
@@ -734,7 +735,7 @@
         </button>
         <button class="btn-secondary btn-sm" onclick="App.openProfileOrLogin()" id="header-auth-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Sign in
+            <span id="header-auth-label">Sign in</span>
         </button>
     </div>
 </header>
@@ -757,6 +758,7 @@
             </div>
             <div id="drawer-user-menu" style="display:none;flex-direction:column;gap:8px;">
                 <p style="font-size:13px;font-weight:600;color:var(--warm);" id="drawer-user-name"></p>
+                <button class="btn-secondary" onclick="App.closeHamburgerDrawer();Marketplace.openProfile()">My profile</button>
                 <button class="btn-secondary" onclick="Auth.logout()">Sign Out</button>
             </div>
             <!-- UTILITY LINKS -->
@@ -892,7 +894,7 @@
 <!-- MAIN HOMEPAGE -->
 <main id="main-content" class="marketplace-home">
     <div class="marketplace-hero fade-up">
-        <img src="/logo-dark.png" alt="SOVR1N">
+        <img src="/sovr1n-wordmark.png" alt="SOVR1N">
         <h1>Bakersfield’s local marketplace</h1>
         <p>Shop locally, hire a service provider, or find someone to move a load.</p>
     </div>
@@ -952,11 +954,11 @@
         <section class="marketplace-role">
             <h2>Transportation</h2>
             <div class="role-actions">
-                <button class="card card-interactive" onclick="App.openModule('drivers')">
+                <button class="card card-interactive" onclick="Marketplace.openTransportation()">
                     <span>Drivers</span>
                     <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 </button>
-                <button class="card card-interactive" onclick="App.openModule('load-board')">
+                <button class="card card-interactive" onclick="Marketplace.openTransportation()">
                     <span>Load board</span>
                     <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11v6M9 14h6"/></svg>
                 </button>
@@ -1018,6 +1020,58 @@
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
         </button>
     </div>
+</div>
+
+<!-- TRANSPORTATION AND PROFILE -->
+<div class="module-view" id="mod-transportation">
+    <main class="marketplace-screen">
+        <header class="marketplace-screen-header">
+            <nav aria-label="Breadcrumb"><button type="button" onclick="App.closeAllModules()">Home</button> / CA / <span data-transport-city></span> / Transportation</nav>
+            <button class="btn-secondary btn-sm" type="button" data-account-action onclick="App.openProfileOrLogin()">Sign in</button>
+        </header>
+        <img class="marketplace-wordmark" src="/sovr1n-wordmark.png" alt="SOVR1N">
+        <h1>Transportation</h1>
+        <div class="transport-classes" id="transport-classes"></div>
+    </main>
+</div>
+
+<div class="module-view" id="mod-transportation-class">
+    <main class="marketplace-screen marketplace-screen-wide">
+        <header class="marketplace-screen-header">
+            <nav aria-label="Breadcrumb"><button type="button" onclick="App.closeAllModules()">Home</button> / CA / <span data-transport-city></span> / <button type="button" onclick="Marketplace.openTransportation()">Transportation</button></nav>
+            <button class="btn-secondary btn-sm" type="button" data-account-action onclick="App.openProfileOrLogin()">Sign in</button>
+        </header>
+        <img class="marketplace-wordmark" src="/sovr1n-wordmark.png" alt="SOVR1N">
+        <div class="marketplace-screen-header">
+            <h1 id="transport-class-title"></h1>
+            <button class="btn-primary btn-sm" type="button" onclick="Marketplace.addLoad()">Add listing</button>
+        </div>
+        <p id="transport-board-status" role="status"></p>
+        <div class="transport-table-wrap" role="region" aria-label="Load listings" tabindex="0">
+            <table class="transport-table">
+                <thead><tr><th scope="col">Item description</th><th scope="col">Pickup ZIP</th><th scope="col">Destination ZIP</th><th scope="col">Date/time needed</th><th scope="col">Rate</th><th scope="col">Notes</th><th scope="col">Actions</th></tr></thead>
+                <tbody id="transport-board-rows"></tbody>
+            </table>
+        </div>
+        <div id="transport-pagination" class="marketplace-pagination" hidden>
+            <button class="btn-secondary btn-sm" id="transport-prev" type="button" onclick="Marketplace.changePage(-1)">Previous</button>
+            <button class="btn-secondary btn-sm" id="transport-next" type="button" onclick="Marketplace.changePage(1)">Next</button>
+        </div>
+        <p class="marketplace-note">Reservations and messaging aren’t available yet.</p>
+    </main>
+</div>
+
+<div class="module-view" id="mod-my-profile">
+    <main class="marketplace-screen">
+        <header class="marketplace-screen-header">
+            <nav aria-label="Breadcrumb"><button type="button" onclick="App.closeAllModules()">Home</button> / My profile</nav>
+            <button class="btn-secondary btn-sm" type="button" onclick="App.openRoleModal()">Switch role</button>
+        </header>
+        <img class="marketplace-wordmark" src="/sovr1n-wordmark.png" alt="SOVR1N">
+        <h1>My profile</h1>
+        <p id="profile-status" role="status"></p>
+        <div id="profile-dashboard"></div>
+    </main>
 </div>
 
 <!-- MODULE: SERVICES BUYER -->
@@ -1379,7 +1433,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
         Post
     </a>
-    <a href="#" onclick="App.openModule('load-board');return false;">
+    <a href="#" onclick="Marketplace.openTransportation();return false;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
         Loads
     </a>
@@ -1399,6 +1453,7 @@
 <script is:inline src="app/search.js"></script>
 <script is:inline src="app.js"></script>
 <script is:inline src="app/home.js"></script>
+<script is:inline src="app/marketplace.js"></script>
 <script is:inline>
 (function(){
     App.toggleChat = function() {
