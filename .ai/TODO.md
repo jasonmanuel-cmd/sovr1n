@@ -1,5 +1,16 @@
 # TODO
 
+## Profile and transportation wireframes
+
+- [ ] Confirm the Class A–D mapping for existing loads before deploying. The preview maps the four classes to small, medium, large, and heavy in that order.
+- [ ] Define and persist load scheduling, notes and mileage, market stock, rentals, calendar applications, reservations, and messaging.
+
+## Nov 11 meeting follow-up
+
+- [x] Improve the homepage hierarchy, beta invitation, and footer navigation.
+- [ ] Confirm the owner’s Stripe account is ready before implementing checkout.
+- [ ] Use production runtime logs to diagnose HTTP 500s from the listings, providers, and loads APIs.
+
 ## Added 2026-11-12 (beta audit)
 
 - [ ] **Owner decision: founder/brand lines** — homepage JSON-LD and FAQ name Jason Manuel / Chaotically Organized AI as founder and alternateName; /beta footer says "© 2026 Chaotically Organized AI". Should match the Aug 28 agreement (Frank as sovr1n founder, no COAI brand).

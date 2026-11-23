@@ -1,5 +1,13 @@
 # PROJECT STATE
 
+## Profile and transportation wireframes
+
+The homepage uses the SOVR1N wordmark supplied in the wireframe PDFs. Transportation now opens a four-class selector and filtered board, and the account control opens a private profile dashboard with owned listings.
+
+## Homepage polish
+
+The Astro homepage puts the beta and marketplace actions ahead of the map, uses the existing Chrome palette, and styles the page without the Tailwind CDN. Stripe onboarding and checkout are still pending. The production browse API failures identified in the audit remain open.
+
 ## Status 2026-11-12
 
 - Live at www.sovr1n.com, Astro static build on Vercel; public beta, Bakersfield first.
