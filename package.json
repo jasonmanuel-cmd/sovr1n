@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "@astrojs/vercel": "^11.0.22",
-    "@supabase/supabase-js": "^2.119.0",
+    "@supabase/supabase-js": "^2.119.2",
     "@vercel/speed-insights": "^2.1.0",
-    "astro": "^7.4.12",
-    "stripe": "^23.1.0"
+    "astro": "^7.4.13",
+    "stripe": "^23.2.0"
   },
   "devDependencies": {
-    "vercel": "^65.17.0"
+    "vercel": "^66.6.0"
   },
   "main": "app.js",
   "directories": {
