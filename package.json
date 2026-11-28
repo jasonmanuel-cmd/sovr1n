@@ -19,7 +19,7 @@
     "stripe": "^23.2.0"
   },
   "devDependencies": {
-    "vercel": "^66.6.0"
+    "vercel": "^68.0.0"
   },
   "main": "app.js",
   "directories": {
