@@ -1,6 +1,39 @@
 # AI HANDOFF
 
-Last Updated: 2026-10-08
+## Session 2026-11-24 (Claude, branch fix/sovr1n-cors-wildcard)
+
+Static security audit flagged wildcard CORS on three authenticated API routes. Fixed:
+
+- Added `lib/cors.js` — `applyCors(req, res, { methods })` sets `Access-Control-Allow-Origin` only when the request's `Origin` matches an allowlist (`https://sovr1n.com`, `https://www.sovr1n.com`, plus `http://localhost:3000` when `NODE_ENV !== 'production'`), handles the `OPTIONS` preflight itself, and returns `false` so the caller returns early.
+- `api/orders/index.js`, `api/orders/[id].js`, `api/reviews/index.js` — replaced the three manual `res.setHeader('Access-Control-Allow-Origin', '*')` blocks with `if (!applyCors(req, res, { methods: '...' })) return;`.
+- No new env vars, no schema changes, no other routes touched. `node --check` passes on all three edited route files.
+
+If a future route needs CORS, import `applyCors` from `lib/cors.js` rather than hand-rolling headers again — keeps the allowlist in one place.
+
+## Profile and transportation wireframes
+
+The three wireframes are implemented in `src/pages/index.astro`, `public/marketplace.css`, and `public/app/marketplace.js` (mirrored in `app/`). The PDF-embedded wordmark is `public/sovr1n-wordmark.png`. The board uses an optional cargo-tier filter on the existing loads API. The profile dashboard is an opt-in view of the authenticated profile API and queries records by the authenticated user. Existing load records retain their stored tiers. Production API health and the four-class mapping need confirmation in preview.
+
+## Nov 11 meeting follow-up
+
+The transcript asked for visual polish and did not specify a redesign or checkout requirements. The homepage changes are in `src/pages/index.astro`, the deployed Astro source. Existing marketplace buttons and city selector retain their handlers. Verify the homepage and beta links on mobile and desktop before promoting a preview. Stripe onboarding remains with the owner. Use Vercel logs to investigate the three failing production browse APIs separately.
+
+## Session 2026-11-12 (Claude, branch claude/project-thread-se0edh)
+
+Beta-readiness audit and fixes, delivered as a draft PR. Nothing merged or deployed.
+
+- Homepage launch banner said "We go public in 2 days" counting down to Oct 8; past that date it showed "go public in moments" next to "We are live". Replaced with static public-beta copy and removed the countdown script and timer.
+- Beta admin page called /api/beta/testers/<id> for activate/remove. No such Vercel route exists (only api/beta/testers.js), so both 404'd. Now calls /api/beta/testers?id=<id>, which testers.js already reads.
+- Beta admin "Send survey" posted to /api/beta/send-survey, which was never built. It now shows a plain "not set up yet" message instead of failing.
+- Sitemap listed pages that don't exist (/about, /terms, /faq, /signin, /signup, /api, /app) and the admin page. Now lists only /, /beta, /beta-signup on www. robots.txt trimmed the same way; Sitemap line points to www.
+- Contract text said "Driver receives 100% of delivery fee" while the math pays 90%. Text now matches the math (app.js and public/app.js, still identical).
+- package-lock.json was out of sync with package.json (npm ci failed). Added only the two missing entries (astro's nested @types/node and undici-types); npm ci --dry-run passes.
+- Separate flagged commit: /beta quote changed from "Founder — Chaotically Organized AI" to "Founder — sovr1n" in all three copies. Owner decision.
+
+Open for the owner (see TODO): founder lines and COAI alternateName in homepage JSON-LD/FAQ, /beta footer copyright, no privacy policy, "legally binding" contract claims, check /api/health env flags, PR #22 (admin-auth hardening + stricter CI) still open.
+
+
+Last Updated: 2026-10-10
 Agent: Claude Sonnet 4.6 (claude-sonnet-4-6)
 Machine: Vercel Remote (cloud session, ephemeral container)
 Branch: main (PR #17 merged 2026-10-08; squash SHA 077f305)
@@ -51,13 +84,25 @@ The project now has a dual layout:
 - **Email URL fix** — `api/beta/signup.js` now uses `req.headers.host` to build base URL (was hardcoded to `https://sovr1n.com`; now works on preview deployments)
 - **is:inline added** to `<script>` tag in `src/pages/beta.astro`
 
+## What Was Done This Session (Oct 10)
+
+- **Supabase schema applied** — User ran all three SQL files manually in Supabase SQL Editor:
+  1. `supabase/schema.sql` (base tables + RLS + triggers)
+  2. `supabase/migrations/001_marketplace_v2.sql` (profiles, orders, extended listings)
+  3. `migrations/001_create_beta_signups.sql` (beta testing tables; `problem` column made nullable)
+- **Vercel env vars (partial)** — Set via Vercel MCP for production + preview + development:
+  - `SUPABASE_URL` = `https://pebqmuumwygrpjofdwfy.supabase.co`
+  - `RESEND_API_KEY` = new `sovr1n-production` key (sending_access only) created in Resend
+  - `EMAIL_FROM` = `noreply@sovr1n.com`
+- **Resend integration** — `api/email/send.js` already wired to Resend API (done prior session, PR #19)
+
 ## What Is Not Finished
 
-- **Schema not applied** (highest priority) — Supabase MCP returned "Unauthorized". Must be done manually via Supabase SQL Editor.
-- **app/config.js anon key placeholder** — real key needed from Supabase dashboard
+- **Supabase keys** — Anon key + service role key not yet retrieved; Supabase MCP has no access to project pebqmuumwygrpjofdwfy. User must go to https://app.supabase.com/project/pebqmuumwygrpjofdwfy/settings/api and paste both keys.
+- **Vercel env vars** — SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY still need to be set.
+- **app/config.js anon key** — placeholder in `app/config.js` + `public/app/config.js` must be replaced once anon key is available.
+- **Resend domain verification** — `sovr1n.com` must be verified in Resend before beta emails deliver. Blocked on user getting DNS access from domain registrant.
 - **GitHub Actions billing** — free tier minutes exhausted. Fix at https://github.com/settings/billing
-- **Email provider** — `api/email/send.js` is a stub. Resend MCP is available to integrate.
-- **RLS policies** — needed after schema is applied
 - **app/ duplication** — `app/` at root and `public/app/` are duplicates (low priority)
 
 ## EXACT NEXT STEPS

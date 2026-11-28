@@ -1,21 +1,37 @@
 # TODO
 
+## Profile and transportation wireframes
+
+- [ ] Confirm the Class A–D mapping for existing loads before deploying. The preview maps the four classes to small, medium, large, and heavy in that order.
+- [ ] Define and persist load scheduling, notes and mileage, market stock, rentals, calendar applications, reservations, and messaging.
+
+## Nov 11 meeting follow-up
+
+- [x] Improve the homepage hierarchy, beta invitation, and footer navigation.
+- [ ] Confirm the owner’s Stripe account is ready before implementing checkout.
+- [ ] Use production runtime logs to diagnose HTTP 500s from the listings, providers, and loads APIs.
+
+## Added 2026-11-12 (beta audit)
+
+- [ ] **Owner decision: founder/brand lines** — homepage JSON-LD and FAQ name Jason Manuel / Chaotically Organized AI as founder and alternateName; /beta footer says "© 2026 Chaotically Organized AI". Should match the Aug 28 agreement (Frank as sovr1n founder, no COAI brand).
+- [ ] **Privacy policy** — site collects name, email, phone, license and insurance details with no privacy policy (CalOPPA). Needs the owning entity and a lawyer's look.
+- [ ] **Attorney check** — contract text "This contract is legally binding" and Terms "Contracts protect all parties legally".
+- [ ] **Check /api/health on production** — confirm hasSupabaseAnonKey and hasServiceRoleKey are true; without the service key every API route returns 500.
+- [ ] **Merge or fold PR #22** — removes ?key= admin auth, stricter CI.
+- [ ] **Build /api/beta/send-survey** or remove the survey button from the admin page.
+- [ ] **New scope, not beta** — payments checkout, Rentals, Community Calendar, profile page per Frank's Oct 25 wireframes.
+
+
 ## Critical — Blocking Beta Launch
 
-- [ ] **Apply schema to Supabase** — Run the three SQL files in the Supabase SQL editor in order:
-  1. `supabase/schema.sql`
-  2. `supabase/migrations/001_marketplace_v2.sql`
-  3. `migrations/001_create_beta_signups.sql`
-  Project: pebqmuumwygrpjofdwfy (https://app.supabase.com/project/pebqmuumwygrpjofdwfy)
+- [x] **Apply schema to Supabase** — All three SQL files run manually in Supabase SQL Editor (2026-10-10)
+- [x] **Partial Vercel env vars** — SUPABASE_URL, RESEND_API_KEY, EMAIL_FROM set via Vercel MCP (2026-10-10)
 
-- [ ] **Set Vercel environment variables** — In Vercel dashboard → sovr1n project → Settings → Environment Variables:
-  - SUPABASE_URL
-  - SUPABASE_ANON_KEY
-  - SUPABASE_SERVICE_ROLE_KEY
-  - STRIPE_SECRET_KEY
-  - STRIPE_PUBLISHABLE_KEY
+- [ ] **Get Supabase keys + finish Vercel env vars** — Go to https://app.supabase.com/project/pebqmuumwygrpjofdwfy/settings/api; copy anon key and service_role key; paste to Claude to set SUPABASE_ANON_KEY + SUPABASE_SERVICE_ROLE_KEY in Vercel and update app/config.js
 
-- [ ] **Fix app/config.js anon key** — Replace the placeholder SUPABASE_ANON_KEY value with the real key from Supabase dashboard → Settings → API
+- [ ] **Fix app/config.js anon key** — Replace placeholder in BOTH `app/config.js` AND `public/app/config.js` once anon key is available
+
+- [ ] **Verify sovr1n.com in Resend** — Resend dashboard → Domains → Add Domain → sovr1n.com; add DNS TXT records. Blocked on DNS access from domain registrant.
 
 - [x] **Wire /beta form to API** — Done. `beta.html`, `public/beta.html`, and `src/pages/beta.astro` now POST to `/api/beta/signup`. API updated: broader `validRoles`, `problem` optional, email URL uses `req.headers.host`.
 

@@ -1,6 +1,27 @@
 # PROJECT STATE
 
-Last Updated: 2026-10-08
+## Profile and transportation wireframes
+
+The homepage uses the SOVR1N wordmark supplied in the wireframe PDFs. Transportation now opens a four-class selector and filtered board, and the account control opens a private profile dashboard with owned listings.
+
+## Homepage polish
+
+The Astro homepage puts the beta and marketplace actions ahead of the map, uses the existing Chrome palette, and styles the page without the Tailwind CDN. Stripe onboarding and checkout are still pending. The production browse API failures identified in the audit remain open.
+
+## Status 2026-11-24
+
+A static-audit pass flagged `Access-Control-Allow-Origin: *` on `/api/orders`, `/api/orders/[id]`, and `/api/reviews` — authenticated endpoints that return order/review data. Added `lib/cors.js` (allowlists `https://sovr1n.com` / `https://www.sovr1n.com`, plus localhost in non-production) and wired all three routes to it. No other API routes had the wildcard.
+
+## Status 2026-11-12
+
+- Live at www.sovr1n.com, Astro static build on Vercel; public beta, Bakersfield first.
+- Client: Frank Hernandez, under the Aug 28 development agreement. Paid through the beta phase; next milestones are launch and post-launch.
+- Beta fixes in draft PR from claude/project-thread-se0edh (stale countdown banner, admin activate/remove 404s, sitemap/robots, driver-pay text, lockfile sync).
+- No checkout exists yet; pricing is displayed only. Rentals, Community Calendar and profile pages from Frank's Oct 25 wireframes are not built.
+- Notes below this section date from Oct 10 and are partly stale (the Astro migration happened despite Decision 004).
+
+
+Last Updated: 2026-10-10
 Current Branch: claude/marketplace-schema-layout-0emf5a
 Last Known Good Commit (main): 077f305 — feat: add SOVR1N metallic logo (PR #17 squash merge)
 
@@ -53,19 +74,17 @@ The Supabase client is split: `lib/supabase.js` (anon key, for authenticated use
 
 ## In Progress
 
-- Supabase schema NOT yet applied — all schema files exist locally but tables do not exist in project pebqmuumwygrpjofdwfy
-- Beta form on `/beta` page is client-side only (shows success UI without calling /api/beta/signup)
-- Feature branch `claude/marketplace-schema-layout-0emf5a` has a sync commit that mirrors what's already on main; can be merged or discarded
+- Supabase anon key + service role key — need from user (Supabase dashboard → Settings → API); MCP has no access to project pebqmuumwygrpjofdwfy
+- Resend domain verification — `sovr1n.com` must be verified in Resend before emails deliver; blocked on user getting DNS access from domain registrant
+- Remaining Vercel env vars — SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY not yet set
 
 ## Known Problems
 
-1. **Schema not applied**: `supabase/schema.sql`, `supabase/migrations/001_marketplace_v2.sql`, and `migrations/001_create_beta_signups.sql` have never been run against the Supabase project. API calls will fail with table-not-found errors.
-2. **Placeholder anon key**: `app/config.js` has a non-functional SUPABASE_ANON_KEY value (suffix: "placeholder"). Must be replaced with the real key from the Supabase dashboard.
-3. **Vercel env vars not confirmed set**: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY must be configured in the Vercel project dashboard for API functions to work.
-4. **Beta form not wired**: `/beta` page form submits client-side only; it does not POST to `/api/beta/signup`.
-5. **Orphaned Flutter/Dart files**: `lib/main.dart`, `lib/app_test.dart`, `lib/core/`, `lib/data/`, `lib/domain/`, `lib/ui/`, `pubspec.yaml` — these are not used by the web app and are leftover from an earlier mobile prototype.
-6. **Email send uses absolute URL**: `api/beta/signup.js` posts to `https://sovr1n.com/api/email/send`. That email handler (`api/email/send.js`) exists but has no actual email provider integration (no SendGrid/Resend/etc. key). Emails silently fail.
-7. **Open PR #3** (Vercel Web Analytics, Vercel bot) — draft, old base SHA, adds `/_vercel/insights/script.js` to index.html. Speed Insights already present; this PR adds Web Analytics separately.
+1. **Placeholder anon key**: `app/config.js` and `public/app/config.js` have a non-functional SUPABASE_ANON_KEY value. Must be replaced with the real key from Supabase dashboard → Settings → API → "anon / public". Update BOTH files.
+2. **Vercel env vars partially set**: SUPABASE_URL, RESEND_API_KEY, EMAIL_FROM are set. Still missing: SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY.
+3. **Resend domain not verified**: `sovr1n.com` must be added and DNS-verified in Resend dashboard before beta signup confirmation emails can deliver. Blocked on DNS access from domain registrant.
+4. **Orphaned Flutter/Dart files**: `lib/main.dart`, `lib/app_test.dart`, `lib/core/`, `lib/data/`, `lib/domain/`, `lib/ui/`, `pubspec.yaml` — leftover mobile prototype, not used.
+5. **Open PR #3** (Vercel Web Analytics bot) — draft, old base SHA. Decide: merge or close.
 
 ## Important Files
 
@@ -94,8 +113,8 @@ Required environment variable NAMES only (never put values here):
 - SUPABASE_SERVICE_ROLE_KEY — Supabase service role key (server-side only, never expose to frontend)
 - STRIPE_SECRET_KEY — Stripe secret key (server-side API routes)
 - STRIPE_PUBLISHABLE_KEY — Stripe publishable key (frontend use)
-
-Set all of these in the Vercel project dashboard under Settings → Environment Variables.
+- RESEND_API_KEY — **SET** (sovr1n-production key, sending_access only)
+- EMAIL_FROM — **SET** (`noreply@sovr1n.com`)
 
 ## Current Objective
 
@@ -119,3 +138,7 @@ path-to-regexp dependency to 6.3.0 via a scoped override; no forced adapter down
 Preserved the existing SECURITY.md policy. No database migrations, production credentials, or deployment
 settings changed. Check the PR and GitHub checks before merging. Provider credential
 rotation and existing deployment/schema TODOs remain separate work.
+Complete the beta pipeline:
+1. Get Supabase anon key + service role key → set in Vercel → update app/config.js
+2. Verify sovr1n.com domain in Resend (requires DNS access from domain registrant)
+3. Set Stripe keys in Vercel when ready for payments

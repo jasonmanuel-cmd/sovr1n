@@ -1,6 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 const { requireAuth } = require('../../lib/auth');
 const { badRequest, forbidden, notFound, serverError } = require('../../lib/errors');
+const { applyCors } = require('../../lib/cors');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -15,10 +16,7 @@ const VALID_TRANSITIONS = {
 };
 
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (!applyCors(req, res, { methods: 'GET, PUT, OPTIONS' })) return;
 
   const user = await requireAuth(req, res);
   if (!user) return;

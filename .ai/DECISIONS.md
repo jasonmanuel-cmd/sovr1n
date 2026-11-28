@@ -77,3 +77,6 @@ Status: Active — use /logo-dark.png for the site logo on all dark-background p
 Admin credentials must be transported through headers, never URL query strings.
 Required CI checks must propagate errors. Scope dependency overrides to the
 affected routing utility instead of forcing a deployment-adapter downgrade.
+## Transportation wireframe preview
+
+The four wireframe classes use the existing cargo tier keys in order: Economy uses small, Pickup uses medium, Hotshot uses large, and Commercial uses heavy. Confirm the mapping before promoting the preview.

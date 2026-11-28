@@ -1,11 +1,5 @@
 User-agent: *
 Allow: /
-Allow: /about
-Allow: /terms
-Allow: /faq
-Allow: /signin
-Allow: /signup
-Allow: /beta-signup
 
 Disallow: /api/
 Disallow: /admin/
@@ -15,4 +9,4 @@ Disallow: /beta/admin
 Crawl-delay: 1
 
 # Sitemap
-Sitemap: https://sovr1n.com/sitemap.xml
+Sitemap: https://www.sovr1n.com/sitemap.xml

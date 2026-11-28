@@ -19,6 +19,7 @@ function profilePayload(data) {
 
 module.exports = async function handler(req, res) {
   applySecurityHeaders(res);
+  res.setHeader('Cache-Control', 'private, no-store');
   if (!rateLimit(req, res, { limit: 30 })) return;
   const user = await requireAuth(req, res);
   if (!user) return;
@@ -32,6 +33,29 @@ module.exports = async function handler(req, res) {
         .single();
 
       if (error || !data) return serverError(res, error?.message || 'Profile not found');
+
+      if (req.query?.view === 'dashboard') {
+        const [listings, loads, provider] = await Promise.all([
+          supabaseAdmin.from('listings')
+            .select('id, type, title, description, price, is_active')
+            .eq('user_id', user.id).order('created_at', { ascending: false }),
+          supabaseAdmin.from('loads')
+            .select('id, title, offered_price, status')
+            .eq('poster_id', user.id).order('created_at', { ascending: false }),
+          supabaseAdmin.from('service_providers')
+            .select('business_name, rating_avg, rating_count')
+            .eq('user_id', user.id).order('created_at', { ascending: false }).limit(1),
+        ]);
+        const error = listings.error || loads.error || provider.error;
+        if (error) return serverError(res, error.message);
+        return res.status(200).json({
+          ...profilePayload(data),
+          createdAt: data.created_at,
+          listings: listings.data,
+          loads: loads.data,
+          business: provider.data?.[0] || null,
+        });
+      }
 
       return res.status(200).json(profilePayload(data));
     }
