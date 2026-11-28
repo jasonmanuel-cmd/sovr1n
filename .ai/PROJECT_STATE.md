@@ -8,6 +8,10 @@ The homepage uses the SOVR1N wordmark supplied in the wireframe PDFs. Transporta
 
 The Astro homepage puts the beta and marketplace actions ahead of the map, uses the existing Chrome palette, and styles the page without the Tailwind CDN. Stripe onboarding and checkout are still pending. The production browse API failures identified in the audit remain open.
 
+## Status 2026-11-24
+
+A static-audit pass flagged `Access-Control-Allow-Origin: *` on `/api/orders`, `/api/orders/[id]`, and `/api/reviews` — authenticated endpoints that return order/review data. Added `lib/cors.js` (allowlists `https://sovr1n.com` / `https://www.sovr1n.com`, plus localhost in non-production) and wired all three routes to it. No other API routes had the wildcard.
+
 ## Status 2026-11-12
 
 - Live at www.sovr1n.com, Astro static build on Vercel; public beta, Bakersfield first.

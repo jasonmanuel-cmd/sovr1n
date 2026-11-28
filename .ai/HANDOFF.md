@@ -1,5 +1,15 @@
 # AI HANDOFF
 
+## Session 2026-11-24 (Claude, branch fix/sovr1n-cors-wildcard)
+
+Static security audit flagged wildcard CORS on three authenticated API routes. Fixed:
+
+- Added `lib/cors.js` — `applyCors(req, res, { methods })` sets `Access-Control-Allow-Origin` only when the request's `Origin` matches an allowlist (`https://sovr1n.com`, `https://www.sovr1n.com`, plus `http://localhost:3000` when `NODE_ENV !== 'production'`), handles the `OPTIONS` preflight itself, and returns `false` so the caller returns early.
+- `api/orders/index.js`, `api/orders/[id].js`, `api/reviews/index.js` — replaced the three manual `res.setHeader('Access-Control-Allow-Origin', '*')` blocks with `if (!applyCors(req, res, { methods: '...' })) return;`.
+- No new env vars, no schema changes, no other routes touched. `node --check` passes on all three edited route files.
+
+If a future route needs CORS, import `applyCors` from `lib/cors.js` rather than hand-rolling headers again — keeps the allowlist in one place.
+
 ## Profile and transportation wireframes
 
 The three wireframes are implemented in `src/pages/index.astro`, `public/marketplace.css`, and `public/app/marketplace.js` (mirrored in `app/`). The PDF-embedded wordmark is `public/sovr1n-wordmark.png`. The board uses an optional cargo-tier filter on the existing loads API. The profile dashboard is an opt-in view of the authenticated profile API and queries records by the authenticated user. Existing load records retain their stored tiers. Production API health and the four-class mapping need confirmation in preview.
