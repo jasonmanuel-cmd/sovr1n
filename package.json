@@ -37,5 +37,10 @@
   "bugs": {
     "url": "https://github.com/jasonmanuel-cmd/sovr1n/issues"
   },
-  "homepage": "https://github.com/jasonmanuel-cmd/sovr1n#readme"
+  "homepage": "https://github.com/jasonmanuel-cmd/sovr1n#readme",
+  "overrides": {
+    "@vercel/routing-utils": {
+      "path-to-regexp": "6.3.0"
+    }
+  }
 }

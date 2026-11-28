@@ -53,6 +53,12 @@ test('a bearer token is accepted as an alternative to the header',()=>{
   assert.equal(blocked,null);
 });
 
+test('a correct secret in the URL cannot authenticate an admin request',()=>{
+  const res = fakeRes();
+  requireAdmin({ headers: {}, query: { key: process.env.ADMIN_SECRET } }, res);
+  assert.equal(res.statusCode,401);
+});
+
 test('an unset ADMIN_SECRET fails closed rather than open',()=>{
   const saved = process.env.ADMIN_SECRET;
   delete process.env.ADMIN_SECRET;

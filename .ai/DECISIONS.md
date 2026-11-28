@@ -71,6 +71,12 @@ Reason: Founder-approved metallic serif logo image provided explicitly by the us
 Files affected: public/logo-dark.png (new), public/logo-light.png (new, white background variant), src/pages/index.astro, src/pages/beta.astro, beta.html, public/beta.html
 Status: Active — use /logo-dark.png for the site logo on all dark-background pages. Do not revert to SVG/text logo.
 
+
+## Decision 008 — 2026-10-17
+
+Admin credentials must be transported through headers, never URL query strings.
+Required CI checks must propagate errors. Scope dependency overrides to the
+affected routing utility instead of forcing a deployment-adapter downgrade.
 ## Transportation wireframe preview
 
 The four wireframe classes use the existing cargo tier keys in order: Economy uses small, Pickup uses medium, Hotshot uses large, and Commercial uses heavy. Confirm the mapping before promoting the preview.
